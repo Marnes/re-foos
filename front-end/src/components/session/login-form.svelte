@@ -8,8 +8,8 @@
 
     const dispatch = createEventDispatcher();
 
-    let username = 'Marnes';
-    let password = 'P@ssw0rd';
+    let username = '';
+    let password = '';
     let loginFailure = false;
 
     $: canSubmit = !_.isEmpty(username) && !_.isEmpty(password);

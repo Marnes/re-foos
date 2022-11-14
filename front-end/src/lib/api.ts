@@ -1,4 +1,4 @@
-const base = 'http://localhost:8080/api';
+const base = import.meta.env.VITE_HOST;
 
 type Request = {
     method: string;

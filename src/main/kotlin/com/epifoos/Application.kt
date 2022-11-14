@@ -15,7 +15,7 @@ import org.jetbrains.exposed.sql.SchemaUtils
 import org.jetbrains.exposed.sql.transactions.transaction
 
 fun main() {
-    embeddedServer(Netty, port = Config.getPort(), host = "0.0.0.0", module = Application::module)
+    embeddedServer(Netty, port = Config.getPort(), module = Application::module)
         .start(wait = true)
 }
 

@@ -1,6 +1,9 @@
 package com.epifoos.plugins
 
 import com.epifoos.auth.authRoutes
+import com.epifoos.exceptions.AuthenticationException
+import com.epifoos.exceptions.AuthorizationException
+import com.epifoos.exceptions.EntityNotFoundException
 import com.epifoos.match.matchRoutes
 import com.epifoos.player.playersRoutes
 import io.ktor.http.*
@@ -28,8 +31,9 @@ fun Application.configureRouting() {
         exception<AuthorizationException> { call, cause ->
             call.respond(HttpStatusCode.Forbidden)
         }
+        exception<EntityNotFoundException> { call, cause ->
+            call.respond(HttpStatusCode.NotFound)
+        }
     }
 }
 
-class AuthenticationException : RuntimeException()
-class AuthorizationException : RuntimeException()

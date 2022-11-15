@@ -2,6 +2,7 @@ package com.epifoos
 
 import com.epifoos.config.Config
 import com.epifoos.game.Games
+import com.epifoos.league.Leagues
 import com.epifoos.match.Matches
 import com.epifoos.player.PlayerElos
 import com.epifoos.player.PlayerStats
@@ -32,6 +33,7 @@ fun Application.module() {
     transaction {
         SchemaUtils.create(
             Players,
+            Leagues,
             Games,
             Matches,
             PlayerElos,

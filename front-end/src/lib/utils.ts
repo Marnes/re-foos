@@ -8,13 +8,6 @@ export const get = (endpoint: string): Promise<Response> => {
     });
 }
 
-export const postForm = (endpoint: string, formData?: FormData): Promise<Response> => {
-    return fetch(endpoint, {
-        method: 'POST',
-        body: formData || new FormData(),
-    });
-}
-
 export const post = (endpoint: string, data?: unknown): Promise<Response> => {
     return fetch(endpoint, {
         method: 'POST',
@@ -45,3 +38,6 @@ export const url = (path: string, params: any): string => {
     return `${ path }?${ query.toString() }`;
 }
 
+export const isSuccess = (statusCode: Number): boolean => {
+    return 200 <= statusCode && statusCode < 300;
+}

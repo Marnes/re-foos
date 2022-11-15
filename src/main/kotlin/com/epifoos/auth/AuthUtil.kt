@@ -1,18 +1,18 @@
 package com.epifoos.auth
 
-import com.epifoos.player.Player
+import com.epifoos.user.User
 import io.ktor.server.application.*
 import io.ktor.server.auth.*
 import io.ktor.server.auth.jwt.*
 import org.jetbrains.exposed.sql.transactions.transaction
 
 object AuthUtil {
-    fun getCurrentUser(call: ApplicationCall): Player {
+    fun getCurrentUser(call: ApplicationCall): User {
         return transaction {
             val principal = call.principal<JWTPrincipal>()
-            val username = principal!!.payload.getClaim("username").asString()
+            val id = principal!!.payload.getClaim("id").asInt()
 
-            Player.findById(username)!!
+            User.findById(id)!!
         }
     }
 }

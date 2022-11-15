@@ -1,7 +1,6 @@
 package com.epifoos.auth
 
-data class PlayerAuthResponse(
+data class UserAuthResponse(
     val username: String,
-    val avatar: String,
     val jwt: String
 )

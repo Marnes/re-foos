@@ -1,12 +1,13 @@
 <script lang='ts'>
     import LoginForm from '$src/components/session/login-form.svelte'
+    import PasswordChangeForm from '$src/components/session/password-change-form.svelte'
     import Icon from "@iconify/svelte";
-    import { AppBar, Avatar, menu, toastStore } from '@brainandbones/skeleton';
+    import { AppBar, menu, toastStore } from '@brainandbones/skeleton';
     import { Dialog } from "$src/models/dialog";
     import { drawerStore } from "$src/stores/game-store";
     import { dialogStore } from "$src/stores/dialog-store";
     import { sessionStore } from "$src/stores/session-store";
-    import { postForm } from "$src/lib/utils";
+    import { del } from "$src/lib/utils";
     import { goto } from "$app/navigation";
     import _ from 'lodash';
 
@@ -16,8 +17,12 @@
         $dialogStore = Dialog.create('Login to <strong>RE-Foos</strong>', LoginForm);
     }
 
+    function showChangePassword() {
+        $dialogStore = Dialog.create('Change your Password', PasswordChangeForm);
+    }
+
     async function logout() {
-        await postForm('auth?/logout')
+        await del('auth/logout')
         await goto('/', { invalidateAll: true, noScroll: true });
         $sessionStore = null;
         toastStore.trigger({ message: 'Successfully logged out', autohide: true, timeout: 3000 });
@@ -41,6 +46,7 @@
         </button>
         <nav class="list-nav card p-4 w-64 shadow-xl" data-menu="session">
           <ul>
+            <li><a on:click={showChangePassword}>Change Password</a></li>
             <li><a on:click={logout}>Logout</a></li>
           </ul>
         </nav>

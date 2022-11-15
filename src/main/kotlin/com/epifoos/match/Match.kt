@@ -1,12 +1,13 @@
 package com.epifoos.match
 
-import com.epifoos.base.BaseIntEntity
-import com.epifoos.base.BaseIntIdTable
+import com.epifoos.base.AuditedEntity
+import com.epifoos.base.AuditedTable
 import com.epifoos.game.Game
 import com.epifoos.game.GameSubmission
 import com.epifoos.game.Games
+import com.epifoos.league.League
+import com.epifoos.league.Leagues
 import com.epifoos.player.Player
-import com.epifoos.player.Players
 import org.jetbrains.exposed.dao.IntEntityClass
 import org.jetbrains.exposed.dao.id.EntityID
 
@@ -14,11 +15,11 @@ import org.jetbrains.exposed.dao.id.EntityID
 /**
  * A Match consists of multiple Games
  */
-object Matches : BaseIntIdTable(("match")) {
-    val capturedBy = reference("captured_by", Players)
+object Matches : AuditedTable(("match")) {
+    var league = reference("league_id", Leagues)
 }
 
-class Match(id: EntityID<Int>) : BaseIntEntity(id, Matches) {
+class Match(id: EntityID<Int>) : AuditedEntity(id, Matches) {
     companion object : IntEntityClass<Match>(Matches) {
         enum class Format(val kValue: Float) {
             CompleteMatch(36.0F),
@@ -26,7 +27,7 @@ class Match(id: EntityID<Int>) : BaseIntEntity(id, Matches) {
         }
     }
 
-    var capturedBy by Player referencedOn Matches.capturedBy
+    var league by League referencedOn Matches.league
     val games by Game referrersOn Games.match
 
     val players

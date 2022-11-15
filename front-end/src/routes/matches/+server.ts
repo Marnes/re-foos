@@ -1,5 +1,5 @@
 import api from '$src/lib/api';
-import { json } from '@sveltejs/kit';
+import { json, error } from '@sveltejs/kit';
 import type { RequestHandler } from '@sveltejs/kit';
 import type { Game } from '$src/models/game';
 import type { Match } from '$src/models/match';
@@ -9,7 +9,11 @@ export const POST: RequestHandler = async ({ cookies, request }) => {
 
     const response = await api.post('matches', normalizeMatch(match), cookies.get('jwt'));
 
-    return json(await response);
+    if (response.status !== 200) {
+        throw error(response.status)
+    }
+
+    return json(await response.json());
 }
 
 function normalizeMatch(match: Match) {

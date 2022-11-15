@@ -3,7 +3,7 @@ package com.epifoos.security
 import com.auth0.jwt.JWT
 import com.auth0.jwt.JWTVerifier
 import com.epifoos.config.Config
-import com.epifoos.player.Player
+import com.epifoos.user.User
 import java.util.*
 
 object JwtService {
@@ -15,12 +15,11 @@ object JwtService {
         .withIssuer(jwtConfig.issuer)
         .build()
 
-    fun generateJwt(player: Player): String {
+    fun generateJwt(user: User): String {
         return JWT.create()
             .withAudience(jwtConfig.audience)
             .withIssuer(jwtConfig.issuer)
-            .withClaim("username", player.id.value)
-            .withClaim("avatar", player.avatar)
+            .withClaim("id", user.id.value)
             .withExpiresAt(getExpiration())
             .sign(jwtConfig.algorithm)
     }

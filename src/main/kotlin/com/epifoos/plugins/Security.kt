@@ -1,6 +1,7 @@
 package com.epifoos.plugins
 
 import com.epifoos.config.Config
+import com.epifoos.exceptions.AuthenticationException
 import com.epifoos.security.JwtService
 import io.ktor.server.application.*
 import io.ktor.server.auth.*

@@ -1,15 +1,13 @@
 package com.epifoos.player
 
-import com.epifoos.base.BaseEntity
-import com.epifoos.base.BaseTable
-import org.jetbrains.exposed.dao.EntityClass
+import com.epifoos.base.BaseIntEntity
+import com.epifoos.base.BaseIntIdTable
+import org.jetbrains.exposed.dao.IntEntityClass
 import org.jetbrains.exposed.dao.id.EntityID
-import org.jetbrains.exposed.sql.Column
 
-object PlayerStats : BaseTable<String>("player_stats") {
-    override val id: Column<EntityID<String>> = varchar("username", 255)
-        .entityId()
-        .uniqueIndex("player_stats_username_uniq_idx")
+object PlayerStats : BaseIntIdTable("player_stats") {
+    var player = reference("player_id", Players)
+        .uniqueIndex("player_stats_player_uniq_idx")
 
     var elo = float("elo")
     var played = integer("played")
@@ -20,12 +18,13 @@ object PlayerStats : BaseTable<String>("player_stats") {
     var eloChange = float("elo_change")
 }
 
-class PlayerStat(id: EntityID<String>) : BaseEntity<String>(id, PlayerStats) {
-    companion object : EntityClass<String, PlayerStat>(PlayerStats) {
+class PlayerStat(id: EntityID<Int>) : BaseIntEntity(id, PlayerStats) {
+    companion object : IntEntityClass<PlayerStat>(PlayerStats) {
         private const val DEFAULT_ELO = 1000F
 
-        fun createDefaults(username: String): PlayerStat {
-            return PlayerStat.new(username) {
+        fun createDefaults(player: Player): PlayerStat {
+            return PlayerStat.new {
+                this.player = player
                 elo = DEFAULT_ELO
                 played = 0
                 wins = 0
@@ -37,7 +36,7 @@ class PlayerStat(id: EntityID<String>) : BaseEntity<String>(id, PlayerStats) {
         }
     }
 
-    val player by Player backReferencedOn Players.id
+    var player by Player referencedOn PlayerStats.player
     var elo by PlayerStats.elo
     var played by PlayerStats.played
     var wins by PlayerStats.wins

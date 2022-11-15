@@ -3,7 +3,6 @@ package com.epifoos.match
 import com.epifoos.base.AuditedEntity
 import com.epifoos.base.AuditedTable
 import com.epifoos.game.Game
-import com.epifoos.game.GameSubmission
 import com.epifoos.game.Games
 import com.epifoos.league.League
 import com.epifoos.league.Leagues
@@ -11,10 +10,6 @@ import com.epifoos.player.Player
 import org.jetbrains.exposed.dao.IntEntityClass
 import org.jetbrains.exposed.dao.id.EntityID
 
-
-/**
- * A Match consists of multiple Games
- */
 object Matches : AuditedTable(("match")) {
     var league = reference("league_id", Leagues)
 }
@@ -57,16 +52,4 @@ class Match(id: EntityID<Int>) : AuditedEntity(id, Matches) {
 
         return null
     }
-}
-
-data class MatchSubmission(
-    var games: List<GameSubmission>
-) {
-    val players
-        get() = listOf(
-            games.first().leftPlayer1,
-            games.first().leftPlayer2,
-            games.first().rightPlayer1,
-            games.first().rightPlayer2
-        )
 }

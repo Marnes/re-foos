@@ -1,8 +1,7 @@
 package com.epifoos.player
 
-import com.epifoos.user.User
-
 data class PlayerDTO(
+    val id: Int,
     val username: String,
     val elo: Float,
     val played: Int,
@@ -15,11 +14,11 @@ data class PlayerDTO(
     val eloChange: Float,
 ) {
     companion object {
-        fun fromPlayer(user: User): PlayerDTO {
-            val player = user.player
+        fun fromPlayer(player: Player): PlayerDTO {
 
             return PlayerDTO(
-                user.username,
+                player.id.value,
+                player.user.username,
                 player.stats.elo,
                 player.stats.played,
                 player.stats.wins,

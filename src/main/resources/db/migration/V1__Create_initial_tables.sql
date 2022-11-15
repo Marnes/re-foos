@@ -196,3 +196,7 @@ CREATE TABLE IF NOT EXISTS player_stats
     id
 ) ON DELETE RESTRICT
   ON UPDATE RESTRICT);
+
+
+INSERT INTO "user" VALUES (nextval('user_id_seq'), now(), now(), 'System', '$2a$10$L8EA8XgMdA0EXgtUk7/VIeo4B3HLRW9OL3TMj/SrKf5CYOn3.bgf.')
+

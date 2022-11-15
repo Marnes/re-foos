@@ -14,9 +14,11 @@ fun Route.authRoutes() {
         call.respond(HttpStatusCode.OK, jwt)
     }
 
-    post("/auth/register") {
-        var jwt = AuthService.register(call.receive())
-        call.respond(HttpStatusCode.OK, jwt)
+    authenticate("basic") {
+        post("/auth/register") {
+            var jwt = AuthService.register(call.receive())
+            call.respond(HttpStatusCode.OK, jwt)
+        }
     }
 
     authenticate {

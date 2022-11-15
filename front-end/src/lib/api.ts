@@ -1,4 +1,4 @@
-const base = import.meta.env.VITE_HOST;
+const base = import.meta.env.VITE_HOST; //Base path. Required
 
 type Request = {
     method: string;

@@ -18,16 +18,17 @@ export const POST: RequestHandler = async ({ cookies, request }) => {
 
 function normalizeMatch(match: Match) {
     return {
+        players: match.players.map(player => player.id),
         games: match.games.map(normalizeGame)
     }
 }
 
 function normalizeGame(game: Game) {
     return {
-        leftPlayer1: game.leftPlayer1.username,
-        leftPlayer2: game.leftPlayer2.username,
-        rightPlayer1: game.rightPlayer1.username,
-        rightPlayer2: game.rightPlayer2.username,
+        leftPlayer1: game.leftPlayer1.id,
+        leftPlayer2: game.leftPlayer2.id,
+        rightPlayer1: game.rightPlayer1.id,
+        rightPlayer2: game.rightPlayer2.id,
         leftScore1: game.leftScore1,
         leftScore2: game.leftScore2,
         rightScore1: game.rightScore1,

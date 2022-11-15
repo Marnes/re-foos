@@ -2,10 +2,10 @@ package com.epifoos.game
 
 import com.epifoos.base.BaseIntEntity
 import com.epifoos.base.BaseIntIdTable
-import com.epifoos.player.Player
-import com.epifoos.player.Players
 import com.epifoos.match.Match
 import com.epifoos.match.Matches
+import com.epifoos.player.Player
+import com.epifoos.player.Players
 import org.jetbrains.exposed.dao.IntEntityClass
 import org.jetbrains.exposed.dao.id.EntityID
 
@@ -89,14 +89,3 @@ class Game(id: EntityID<Int>) : BaseIntEntity(id, Games) {
         return leftTotal == rightTotal
     }
 }
-
-data class GameSubmission(
-    var leftPlayer1: String,
-    var leftPlayer2: String,
-    var rightPlayer1: String,
-    var rightPlayer2: String,
-    var leftScore1: Int,
-    var leftScore2: Int,
-    var rightScore1: Int,
-    var rightScore2: Int
-)

@@ -29,7 +29,7 @@
         if (response.status === 200) {
             await goto('/', { invalidateAll: true, noScroll: true });
             $dialogStore = null;
-            toastStore.trigger({ message: 'Successfully changed password. Sign in again.', autohide: true, timeout: 3000 });
+            toastStore.trigger({ message: 'Successfully changed password.', autohide: true, timeout: 3000 });
         } else {
             changeFailure = true;
         }

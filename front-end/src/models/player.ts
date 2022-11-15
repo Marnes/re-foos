@@ -1,4 +1,5 @@
 export class Player {
+	public id!: number;
 	public username!: string;
 	public rank!: number;
 	public elo!: number;

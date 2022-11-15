@@ -1,6 +1,5 @@
 package com.epifoos.auth
 
-import com.epifoos.config.Config
 import com.epifoos.exceptions.AuthenticationException
 import com.epifoos.player.Player
 import com.epifoos.player.PlayerStat
@@ -25,12 +24,6 @@ object AuthService {
     }
 
     fun register(registerRequest: RegisterRequest): UserAuthResponse {
-        val secret = Config.getProperty("ktor.secret")!!
-
-        if (registerRequest.secret != secret) {
-            throw AuthenticationException()
-        }
-
         val user = transaction {
             User.new {
                 username = registerRequest.username
@@ -57,5 +50,15 @@ object AuthService {
         transaction {
             currentUser.password = BCrypt.hashpw(changePasswordRequest.newPassword, BCrypt.gensalt())
         }
+    }
+
+    fun authenticate(username: String, password: String): User {
+        var user: User = transaction { User.findByUsername(username) ?: throw AuthenticationException() }
+
+        if (!BCrypt.checkpw(password, user.password)) {
+            throw AuthenticationException()
+        }
+
+        return user
     }
 }

@@ -12,7 +12,7 @@ export const POST: RequestHandler = async ({ cookies, request }) => {
         return error(401);
     }
 
-    await cookies.delete("jwt", { path: '/' });
+    // await cookies.delete("jwt", { path: '/' });
     return json({});
 }
 

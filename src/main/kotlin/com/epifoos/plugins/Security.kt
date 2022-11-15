@@ -1,5 +1,7 @@
 package com.epifoos.plugins
 
+import com.auth0.jwt.JWT
+import com.auth0.jwt.JWTVerifier
 import com.epifoos.config.Config
 import com.epifoos.exceptions.AuthenticationException
 import com.epifoos.security.JwtService
@@ -9,13 +11,19 @@ import io.ktor.server.auth.jwt.*
 
 fun Application.configureSecurity() {
 
+    val jwtConfig = Config.getJwtConfig();
+
+    val verifier: JWTVerifier = JWT
+        .require(jwtConfig.algorithm)
+        .withIssuer(jwtConfig.issuer)
+        .build()
+
+
     install(Authentication) {
         jwt {
-            realm = "EPI-Foos"
+            realm = jwtConfig.realm
 
-            verifier(
-                JwtService.verifier
-            )
+            verifier(verifier)
 
             challenge { _, _ ->
                 throw AuthenticationException()

@@ -12,10 +12,11 @@ object Config {
         url = getProperty("database.url")!!,
         driver = getProperty("database.driver")!!,
         user = getProperty("database.user")!!,
-        password = getProperty("database.password")!!
+        password = getProperty("database.password")!!,
     )
 
     fun getJwtConfig(): JwtConfig = JwtConfig(
+        realm = getProperty("jwt.realm")!!,
         secret = getProperty("jwt.secret")!!,
         issuer = getProperty("jwt.issuer")!!,
         audience = getProperty("jwt.audience")!!

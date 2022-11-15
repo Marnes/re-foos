@@ -17,16 +17,7 @@ fun Application.configureSerialization() {
             disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
         }
         json(
-            Json{ ignoreUnknownKeys = true }
+            Json { ignoreUnknownKeys = true }
         )
-    }
-
-    routing {
-        get("/json/jackson") {
-            call.respond(mapOf("hello" to "world"))
-        }
-        get("/json/kotlinx-serialization") {
-            call.respond(mapOf("hello" to "world"))
-        }
     }
 }

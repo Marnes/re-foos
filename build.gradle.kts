@@ -46,6 +46,7 @@ dependencies {
     implementation("org.mindrot:jbcrypt:0.4")
     implementation("io.micrometer:micrometer-registry-prometheus:1.10.0")
     implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.14.0")
+    implementation("org.flywaydb:flyway-core:9.8.1")
 
     testImplementation("io.ktor:ktor-server-tests-jvm:$ktor_version")
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version")

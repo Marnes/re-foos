@@ -8,10 +8,12 @@ import io.ktor.server.response.*
 import io.ktor.server.routing.*
 
 fun Route.leagueRoutes() {
-    authenticate("basic") {
-        post("/leagues") {
-            val league = LeagueService.createLeague(call.receive(), AuthUtil.getCurrentUser(call))
-            call.respond(league)
+    route("/leagues") {
+        authenticate("basic") {
+            post {
+                val league = LeagueService.createLeague(call.receive(), AuthUtil.getCurrentUser(call))
+                call.respond(league)
+            }
         }
     }
 }

@@ -49,7 +49,7 @@ class Game(id: EntityID<Int>) : BaseIntEntity(id, Games) {
     var rightScore2 by Games.rightScore2
 
     val leftTotal get() = leftScore1 + leftScore2
-    val rightTotal get() = rightScore1 + rightScore1
+    val rightTotal get() = rightScore1 + rightScore2
 
     val leftResult
         get() = if (leftTotal == MAX_SCORE) Result.WIN_IN_TWO

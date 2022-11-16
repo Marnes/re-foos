@@ -1,5 +1,6 @@
 package com.epifoos.plugins
 
+import com.epifoos.admin.adminRoutes
 import com.epifoos.auth.authRoutes
 import com.epifoos.exceptions.AuthenticationException
 import com.epifoos.exceptions.AuthorizationException
@@ -21,6 +22,7 @@ fun Application.configureRouting() {
             authRoutes()
             playersRoutes()
             leagueRoutes()
+            adminRoutes()
         }
         static("/") {
             resources("static")

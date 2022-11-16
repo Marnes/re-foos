@@ -1,10 +1,10 @@
 package com.epifoos.elo
 
-import com.epifoos.player.Player
 import com.epifoos.game.Game
 import com.epifoos.match.Match
+import com.epifoos.player.Player
 import com.epifoos.player.PlayerElo
-import com.epifoos.player.StatsService
+import com.epifoos.player.stats.StatsService
 import org.jetbrains.exposed.sql.transactions.transaction
 import kotlin.math.pow
 
@@ -102,11 +102,11 @@ object EloService {
         rightExpectedScore: Float,
         rightActualScore: Float
     ): Map<Player, Float> {
-        return game.players.map {
-            it to calculateEloChange(
+        return game.players.associateWith {
+            calculateEloChange(
                 game, it, format, leftExpectedScore, leftActualScore, rightExpectedScore, rightActualScore
             )
-        }.toMap()
+        }
     }
 
     private fun calculateEloChange(

@@ -8,10 +8,12 @@ import io.ktor.server.response.*
 import io.ktor.server.routing.*
 
 fun Route.matchRoutes() {
-    authenticate {
-        post("/matches") {
-            val newMatch = MatchService.captureMatch(call.receive(), AuthUtil.getCurrentUser(call))
-            call.respond(newMatch)
+    route("/matches") {
+        authenticate {
+            post {
+                val newMatch = MatchService.captureMatch(call.receive(), AuthUtil.getCurrentUser(call))
+                call.respond(newMatch)
+            }
         }
     }
 }

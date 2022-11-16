@@ -1,8 +1,26 @@
-package com.epifoos.player
+package com.epifoos.player.stats
 
 import com.epifoos.match.Match
+import com.epifoos.player.Player
+import com.epifoos.player.PlayerElos
+import com.epifoos.player.PlayerStat
+import org.jetbrains.exposed.sql.deleteAll
+import org.jetbrains.exposed.sql.transactions.transaction
 
 object StatsService {
+
+    fun createDefault(player: Player): PlayerStat {
+        return transaction {
+             PlayerStat.createDefaults(player)
+        }
+    }
+
+    fun resetStats() {
+        transaction {
+            PlayerElos.deleteAll()
+            PlayerStat.all().forEach { it.reset() }
+        }
+    }
 
     fun updateStats(player: Player, match: Match, eloChange: Float) {
         player.stats.elo = player.stats.elo + eloChange

@@ -11,7 +11,7 @@
 
     const dispatch = createEventDispatcher();
 
-    const scores = _.times(maxScore, (score) => score + 1);
+    const scores = _.times(maxScore + 1, (score) => score);
 
     function onSelect(score) {
         return () => {
@@ -35,7 +35,7 @@
   </div>
   {#each scores as i}
     <div
-        class="basis-1/5 stat stat-{i} bg-surface-700 relative"
+        class="basis-1/6 stat stat-{i} bg-surface-700 relative"
         class:shadow-2xl="{i === value}"
         class:shadow-black="{i === value}"
         class:selected="{i === value}"

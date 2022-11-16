@@ -1,8 +1,7 @@
 package com.epifoos.auth
 
 import com.epifoos.exceptions.AuthenticationException
-import com.epifoos.player.Player
-import com.epifoos.player.PlayerStat
+import com.epifoos.player.PlayerService
 import com.epifoos.security.JwtService
 import com.epifoos.user.User
 import org.jetbrains.exposed.sql.transactions.transaction
@@ -28,12 +27,7 @@ object AuthService {
             User.new {
                 username = registerRequest.username
                 password = BCrypt.hashpw(registerRequest.password, BCrypt.gensalt())
-            }.also {
-                Player.new {
-                    user = it
-                    avatar = ""
-                }.also { PlayerStat.createDefaults(it) }
-            }
+            }.also { PlayerService.createPlayer(it) }
         }
 
         return UserAuthResponse(

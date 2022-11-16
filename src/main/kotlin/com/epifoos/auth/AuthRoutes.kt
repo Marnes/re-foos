@@ -9,22 +9,24 @@ import io.ktor.server.routing.*
 
 fun Route.authRoutes() {
 
-    post("/auth/login") {
-        var jwt = AuthService.login(call.receive())
-        call.respond(HttpStatusCode.OK, jwt)
-    }
-
-    authenticate("basic") {
-        post("/auth/register") {
-            var jwt = AuthService.register(call.receive())
+    route("/auth") {
+        post("/login") {
+            var jwt = AuthService.login(call.receive())
             call.respond(HttpStatusCode.OK, jwt)
         }
-    }
 
-    authenticate {
-        post("/auth/change-password") {
-            AuthService.changePassword(call.receive(), AuthUtil.getCurrentUser(call))
-            call.respond(HttpStatusCode.OK)
+        authenticate("basic") {
+            post("/register") {
+                var jwt = AuthService.register(call.receive())
+                call.respond(HttpStatusCode.OK, jwt)
+            }
+        }
+
+        authenticate {
+            post("/change-password") {
+                AuthService.changePassword(call.receive(), AuthUtil.getCurrentUser(call))
+                call.respond(HttpStatusCode.OK)
+            }
         }
     }
 }

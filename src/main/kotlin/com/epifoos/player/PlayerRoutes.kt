@@ -7,7 +7,9 @@ import io.ktor.server.routing.*
 
 
 fun Route.playersRoutes() {
-    get("/players") {
-        call.respond(HttpStatusCode.OK, PlayerService.getPlayers())
+    route("/players") {
+        get {
+            call.respond(HttpStatusCode.OK, PlayerService.getPlayers())
+        }
     }
 }

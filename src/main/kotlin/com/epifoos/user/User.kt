@@ -2,6 +2,7 @@ package com.epifoos.user
 
 import com.epifoos.base.BaseIntEntity
 import com.epifoos.base.BaseIntIdTable
+import com.epifoos.ilike
 import com.epifoos.player.Player
 import com.epifoos.player.Players
 import org.jetbrains.exposed.dao.IntEntityClass
@@ -16,7 +17,7 @@ object Users : BaseIntIdTable("user") {
 class User(id: EntityID<Int>) : BaseIntEntity(id, Users) {
     companion object : IntEntityClass<User>(Users) {
         fun findByUsername(username: String): User? {
-            return User.find { Users.username eq username }.firstOrNull()
+            return User.find { Users.username ilike username }.firstOrNull()
         }
     }
 
@@ -24,4 +25,3 @@ class User(id: EntityID<Int>) : BaseIntEntity(id, Users) {
     var password by Users.password
     val player by Player backReferencedOn Players.user
 }
-

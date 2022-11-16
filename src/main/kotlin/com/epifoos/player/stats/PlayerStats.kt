@@ -25,14 +25,7 @@ class PlayerStat(id: EntityID<Int>) : BaseIntEntity(id, PlayerStats) {
         fun createDefaults(player: Player): PlayerStat {
             return PlayerStat.new {
                 this.player = player
-                elo = DEFAULT_ELO
-                played = 0
-                wins = 0
-                losses = 0
-                goalsFor = 0
-                goalsAgainst = 0
-                eloChange = 0F
-            }
+            }.also { it.reset() }
         }
     }
 
@@ -44,4 +37,14 @@ class PlayerStat(id: EntityID<Int>) : BaseIntEntity(id, PlayerStats) {
     var goalsFor by PlayerStats.goalsFor
     var goalsAgainst by PlayerStats.goalsAgainst
     var eloChange by PlayerStats.eloChange
+
+    fun reset() {
+        elo = DEFAULT_ELO
+        played = 0
+        wins = 0
+        losses = 0
+        goalsFor = 0
+        goalsAgainst = 0
+        eloChange = 0F
+    }
 }

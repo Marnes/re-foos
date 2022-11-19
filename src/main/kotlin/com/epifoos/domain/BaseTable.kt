@@ -1,7 +1,7 @@
 package com.epifoos.domain
 
 import com.epifoos.domain.user.User
-import com.epifoos.domain.user.Users
+import com.epifoos.domain.user.UserTable
 import org.jetbrains.exposed.dao.Entity
 import org.jetbrains.exposed.dao.IntEntity
 import org.jetbrains.exposed.dao.id.EntityID
@@ -32,7 +32,7 @@ abstract class BaseEntity<ID : Comparable<ID>>(id: EntityID<ID>, table: BaseTabl
 }
 
 abstract class AuditedTable(name: String) : BaseIntIdTable(name) {
-    var createdBy = reference("created_by", Users)
+    var createdBy = reference("created_by", UserTable)
 }
 
 abstract class AuditedEntity(id: EntityID<Int>, table: AuditedTable) : BaseIntEntity(id, table) {

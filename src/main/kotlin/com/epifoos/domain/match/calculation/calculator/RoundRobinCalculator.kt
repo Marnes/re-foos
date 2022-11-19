@@ -20,7 +20,9 @@ class RoundRobinCalculator(matchMapper: MatchMapper) : EloCalculator(matchMapper
     override fun calculate(): CalculationResult {
         val gameResults = matchMapper.gameMappers.map { calculateGameResult(it) }
 
-        return CalculationResult(matchMapper.players, calculateTotalScores(gameResults), gameResults)
+        return CalculationResult(
+            matchMapper.match, matchMapper.players, calculateTotalScores(gameResults), gameResults
+        )
     }
 
     private fun calculateTotalScores(gameResults: List<GameCalculationResult>): Map<Player, Float> {

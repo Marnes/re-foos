@@ -7,13 +7,18 @@ import org.jetbrains.exposed.sql.transactions.transaction
 object LeagueService {
 
     fun createLeague(leagueDto: LeagueDto, currentUser: User): LeagueDto {
-        val league = transaction {
+        transaction {
             League.new {
                 name = leagueDto.name
                 createdBy = currentUser
+            }.also {
+                LeagueConfig.new {
+                    league = it
+                    startingElo = leagueDto.startingElo
+                }
             }
         }
 
-        return LeagueDto(league.id.value, league.name)
+        return leagueDto
     }
 }

@@ -1,9 +1,11 @@
 package com.epifoos.match.calculation
 
 import com.epifoos.domain.match.Game
+import com.epifoos.domain.match.Match
 import com.epifoos.domain.player.Player
 
 data class CalculationResult(
+    val match: Match,
     val players: List<Player>,
     val eloChanges: Map<Player, Float>,
     val gameCalculationResults: List<GameCalculationResult>

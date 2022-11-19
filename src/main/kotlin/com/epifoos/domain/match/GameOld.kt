@@ -3,18 +3,18 @@ package com.epifoos.game
 import com.epifoos.domain.BaseIntEntity
 import com.epifoos.domain.BaseIntIdTable
 import com.epifoos.domain.match.Match
-import com.epifoos.domain.match.Matches
+import com.epifoos.domain.match.MatchTable
 import com.epifoos.domain.player.Player
-import com.epifoos.domain.player.Players
+import com.epifoos.domain.player.PlayerTable
 import org.jetbrains.exposed.dao.IntEntityClass
 import org.jetbrains.exposed.dao.id.EntityID
 
 object GamesOld : BaseIntIdTable("game_old") {
-    var match = reference("match_id", Matches)
-    var leftPlayer1 = reference("left_player_1", Players)
-    var leftPlayer2 = reference("left_player_2", Players)
-    var rightPlayer1 = reference("right_player_1", Players)
-    var rightPlayer2 = reference("right_player_2", Players)
+    var match = reference("match_id", MatchTable)
+    var leftPlayer1 = reference("left_player_1", PlayerTable)
+    var leftPlayer2 = reference("left_player_2", PlayerTable)
+    var rightPlayer1 = reference("right_player_1", PlayerTable)
+    var rightPlayer2 = reference("right_player_2", PlayerTable)
     var leftScore1 = integer("left_score_1")
     var leftScore2 = integer("left_score_2")
     var rightScore1 = integer("right_score_1")

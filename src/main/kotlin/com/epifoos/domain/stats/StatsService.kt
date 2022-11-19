@@ -1,5 +1,6 @@
 package com.epifoos.domain.stats
 
+import com.epifoos.domain.league.League
 import com.epifoos.domain.player.Player
 import com.epifoos.match.calculation.CalculationResult
 import org.jetbrains.exposed.sql.deleteAll
@@ -7,9 +8,10 @@ import org.jetbrains.exposed.sql.transactions.transaction
 
 object StatsService {
 
-    fun createDefault(player: Player): BasePlayerStat {
+    fun createDefault(player: Player): BasePlayerStats {
         return transaction {
-            PlayerStat.createDefaults(player)
+            PlayerStats.new { this.player = player }
+                .also { it.setDefaults(player.league) }
         }
     }
 
@@ -17,15 +19,16 @@ object StatsService {
 
     }
 
-    fun resetStats() {
+    fun resetStats(league: League) {
         transaction {
-            MatchPlayerStats.deleteAll()
-            GamePlayerStats.deleteAll()
-            MatchResultStats.deleteAll()
-            GameResultStats.deleteAll()
-            LeagueStats.deleteAll()
-            RandomStats.deleteAll()
-            PlayerStats.deleteAll()
+            //TODO: Only delete for league
+            MatchPlayerStatsTable.deleteAll()
+            GamePlayerStatsTable.deleteAll()
+            MatchResultStatsTable.deleteAll()
+            GameResultStatsTable.deleteAll()
+            LeagueStatsTable.deleteAll()
+            RandomStatsTable.deleteAll()
+            PlayerStatsTable.deleteAll()
             Player.all().forEach { createDefault(it) }
         }
     }

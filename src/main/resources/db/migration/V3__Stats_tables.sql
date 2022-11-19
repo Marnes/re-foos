@@ -10,7 +10,7 @@ CREATE TABLE IF NOT EXISTS game_player_stats
     elo_change   REAL                                  NOT NULL,
     game_id      INT                                   NOT NULL,
     CONSTRAINT fk_game_player_stats_player__id FOREIGN KEY (player) REFERENCES player (id) ON DELETE RESTRICT ON UPDATE RESTRICT,
-    CONSTRAINT fk_game_player_stats_game_id__id FOREIGN KEY (game_id) REFERENCES game_old (id) ON DELETE RESTRICT ON UPDATE RESTRICT
+    CONSTRAINT fk_game_player_stats_game_id__id FOREIGN KEY (game_id) REFERENCES game (id) ON DELETE RESTRICT ON UPDATE RESTRICT
 );
 
 ALTER TABLE game_player_stats
@@ -27,7 +27,7 @@ CREATE TABLE IF NOT EXISTS game_stats
     game_id      INT                                   NOT NULL,
     CONSTRAINT fk_game_stats_winner__id FOREIGN KEY (winner) REFERENCES player (id) ON DELETE RESTRICT ON UPDATE RESTRICT,
     CONSTRAINT fk_game_stats_loser__id FOREIGN KEY (loser) REFERENCES player (id) ON DELETE RESTRICT ON UPDATE RESTRICT,
-    CONSTRAINT fk_game_stats_game_id__id FOREIGN KEY (game_id) REFERENCES game_old (id) ON DELETE RESTRICT ON UPDATE RESTRICT
+    CONSTRAINT fk_game_stats_game_id__id FOREIGN KEY (game_id) REFERENCES game (id) ON DELETE RESTRICT ON UPDATE RESTRICT
 );
 
 ALTER TABLE game_stats

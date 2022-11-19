@@ -5,6 +5,7 @@ alter sequence game_id_seq rename to game_old_id_seq;
 
 alter table "user"
     add column avatar varchar(255);
+
 alter table player
     drop column avatar;
 

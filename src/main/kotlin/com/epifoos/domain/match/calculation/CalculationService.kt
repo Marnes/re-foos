@@ -1,18 +1,18 @@
 package com.epifoos.domain.match.calculation
 
+import com.epifoos.domain.league.League
 import com.epifoos.domain.match.Match
 import com.epifoos.domain.match.MatchUtil
 import com.epifoos.domain.match.calculation.calculator.RoundRobinCalculator
 import com.epifoos.domain.player.PlayerUtil
 import com.epifoos.domain.stats.StatsService
-import com.epifoos.elo.EloService
 import org.jetbrains.exposed.sql.transactions.transaction
 
 object CalculationService {
 
-    fun recalculate() {
+    fun recalculate(league: League) {
         transaction {
-            StatsService.resetStats()
+            StatsService.resetStats(league)
             Match.all().sortedBy { it.createdDate }.forEach { calculate(it) }
         }
     }
@@ -25,7 +25,6 @@ object CalculationService {
             .create(matchMapper)
             .calculate()
 
-        EloService.updateElo(calculationResult)
         StatsService.updateStats(calculationResult)
     }
 

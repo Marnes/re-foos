@@ -1,5 +1,6 @@
 package com.epifoos.domain.auth
 
+import com.epifoos.domain.league.League
 import com.epifoos.domain.player.PlayerService
 import com.epifoos.domain.user.User
 import com.epifoos.exceptions.AuthenticationException
@@ -23,11 +24,13 @@ object AuthService {
     }
 
     fun register(registerRequest: RegisterRequest): UserAuthResponse {
+        val league = transaction { League.all().first() }
+
         val user = transaction {
             User.new {
                 username = registerRequest.username
                 password = BCrypt.hashpw(registerRequest.password, BCrypt.gensalt())
-            }.also { PlayerService.createPlayer(it) }
+            }.also { PlayerService.createPlayer(league, it) }
         }
 
         return UserAuthResponse(

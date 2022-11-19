@@ -2,24 +2,30 @@ package com.epifoos.domain.player
 
 import com.epifoos.domain.BaseIntEntity
 import com.epifoos.domain.BaseIntIdTable
-import com.epifoos.domain.stats.PlayerStat
+import com.epifoos.domain.league.League
+import com.epifoos.domain.league.LeagueTable
 import com.epifoos.domain.stats.PlayerStats
+import com.epifoos.domain.stats.PlayerStatsTable
 import com.epifoos.domain.user.User
-import com.epifoos.domain.user.Users
+import com.epifoos.domain.user.UserTable
 import org.jetbrains.exposed.dao.IntEntityClass
 import org.jetbrains.exposed.dao.id.EntityID
 
-object Players : BaseIntIdTable("player") {
-    var user = reference("user_id", Users)
-        .uniqueIndex("player_user_uniq_idx")
+object PlayerTable : BaseIntIdTable("player") {
+    var user = reference("user_id", UserTable)
+    var league = reference("league_id", LeagueTable)
+
+    init {
+        uniqueIndex("player_user_league_uniq_idx", user, league)
+    }
 }
 
-class Player(id: EntityID<Int>) : BaseIntEntity(id, Players) {
-    companion object : IntEntityClass<Player>(Players)
+class Player(id: EntityID<Int>) : BaseIntEntity(id, PlayerTable) {
+    companion object : IntEntityClass<Player>(PlayerTable)
 
-    var user by User referencedOn Players.user
-    val stats by PlayerStat backReferencedOn PlayerStats.player
-    //val global by lazy { GlobalEntity.findById(id.value)!! } LAZY LOAD
+    var user by User referencedOn PlayerTable.user
+    var league by League referencedOn PlayerTable.league
+    val stats by PlayerStats backReferencedOn PlayerStatsTable.player
 }
 
 

@@ -1,6 +1,9 @@
 package com.epifoos.plugins
 
 import com.epifoos.config.Config
+import com.epifoos.domain.league.LeagueConfigTable
+import com.epifoos.domain.league.LeagueTable
+import com.epifoos.domain.player.PlayerTable
 import com.epifoos.domain.stats.*
 import io.ktor.server.application.*
 import org.flywaydb.core.Flyway
@@ -27,13 +30,16 @@ fun Application.configureDatabase() {
 fun writeSchema() {
     transaction {
         val schema = SchemaUtils.createStatements(
-            GamePlayerStats,
-            GameResultStats,
-            MatchPlayerStats,
-            MatchResultStats,
-            PlayerStats,
-            LeagueStats,
-            RandomStats,
+            GamePlayerStatsTable,
+            GameResultStatsTable,
+            MatchPlayerStatsTable,
+            MatchResultStatsTable,
+            PlayerStatsTable,
+            LeagueStatsTable,
+            RandomStatsTable,
+            PlayerTable,
+            LeagueTable,
+            LeagueConfigTable,
         ).joinToString("\n\n") { "$it;" }
         File("schema.sql").writeText(schema)
     }

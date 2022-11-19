@@ -1,6 +1,7 @@
 package com.epifoos.domain.stats
 
 import com.epifoos.domain.player.Player
+import com.epifoos.match.calculation.CalculationResult
 import org.jetbrains.exposed.sql.deleteAll
 import org.jetbrains.exposed.sql.transactions.transaction
 
@@ -10,6 +11,10 @@ object StatsService {
         return transaction {
             PlayerStat.createDefaults(player)
         }
+    }
+
+    fun updateStats(calculationResult: CalculationResult) {
+
     }
 
     fun resetStats() {

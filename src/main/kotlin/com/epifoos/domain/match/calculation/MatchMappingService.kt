@@ -53,11 +53,11 @@ object MatchMappingService {
     private fun getResultMap(
         game: Game,
         playerTeamMap: Map<Player, Team>
-    ): Map<Player, MatchResult> {
+    ): Map<Player, Float> {
         val teamTotalWins = getTeamTotalWins(game)
         val teamTotalScore = getTeamTotalScore(game)
 
-        return playerTeamMap.entries.associateBy({ it.key }, { getResult(it.value, teamTotalWins, teamTotalScore) })
+        return playerTeamMap.entries.associateBy({ it.key }, { getResultScore(it.value, teamTotalWins, teamTotalScore) })
     }
 
     private fun getExpectedScore(
@@ -83,6 +83,10 @@ object MatchMappingService {
             .toFloat()
 
         return normalizeScore(teamTotalScore, otherAverageTotalScore)
+    }
+
+    private fun getResultScore(team: Team, teamTotalWins: Map<Team, Int>, teamTotalScoreMap: Map<Team, Int>): Float {
+        return getResult(team, teamTotalWins, teamTotalScoreMap).weight / MatchResult.max().weight
     }
 
     private fun getResult(team: Team, teamTotalWins: Map<Team, Int>, teamTotalScoreMap: Map<Team, Int>): MatchResult {

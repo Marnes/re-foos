@@ -9,13 +9,8 @@ import com.epifoos.match.calculation.GameCalculationResult
 class RoundRobinCalculator(matchMapper: MatchMapper) : EloCalculator(matchMapper) {
 
     companion object {
-        private const val STARTING_CHANGE = 0.0F
-        private const val ELO_WEIGHT = 400.0F
-
-        private const val MAX_SCORE = 10
-
         private const val RESULT_WEIGHT = 0.5F
-        private const val GOAL_WEIGHT = 1.0F - RESULT_WEIGHT
+        private const val SCORE_WEIGHT = 1.0F - RESULT_WEIGHT
 
         fun create(matchMapper: MatchMapper): RoundRobinCalculator {
             return RoundRobinCalculator(matchMapper)
@@ -25,9 +20,8 @@ class RoundRobinCalculator(matchMapper: MatchMapper) : EloCalculator(matchMapper
     override fun calculate(): CalculationResult {
         val gameResults = matchMapper.gameMappers.map { calculateGameResult(it) }
 
-        return CalculationResult(calculateTotalScores(gameResults), gameResults)
+        return CalculationResult(matchMapper.players, calculateTotalScores(gameResults), gameResults)
     }
-
 
     private fun calculateTotalScores(gameResults: List<GameCalculationResult>): Map<Player, Float> {
         return gameResults.flatMap { it.eloChanges.asSequence() }
@@ -54,10 +48,10 @@ class RoundRobinCalculator(matchMapper: MatchMapper) : EloCalculator(matchMapper
 
     private fun calculateResultBasedEloChanges(gameMapper: GameMapper): Map<Player, Float> {
         return matchMapper.players
-            .associateWith { calculateEloChange(gameMapper.getResult(it).weight, gameMapper.getExpectedScore(it)) }
+            .associateWith { calculateEloChange(gameMapper.getResultScore(it), gameMapper.getExpectedScore(it)) }
     }
 
     private fun calculateOverallEloChanges(resultBasedEloChange: Float, scoreBasedEloChange: Float): Float {
-        return (resultBasedEloChange * RESULT_WEIGHT + scoreBasedEloChange * GOAL_WEIGHT)
+        return (resultBasedEloChange * RESULT_WEIGHT + scoreBasedEloChange * SCORE_WEIGHT)
     }
 }

@@ -1,9 +1,8 @@
 package com.epifoos.security
 
 import com.auth0.jwt.JWT
-import com.auth0.jwt.JWTVerifier
 import com.epifoos.config.Config
-import com.epifoos.user.User
+import com.epifoos.domain.user.User
 import java.util.*
 
 object JwtService {

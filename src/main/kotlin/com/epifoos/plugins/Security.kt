@@ -2,7 +2,7 @@ package com.epifoos.plugins
 
 import com.auth0.jwt.JWT
 import com.auth0.jwt.JWTVerifier
-import com.epifoos.auth.AuthService
+import com.epifoos.domain.auth.AuthService
 import com.epifoos.config.Config
 import com.epifoos.exceptions.AuthenticationException
 import io.ktor.server.application.*

@@ -1,13 +1,13 @@
 package com.epifoos.plugins
 
-import com.epifoos.admin.adminRoutes
-import com.epifoos.auth.authRoutes
+import com.epifoos.domain.admin.adminRoutes
+import com.epifoos.domain.auth.authRoutes
+import com.epifoos.domain.league.leagueRoutes
+import com.epifoos.domain.match.matchRoutes
+import com.epifoos.domain.player.playersRoutes
 import com.epifoos.exceptions.AuthenticationException
 import com.epifoos.exceptions.AuthorizationException
 import com.epifoos.exceptions.EntityNotFoundException
-import com.epifoos.league.leagueRoutes
-import com.epifoos.match.matchRoutes
-import com.epifoos.player.playersRoutes
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.http.content.*

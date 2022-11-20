@@ -1,5 +1,7 @@
 package com.epifoos.domain.admin
 
+import com.epifoos.domain.league.League
+import com.epifoos.domain.league.LeagueConfig
 import com.epifoos.domain.match.*
 import com.epifoos.domain.player.Player
 import com.epifoos.game.GameOld
@@ -10,6 +12,12 @@ object AdminService {
     fun migrate() {
         transaction {
             Match.all().sortedBy { it.createdDate }.forEach { migrate(it) }
+            League.all().forEach {
+                LeagueConfig.new {
+                    league = it
+                    startingElo = 1000F
+                }
+            }
         }
     }
 

@@ -1,8 +1,8 @@
 package com.epifoos.domain.stats
 
+import com.epifoos.domain.calculation.CalculationResult
 import com.epifoos.domain.league.League
 import com.epifoos.domain.player.Player
-import com.epifoos.match.calculation.CalculationResult
 import org.jetbrains.exposed.sql.deleteAll
 import org.jetbrains.exposed.sql.transactions.transaction
 
@@ -16,7 +16,7 @@ object StatsService {
     }
 
     fun updateStats(calculationResult: CalculationResult) {
-
+        PlayerStatsService.updateStats(calculationResult)
     }
 
     fun resetStats(league: League) {
@@ -24,8 +24,8 @@ object StatsService {
             //TODO: Only delete for league
             MatchPlayerStatsTable.deleteAll()
             GamePlayerStatsTable.deleteAll()
-            MatchResultStatsTable.deleteAll()
-            GameResultStatsTable.deleteAll()
+            MatchStatsTable.deleteAll()
+            GameStatsTable.deleteAll()
             LeagueStatsTable.deleteAll()
             RandomStatsTable.deleteAll()
             PlayerStatsTable.deleteAll()

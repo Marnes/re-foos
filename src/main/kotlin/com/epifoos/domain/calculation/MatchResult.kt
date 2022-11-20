@@ -1,4 +1,4 @@
-package com.epifoos.domain.match
+package com.epifoos.domain.calculation
 
 enum class MatchResult(val weight: Float) {
     WIN(4.0F),

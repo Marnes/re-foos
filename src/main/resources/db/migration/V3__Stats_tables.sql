@@ -23,10 +23,10 @@ CREATE TABLE IF NOT EXISTS game_stats
     updated_date TIMESTAMP                             NOT NULL,
     winner       INT                                   NOT NULL,
     loser        INT                                   NOT NULL,
-    "eloChange"  REAL                                  NOT NULL,
+    goals_scored INT                                   NOT NULL,
     game_id      INT                                   NOT NULL,
-    CONSTRAINT fk_game_stats_winner__id FOREIGN KEY (winner) REFERENCES player (id) ON DELETE RESTRICT ON UPDATE RESTRICT,
-    CONSTRAINT fk_game_stats_loser__id FOREIGN KEY (loser) REFERENCES player (id) ON DELETE RESTRICT ON UPDATE RESTRICT,
+    CONSTRAINT fk_game_stats_winner__id FOREIGN KEY (winner) REFERENCES team (id) ON DELETE RESTRICT ON UPDATE RESTRICT,
+    CONSTRAINT fk_game_stats_loser__id FOREIGN KEY (loser) REFERENCES team (id) ON DELETE RESTRICT ON UPDATE RESTRICT,
     CONSTRAINT fk_game_stats_game_id__id FOREIGN KEY (game_id) REFERENCES game (id) ON DELETE RESTRICT ON UPDATE RESTRICT
 );
 
@@ -55,7 +55,7 @@ CREATE TABLE IF NOT EXISTS match_stats
     updated_date TIMESTAMP                             NOT NULL,
     winner       INT                                   NOT NULL,
     loser        INT                                   NOT NULL,
-    "eloChange"  REAL                                  NOT NULL,
+    goals_scored INT                                   NOT NULL,
     match_id     INT                                   NOT NULL,
     CONSTRAINT fk_match_stats_winner__id FOREIGN KEY (winner) REFERENCES player (id) ON DELETE RESTRICT ON UPDATE RESTRICT,
     CONSTRAINT fk_match_stats_loser__id FOREIGN KEY (loser) REFERENCES player (id) ON DELETE RESTRICT ON UPDATE RESTRICT,

@@ -31,9 +31,9 @@ fun writeSchema() {
     transaction {
         val schema = SchemaUtils.createStatements(
             GamePlayerStatsTable,
-            GameResultStatsTable,
+            GameStatsTable,
             MatchPlayerStatsTable,
-            MatchResultStatsTable,
+            MatchStatsTable,
             PlayerStatsTable,
             LeagueStatsTable,
             RandomStatsTable,

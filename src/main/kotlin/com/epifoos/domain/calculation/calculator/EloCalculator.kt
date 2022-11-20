@@ -3,11 +3,11 @@ package com.epifoos.domain.calculation.calculator
 import com.epifoos.domain.calculation.CalculationResult
 import com.epifoos.domain.calculation.GameCalculationResult
 import com.epifoos.domain.calculation.coefficient.CoefficientCalculator
-import com.epifoos.domain.calculation.data.DataMapper
+import com.epifoos.domain.calculation.data.MatchDataMapper
 import com.epifoos.domain.match.Match
 import com.epifoos.domain.player.Player
 
-abstract class EloCalculator<C : CoefficientCalculator, D : DataMapper> {
+abstract class EloCalculator<C : CoefficientCalculator, D : MatchDataMapper<*>> {
     lateinit var dataMapper: D
     lateinit var coefficientCalculator: C
 

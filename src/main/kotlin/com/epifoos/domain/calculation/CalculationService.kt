@@ -2,7 +2,8 @@ package com.epifoos.domain.calculation
 
 import com.epifoos.domain.calculation.calculator.types.RoundRobinCalculator
 import com.epifoos.domain.calculation.coefficient.types.RoundRobinCoefficientCalculator
-import com.epifoos.domain.calculation.data.types.RoundRobinDataMapper
+import com.epifoos.domain.calculation.data.win.DefaultMatchDataMapper
+import com.epifoos.domain.calculation.data.win.RoundRobinWinConditionMapper
 import com.epifoos.domain.league.League
 import com.epifoos.domain.match.Match
 import com.epifoos.domain.stats.StatsService
@@ -13,15 +14,15 @@ object CalculationService {
     fun recalculate(league: League) {
         transaction {
             StatsService.resetStats(league)
-            Match.all().sortedBy { it.createdDate }.forEach { calculate(it) }
+            calculate( Match.all().minBy { it.createdDate })
         }
     }
 
     fun calculate(match: Match) {
         val calculationResult = RoundRobinCalculator
             .create()
-            .setDataMapper(RoundRobinDataMapper.create())
-            .setCoefficientCalculator(RoundRobinCoefficientCalculator.create())
+            .setDataMapper(DefaultMatchDataMapper(RoundRobinWinConditionMapper()))
+            .setCoefficientCalculator(RoundRobinCoefficientCalculator())
             .calculate(match)
 
         StatsService.updateStats(calculationResult)

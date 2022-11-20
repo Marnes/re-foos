@@ -1,4 +1,4 @@
-package com.epifoos.domain.calculation.coefficient.dto
+package com.epifoos.domain.calculation.coefficient
 
 import com.epifoos.domain.match.Game
 import com.epifoos.domain.player.Player

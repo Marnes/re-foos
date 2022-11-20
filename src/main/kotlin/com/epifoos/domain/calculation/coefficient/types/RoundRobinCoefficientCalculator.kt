@@ -2,8 +2,8 @@ package com.epifoos.domain.calculation.coefficient.types
 
 import com.epifoos.domain.calculation.MatchResult
 import com.epifoos.domain.calculation.coefficient.CoefficientCalculator
-import com.epifoos.domain.calculation.coefficient.dto.GameCoefficients
-import com.epifoos.domain.calculation.coefficient.dto.MatchCoefficients
+import com.epifoos.domain.calculation.coefficient.GameCoefficients
+import com.epifoos.domain.calculation.coefficient.MatchCoefficients
 import com.epifoos.domain.calculation.data.dto.GameData
 import com.epifoos.domain.calculation.data.dto.MatchData
 import com.epifoos.domain.match.Match
@@ -14,10 +14,6 @@ class RoundRobinCoefficientCalculator : CoefficientCalculator() {
     companion object {
         private const val ELO_WEIGHT = 400.0F
         private const val MAX_SCORE = 5
-
-        fun create(): RoundRobinCoefficientCalculator {
-            return RoundRobinCoefficientCalculator()
-        }
     }
 
     override fun calculateCoefficient(

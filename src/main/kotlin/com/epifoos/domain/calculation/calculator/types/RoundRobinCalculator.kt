@@ -3,15 +3,15 @@ package com.epifoos.domain.calculation.calculator.types
 import com.epifoos.domain.calculation.CalculationResult
 import com.epifoos.domain.calculation.GameCalculationResult
 import com.epifoos.domain.calculation.calculator.EloCalculator
-import com.epifoos.domain.calculation.coefficient.dto.GameCoefficients
-import com.epifoos.domain.calculation.coefficient.dto.MatchCoefficients
+import com.epifoos.domain.calculation.coefficient.GameCoefficients
+import com.epifoos.domain.calculation.coefficient.MatchCoefficients
 import com.epifoos.domain.calculation.coefficient.types.RoundRobinCoefficientCalculator
-import com.epifoos.domain.calculation.data.types.RoundRobinDataMapper
+import com.epifoos.domain.calculation.data.win.DefaultMatchDataMapper
 import com.epifoos.domain.match.Match
 import com.epifoos.domain.player.Player
 
 class RoundRobinCalculator :
-    EloCalculator<RoundRobinCoefficientCalculator, RoundRobinDataMapper>() {
+    EloCalculator<RoundRobinCoefficientCalculator, DefaultMatchDataMapper<*>>() {
 
     companion object {
         private const val RESULT_WEIGHT = 0.5F

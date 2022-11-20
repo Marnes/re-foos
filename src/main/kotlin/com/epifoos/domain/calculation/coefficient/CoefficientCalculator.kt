@@ -1,6 +1,5 @@
 package com.epifoos.domain.calculation.coefficient
 
-import com.epifoos.domain.calculation.coefficient.dto.MatchCoefficients
 import com.epifoos.domain.calculation.data.dto.MatchData
 import com.epifoos.domain.match.Match
 

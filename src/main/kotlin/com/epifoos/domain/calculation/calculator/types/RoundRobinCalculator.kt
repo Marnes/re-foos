@@ -6,6 +6,7 @@ import com.epifoos.domain.calculation.calculator.EloCalculator
 import com.epifoos.domain.calculation.coefficient.GameCoefficients
 import com.epifoos.domain.calculation.coefficient.MatchCoefficients
 import com.epifoos.domain.calculation.coefficient.types.RoundRobinCoefficientCalculator
+import com.epifoos.domain.calculation.data.dto.MatchData
 import com.epifoos.domain.calculation.data.win.DefaultMatchDataMapper
 import com.epifoos.domain.match.Match
 import com.epifoos.domain.player.Player
@@ -28,7 +29,7 @@ class RoundRobinCalculator :
     ): CalculationResult {
         val matchData = dataMapper.getMatchData(match)
         val matchCoefficients = coefficientCalculator.calculateCoefficient(match, matchData)
-        val gameResults = calculateGameResults(match, matchData.players, matchCoefficients)
+        val gameResults = calculateGameResults(match, matchData, matchCoefficients)
         val eloChanges = calculateTotalScores(gameResults)
 
         return CalculationResult(
@@ -42,10 +43,16 @@ class RoundRobinCalculator :
 
     private fun calculateGameResults(
         match: Match,
-        players: Set<Player>,
+        matchData: MatchData,
         matchCoefficients: MatchCoefficients,
     ): List<GameCalculationResult> {
-        return match.games.map { GameCalculationResult(it, calculate(players, matchCoefficients.getCoefficient(it))) }
+        return match.games.map {
+            GameCalculationResult(
+                it,
+                matchData.gameDataMap[it]!!,
+                calculate(matchData.players, matchCoefficients.getCoefficient(it))
+            )
+        }
     }
 
     private fun calculate(players: Set<Player>, coefficients: GameCoefficients): Map<Player, Float> {

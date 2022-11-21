@@ -5,38 +5,43 @@ import com.epifoos.domain.BaseIntIdTable
 import com.epifoos.domain.match.*
 import com.epifoos.domain.player.Player
 import com.epifoos.domain.player.PlayerTable
+import org.jetbrains.exposed.dao.IntEntityClass
 import org.jetbrains.exposed.dao.id.EntityID
 
-abstract class BaseStatsTable(name: String) : BaseIntIdTable(name) {
-    var goalsScored = float("goals_scored")
+abstract class BaseMatchStatsTable(name: String) : BaseIntIdTable(name) {
+    var totalScored = integer("total_scored")
 }
 
-abstract class BaseResultStats(id: EntityID<Int>, table: BaseStatsTable) : BaseIntEntity(id, table) {
-    var goalsScored by table.goalsScored
+abstract class BaseMatchStats(id: EntityID<Int>, table: BaseMatchStatsTable) : BaseIntEntity(id, table) {
+    var totalScored by table.totalScored
 }
 
-object MatchStatsTable : BaseStatsTable("match_stats") {
+object MatchStatsTable : BaseMatchStatsTable("match_stats") {
     var match = reference("match_id", MatchTable)
         .uniqueIndex("match_results_unique_idx")
-    var winner = reference("winner", PlayerTable)
-    var loser = reference("loser", PlayerTable)
+    var winner = optReference("winner", PlayerTable)
+    var loser = optReference("loser", PlayerTable)
 }
 
-class MatchStats(id: EntityID<Int>) : BaseResultStats(id, MatchStatsTable) {
+class MatchStats(id: EntityID<Int>) : BaseMatchStats(id, MatchStatsTable) {
+    companion object : IntEntityClass<MatchStats>(MatchStatsTable)
+
     var match by Match referencedOn MatchStatsTable.match
-    var winner by Player referencedOn MatchStatsTable.winner
-    var loser by Player referencedOn MatchStatsTable.loser
+    var winner by Player optionalReferencedOn MatchStatsTable.winner
+    var loser by Player optionalReferencedOn MatchStatsTable.loser
 }
 
-object GameStatsTable : BaseStatsTable("game_stats") {
+object GameStatsTable : BaseMatchStatsTable("game_stats") {
     var game = reference("game_id", GameTable)
         .uniqueIndex("game_results_unique_idx")
-    var winner = reference("winner", TeamTable)
-    var loser = reference("loser", TeamTable)
+    var winner = optReference("winner", TeamTable)
+    var loser = optReference("loser", TeamTable)
 }
 
-class GameStats(id: EntityID<Int>) : BaseResultStats(id, GameStatsTable) {
+class GameStats(id: EntityID<Int>) : BaseMatchStats(id, GameStatsTable) {
+    companion object : IntEntityClass<GameStats>(GameStatsTable)
+
     var game by Game referencedOn GameStatsTable.game
-    var winner by Player referencedOn GameStatsTable.winner
-    var loser by Player referencedOn GameStatsTable.loser
+    var winner by Team optionalReferencedOn GameStatsTable.winner
+    var loser by Team optionalReferencedOn GameStatsTable.loser
 }

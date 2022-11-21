@@ -1,10 +1,48 @@
 package com.epifoos.domain.stats
 
 import com.epifoos.domain.calculation.CalculationResult
+import com.epifoos.domain.calculation.data.dto.GameData
+import com.epifoos.domain.calculation.data.dto.MatchData
+import com.epifoos.domain.match.Game
+import com.epifoos.domain.match.Match
 
 object MatchStatsService {
 
-    fun updateStats(calculationResult: CalculationResult) {
-
+    fun createStats(calculationResult: CalculationResult) {
+        createMatchStats(calculationResult.match, calculationResult.matchData)
+        calculationResult.match.games.forEach { createGameStats(it, calculationResult.matchData.gameDataMap[it]!!) }
     }
+
+    fun getMatchStats(match: Match): MatchStats {
+        return getMatchStats(listOf(match))[match]!!
+    }
+
+    fun getMatchStats(matches: List<Match>): Map<Match, MatchStats> {
+        return MatchStats.find { MatchStatsTable.match inList matches.map { it.id.value } }
+            .associateBy { it.match }
+    }
+
+    fun getGameStats(games: List<Game>): Map<Game, GameStats> {
+        return GameStats.find { GameStatsTable.game inList games.map { it.id.value } }
+            .associateBy { it.game }
+    }
+
+    private fun createMatchStats(match: Match, matchData: MatchData) {
+        MatchStats.new {
+            this.match = match
+            totalScored = matchData.totalScored
+            winner = matchData.winners.firstOrNull()
+            loser = matchData.losers.firstOrNull()
+        }
+    }
+
+    private fun createGameStats(game: Game, gameData: GameData) {
+        GameStats.new {
+            this.game = game
+            totalScored = gameData.totalScored
+            winner = gameData.winner
+            loser = gameData.loser
+        }
+    }
+
 }

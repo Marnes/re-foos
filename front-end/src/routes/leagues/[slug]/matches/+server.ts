@@ -1,13 +1,12 @@
 import api from '$src/lib/api';
-import { json, error } from '@sveltejs/kit';
 import type { RequestHandler } from '@sveltejs/kit';
-import type { Game } from '$src/models/game';
-import type { Match } from '$src/models/match';
+import { error, json } from '@sveltejs/kit';
+import type { GameCaptureRequest, MatchCaptureRequest } from '$src/models/match/capture-request';
 
-export const POST: RequestHandler = async ({ cookies, request }) => {
-    const match: Match = await request.json();
+export const POST: RequestHandler = async ({ cookies, request, params }) => {
+    const match: MatchCaptureRequest = await request.json();
 
-    const response = await api.post('matches', normalizeMatch(match), cookies.get('jwt'));
+    const response = await api.post(`/leagues/${ params.slug }/matches`, normalizeMatch(match), cookies.get('jwt'));
 
     if (response.status !== 200) {
         throw error(response.status)
@@ -16,14 +15,14 @@ export const POST: RequestHandler = async ({ cookies, request }) => {
     return json(await response.json());
 }
 
-function normalizeMatch(match: Match) {
+function normalizeMatch(match: MatchCaptureRequest) {
     return {
         players: match.players.map(player => player.id),
         games: match.games.map(normalizeGame)
     }
 }
 
-function normalizeGame(game: Game) {
+function normalizeGame(game: GameCaptureRequest) {
     return {
         leftPlayer1: game.leftPlayer1.id,
         leftPlayer2: game.leftPlayer2.id,

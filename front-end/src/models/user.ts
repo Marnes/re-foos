@@ -1,11 +1,16 @@
 export class User {
-	username!: string;
-	avatar!: string;
-	exp!: number;
+    username!: string;
+    avatar!: string;
+    exp!: number;
 
-	static fromJwt(jwt: any): User {
-		const user = new User();
+    static fromJwt(jwt: any): User {
+        const user = new User();
 
-		return user;
-	}
+        return user;
+    }
+}
+
+export class UserMin {
+    id!: number;
+    username!: string;
 }

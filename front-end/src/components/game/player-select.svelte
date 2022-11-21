@@ -1,7 +1,7 @@
 <script lang="ts">
     import PlayerBoard from '$src/components/game/player/player-board.svelte';
-    import { Player } from "$src/models/player";
-    import { createEventDispatcher } from "svelte";
+    import { Player } from '$src/models/player/player';
+    import { createEventDispatcher } from 'svelte';
 
     const dispatch = createEventDispatcher();
 

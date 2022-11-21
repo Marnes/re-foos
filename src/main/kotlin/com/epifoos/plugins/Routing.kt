@@ -3,8 +3,6 @@ package com.epifoos.plugins
 import com.epifoos.domain.admin.adminRoutes
 import com.epifoos.domain.auth.authRoutes
 import com.epifoos.domain.league.leagueRoutes
-import com.epifoos.domain.match.matchRoutes
-import com.epifoos.domain.player.playersRoutes
 import com.epifoos.exceptions.AuthenticationException
 import com.epifoos.exceptions.AuthorizationException
 import com.epifoos.exceptions.EntityNotFoundException
@@ -18,11 +16,10 @@ import io.ktor.server.routing.*
 fun Application.configureRouting() {
     routing {
         route("/api") {
-            matchRoutes()
             authRoutes()
-            playersRoutes()
-            leagueRoutes()
             adminRoutes()
+
+            leagueRoutes()
         }
         static("/") {
             resources("static")

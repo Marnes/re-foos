@@ -19,6 +19,7 @@ open class DefaultMatchDataMapper<W : WinConditionMapper>(winConditionMapper: W)
         val initialEloMap = PlayerUtil.getEloMap(players)
         val gameData = match.games.associateWith { getGameData(it, initialEloMap) }
 
+        val totalScore = getTotalScore(gameData)
         val scoreForMap = getScoreForMap(players, gameData.values)
         val scoreAgainstMap = getScoreAgainstMap(players, gameData.values)
         val gameWinsMap = getGamesWinsMap(players, gameData.values)
@@ -30,8 +31,10 @@ open class DefaultMatchDataMapper<W : WinConditionMapper>(winConditionMapper: W)
 
         return MatchData(
             players,
+            initialEloMap,
             winner,
             loser,
+            totalScore,
             scoreForMap,
             scoreAgainstMap,
             gameWinsMap,
@@ -42,12 +45,16 @@ open class DefaultMatchDataMapper<W : WinConditionMapper>(winConditionMapper: W)
         )
     }
 
+    private fun getTotalScore(gameData: Map<Game, GameData>): Int {
+        return gameData.values.sumOf { it.totalScored }
+    }
+
     private fun getScoreForMap(players: Set<Player>, gameData: Collection<GameData>): Map<Player, Int> {
-        return players.associateWith { player -> gameData.sumOf { it.getTotalScore(player) } }
+        return players.associateWith { player -> gameData.sumOf { it.getScoreFor(player) } }
     }
 
     private fun getScoreAgainstMap(players: Set<Player>, gameData: Collection<GameData>): Map<Player, Int> {
-        return players.associateWith { player -> gameData.sumOf { it.getOpponentTotalScore(player) } }
+        return players.associateWith { player -> gameData.sumOf { it.getScoreAgainst(player) } }
     }
 
     private fun getGamesWinsMap(players: Set<Player>, gameData: Collection<GameData>): Map<Player, Int> {
@@ -80,10 +87,10 @@ open class DefaultMatchDataMapper<W : WinConditionMapper>(winConditionMapper: W)
 
         return GameData(
             playerTeams,
-            initialEloMap,
             winner.first,
             loser.first,
             totalPlayed,
+            totalScores.values.sum(),
             totalScores,
             scoresAgainst,
             totalWins,
@@ -95,7 +102,7 @@ open class DefaultMatchDataMapper<W : WinConditionMapper>(winConditionMapper: W)
 
     private fun getPlayerTeamsMap(game: Game): Map<Player, Team> {
         val playerTeams = mutableMapOf<Player, Team>()
-        val teamPlayers = game.teams.associateWith { team -> team.teamPlayers.map { it.player } }
+        val teamPlayers = game.teams.associateWith { team -> team.players.map { it } }
 
         teamPlayers.forEach { teamPlayer -> teamPlayer.value.forEach { playerTeams[it] = teamPlayer.key } }
 
@@ -133,7 +140,7 @@ open class DefaultMatchDataMapper<W : WinConditionMapper>(winConditionMapper: W)
     }
 
     private fun calculateAverageElo(team: Team, initialEloMap: Map<Player, Float>): Float {
-        return team.teamPlayers.map { initialEloMap[it.player]!! }
+        return team.players.map { initialEloMap[it]!! }
             .average()
             .toFloat()
     }

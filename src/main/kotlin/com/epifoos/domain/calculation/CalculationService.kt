@@ -14,7 +14,7 @@ object CalculationService {
     fun recalculate(league: League) {
         transaction {
             StatsService.resetStats(league)
-            calculate( Match.all().minBy { it.createdDate })
+            Match.all().forEach { calculate(it) }
         }
     }
 

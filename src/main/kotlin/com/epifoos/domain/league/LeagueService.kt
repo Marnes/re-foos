@@ -1,24 +1,24 @@
 package com.epifoos.domain.league
 
-import com.epifoos.domain.league.dto.LeagueDto
+import com.epifoos.domain.league.dto.LeagueRequestDto
 import com.epifoos.domain.user.User
 import org.jetbrains.exposed.sql.transactions.transaction
 
 object LeagueService {
 
-    fun createLeague(leagueDto: LeagueDto, currentUser: User): LeagueDto {
+    fun createLeague(leagueRequestDto: LeagueRequestDto, currentUser: User): LeagueRequestDto {
         transaction {
             League.new {
-                name = leagueDto.name
+                name = leagueRequestDto.name
                 createdBy = currentUser
             }.also {
                 LeagueConfig.new {
                     league = it
-                    startingElo = leagueDto.startingElo
+                    startingElo = leagueRequestDto.startingElo
                 }
             }
         }
 
-        return leagueDto
+        return leagueRequestDto
     }
 }

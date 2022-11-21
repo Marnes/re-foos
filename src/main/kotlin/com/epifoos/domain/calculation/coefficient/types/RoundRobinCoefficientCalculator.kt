@@ -13,7 +13,7 @@ import kotlin.math.pow
 class RoundRobinCoefficientCalculator : CoefficientCalculator() {
     companion object {
         private const val ELO_WEIGHT = 400.0F
-        private const val MAX_SCORE = 5
+        private const val MAX_SCORE = 10
     }
 
     override fun calculateCoefficient(
@@ -23,7 +23,7 @@ class RoundRobinCoefficientCalculator : CoefficientCalculator() {
         return MatchCoefficients(match.games.associateWith {
             calculateCoefficient(
                 matchData.players,
-                matchData.getGameData(it),
+                matchData.gameDataMap[it]!!,
             )
         })
     }
@@ -56,7 +56,7 @@ class RoundRobinCoefficientCalculator : CoefficientCalculator() {
     }
 
     private fun getActualCoefficient(player: Player, gameData: GameData): Float {
-        return normalizeScore(gameData.getTotalScore(player), gameData.getOpponentAverageScore(player))
+        return normalizeScore(gameData.getScoreFor(player), gameData.getOpponentAverageScore(player))
     }
 
     private fun getResultCoefficient(player: Player, gameData: GameData): Float {

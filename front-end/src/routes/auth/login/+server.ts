@@ -7,10 +7,9 @@ import { isSuccess } from "$src/lib/utils";
 export const POST: RequestHandler = async ({ cookies, request }) => {
     const user = await request.json();
 
-    const response = await api.post('auth/login', user);
+    const response = await api.post('/auth/login', user);
 
     if (!isSuccess(response.status)) {
-        console.log(response.status);
         throw error(response.status);
     }
 

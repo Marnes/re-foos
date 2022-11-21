@@ -5,7 +5,7 @@ import { isSuccess } from "$src/lib/utils";
 
 export const POST: RequestHandler = async ({ cookies, request }) => {
     const passwordChange = await request.json();
-    const response = await api.post('auth/change-password', passwordChange, cookies.get('jwt'));
+    const response = await api.post('/auth/change-password', passwordChange, cookies.get('jwt'));
 
     if (!isSuccess(response.status)) {
         return error(401);

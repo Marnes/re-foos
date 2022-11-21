@@ -1,14 +1,14 @@
 <script lang="ts">
     import ScoreBoard from '$src/components/game/match/match-board.svelte';
-    import { Match } from "$src/models/match";
-    import { createEventDispatcher } from "svelte";
+    import { MatchCaptureRequest } from '$src/models/match/capture-request';
+    import { createEventDispatcher } from 'svelte';
     import { getLoser, getSubmitString, getWinner } from '$src/lib/util/match-util';
-    import type { Player } from "$src/models/player";
+    import type { Player } from 'front-end/src/models/player/player';
 
     export let maxScore: Number;
     export let players: Player[];
 
-    let match = Match.create(players);
+    let match = MatchCaptureRequest.create(players);
 
     const dispatch = createEventDispatcher();
 

@@ -1,11 +1,11 @@
 <script lang="ts">
     import PlayerSelect from '$src/components/game/player-select.svelte'
     import ScoreCapture from '$src/components/game/score-capture.svelte'
-    import { Player } from "$src/models/player";
-    import { post } from "$src/lib/utils";
-    import { toastStore } from "@brainandbones/skeleton";
-    import { drawerStore } from "$src/stores/game-store";
-    import { goto } from "$app/navigation";
+    import { Player } from '$src/models/player/player';
+    import { post } from '$src/lib/utils';
+    import { toastStore } from '@brainandbones/skeleton';
+    import { drawerStore } from '$src/stores/game-store';
+    import { invalidateAll } from '$app/navigation';
 
     export let players;
     export let maxScore;
@@ -34,10 +34,10 @@
     }
 
     const submitGame = async ({ detail }: CustomEvent) => {
-        const response = await post(`matches`, detail);
+        const response = await post(`/leagues/1/matches`, detail);
 
         if (response.ok) {
-            await goto('/', { invalidateAll: true, noScroll: true });
+            await invalidateAll();
             $drawerStore = false;
             toastStore.trigger({ message: 'Match Captured', autohide: true, timeout: 3000 });
         }

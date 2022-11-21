@@ -5,7 +5,7 @@
 
 </script>
 
-<AppRail selected={railStore}>
+<AppRail selected={railStore} class="hidden lg:block">
   <AppRailTile label="Leaderboard" title="Leaderboard" value={1}>
     <Icon icon="iconoir:leaderboard-star" class="text-2xl" />
   </AppRailTile>

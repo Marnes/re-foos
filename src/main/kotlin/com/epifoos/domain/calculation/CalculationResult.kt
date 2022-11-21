@@ -1,6 +1,7 @@
 package com.epifoos.domain.calculation
 
 import com.epifoos.domain.calculation.coefficient.MatchCoefficients
+import com.epifoos.domain.calculation.data.dto.GameData
 import com.epifoos.domain.calculation.data.dto.MatchData
 import com.epifoos.domain.match.Game
 import com.epifoos.domain.match.Match
@@ -12,13 +13,10 @@ data class CalculationResult(
     val coefficients: MatchCoefficients,
     val eloChanges: Map<Player, Float>,
     val gameCalculationResults: List<GameCalculationResult>
-) {
-    fun getEloChange(player: Player): Float {
-        return eloChanges[player]!!
-    }
-}
+)
 
 data class GameCalculationResult(
     val game: Game,
+    val gameData: GameData,
     val eloChanges: Map<Player, Float>,
 )

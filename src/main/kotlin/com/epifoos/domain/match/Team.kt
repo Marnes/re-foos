@@ -15,8 +15,8 @@ class Team(id: EntityID<Int>) : BaseIntEntity(id, TeamTable) {
     companion object : IntEntityClass<Team>(TeamTable)
 
     var game by Game referencedOn TeamTable.game
+    var players by Player via TeamPlayerTable
     val scores by TeamScore referrersOn TeamScoreTable.team
-    val teamPlayers by TeamPlayer referrersOn TeamPlayerTable.team
 }
 
 object TeamScoreTable : BaseIntIdTable(("team_scores")) {
@@ -40,9 +40,3 @@ object TeamPlayerTable : BaseIntIdTable(("team_player")) {
     }
 }
 
-class TeamPlayer(id: EntityID<Int>) : BaseIntEntity(id, TeamPlayerTable) {
-    companion object : IntEntityClass<TeamPlayer>(TeamPlayerTable)
-
-    var team by Team referencedOn TeamPlayerTable.team
-    var player by Player referencedOn TeamPlayerTable.player
-}

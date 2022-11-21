@@ -24,7 +24,7 @@ const send = async ({ method, path, data, token }: Request): Promise<Response> =
         opts.headers['Authorization'] = `Bearer ${ token }`;
     }
 
-    return await fetch(`${ base }/${ path }`, opts);
+    return await fetch(`${ base }${ path }`, opts);
 }
 
 export default {

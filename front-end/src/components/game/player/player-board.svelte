@@ -1,6 +1,6 @@
 <script lang='ts'>
     import PlayerCard from '$src/components/game/player/player-card.svelte';
-    import type { Player } from '$src/models/player';
+    import type { Player } from 'front-end/src/models/player/player';
     import _ from 'lodash';
 
     export let players: Player[];

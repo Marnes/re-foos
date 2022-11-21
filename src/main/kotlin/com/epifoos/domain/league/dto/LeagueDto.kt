@@ -1,7 +1,13 @@
 package com.epifoos.domain.league.dto
 
+
 data class LeagueDto(
-    var id: Int,
-    var name: String,
-    var startingElo: Float,
+    val id: Int,
+    val name: String
+)
+
+data class LeagueRequestDto(
+    val id: Int,
+    val name: String,
+    val startingElo: Float,
 )

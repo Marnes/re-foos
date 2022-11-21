@@ -1,10 +1,10 @@
 <script lang='ts'>
-    import { goto } from '$app/navigation';
-    import { dialogStore } from "$src/stores/dialog-store";
-    import { toastStore } from "@brainandbones/skeleton";
-    import { post } from "$src/lib/utils";
-    import { KeyCodes } from "$src/models/key-codes";
+    import { dialogStore } from '$src/stores/dialog-store';
+    import { toastStore } from '@brainandbones/skeleton';
+    import { post } from '$src/lib/utils';
+    import { KeyCodes } from '$src/models/key-codes';
     import _ from 'lodash';
+    import { invalidateAll } from '$app/navigation';
 
     let username = '';
     let password = '';
@@ -23,10 +23,10 @@
     });
 
     const login = async () => {
-        const response = await post('auth/login', { username, password });
+        const response = await post('/auth/login', { username, password });
 
         if (response.status === 200) {
-            await goto('/', { invalidateAll: true, noScroll: true });
+            await invalidateAll();
             $dialogStore = null;
             toastStore.trigger({ message: 'Successfully logged in', autohide: true, timeout: 3000 });
         } else {

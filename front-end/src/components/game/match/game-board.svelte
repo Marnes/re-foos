@@ -1,7 +1,7 @@
 <script lang="ts">
     import ScoreInput from '$src/components/game/match/score-input.svelte'
-    import type { Game } from '$src/models/game';
-    import type { Player } from '$src/models/player';
+    import type { Game } from 'front-end/src/models/match/game';
+    import type { Player } from 'front-end/src/models/player/player';
 
     export let game: Game;
     export let maxScore: number;

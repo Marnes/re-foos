@@ -1,6 +1,8 @@
 package com.epifoos.domain.league
 
 import com.epifoos.domain.auth.AuthUtil
+import com.epifoos.domain.match.matchRoutes
+import com.epifoos.domain.player.playersRoutes
 import io.ktor.server.application.*
 import io.ktor.server.auth.*
 import io.ktor.server.request.*
@@ -15,5 +17,10 @@ fun Route.leagueRoutes() {
                 call.respond(league)
             }
         }
+    }
+
+    route("/leagues/{leagueId}") {
+        playersRoutes()
+        matchRoutes()
     }
 }

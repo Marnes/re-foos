@@ -29,3 +29,12 @@ class Player(id: EntityID<Int>) : BaseIntEntity(id, PlayerTable) {
 }
 
 
+object PlayerSpotlightTable: BaseIntIdTable("player_spotlight") {
+    var player = reference("player_id", PlayerTable)
+}
+
+class PlayerSpotlight(id: EntityID<Int>) : BaseIntEntity(id, PlayerSpotlightTable) {
+    companion object : IntEntityClass<PlayerSpotlight>(PlayerSpotlightTable)
+
+    var player by Player referencedOn PlayerSpotlightTable.player
+}

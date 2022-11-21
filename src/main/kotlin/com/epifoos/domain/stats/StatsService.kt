@@ -8,15 +8,18 @@ import org.jetbrains.exposed.sql.transactions.transaction
 
 object StatsService {
 
-    fun createDefault(player: Player): BasePlayerStats {
-        return transaction {
-            PlayerStats.new { this.player = player }
-                .also { it.setDefaults(player.league) }
-        }
+    fun createDefault(league: League, player: Player) {
+        PlayerStatsService.createDefault(league, player)
     }
 
     fun updateStats(calculationResult: CalculationResult) {
+        PlayerStatsSnapshotService.createSnapshots(
+            calculationResult.match,
+            calculationResult.matchData.players.map { it.stats })
+
         PlayerStatsService.updateStats(calculationResult)
+        MatchPlayerStatsService.createStats(calculationResult)
+        MatchStatsService.createStats(calculationResult)
     }
 
     fun resetStats(league: League) {
@@ -26,32 +29,9 @@ object StatsService {
             GamePlayerStatsTable.deleteAll()
             MatchStatsTable.deleteAll()
             GameStatsTable.deleteAll()
-            LeagueStatsTable.deleteAll()
-            RandomStatsTable.deleteAll()
             PlayerStatsTable.deleteAll()
-            Player.all().forEach { createDefault(it) }
+            PlayerStatsSnapshotTable.deleteAll()
+            Player.all().forEach { createDefault(league, it) }
         }
     }
-
-//    fun updateStats(player: Player, match: Match, eloChange: Float) {
-//        player.stats.elo = player.stats.elo + eloChange
-//        player.stats.eloChange = eloChange
-//        player.stats.played += 1
-//
-//        if (match.getWinner() == player) player.basePlayerStats.wins += 1
-//        if (match.getLoser() == player) player.basePlayerStats.losses += 1
-//
-//        player.basePlayerStats.goalsFor += getGoalsFor(player, match)
-//        player.basePlayerStats.goalsAgainst += getGoalsAgainst(player, match)
-//    }
-//
-//    private fun getGoalsFor(player: Player, match: Match): Int {
-//        return match.gamesOld
-//            .fold(0) { initial, game -> initial + if (game.leftPlayers.contains(player)) game.leftTotal else game.rightTotal }
-//    }
-//
-//    private fun getGoalsAgainst(player: Player, match: Match): Int {
-//        return match.gamesOld
-//            .fold(0) { initial, game -> initial + if (game.leftPlayers.contains(player)) game.rightTotal else game.leftTotal }
-//    }
 }

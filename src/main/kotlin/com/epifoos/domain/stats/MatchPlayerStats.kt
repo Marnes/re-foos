@@ -9,6 +9,7 @@ import org.jetbrains.exposed.dao.id.EntityID
 
 object MatchPlayerStatsTable : BasePlayerStatsTable("match_player_stats") {
     var match = reference("match_id", MatchTable)
+    var initialElo = float("initial_elo")
 
     init {
         uniqueIndex("match_player_stats_unique_idx", match, player)
@@ -19,6 +20,7 @@ class MatchPlayerStats(id: EntityID<Int>) : BasePlayerStats(id, MatchPlayerStats
     companion object : IntEntityClass<MatchPlayerStats>(MatchPlayerStatsTable)
 
     var match by Match referencedOn MatchPlayerStatsTable.match
+    var initialElo by MatchPlayerStatsTable.initialElo
 }
 
 object GamePlayerStatsTable : BasePlayerStatsTable("game_player_stats") {

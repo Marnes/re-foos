@@ -1,6 +1,6 @@
 <script lang="ts">
     import PlayerCard from '$src/components/game/player/player-card.svelte';
-    import { Player } from "$src/models/player";
+    import { Player } from '$src/models/player/player';
     import { createEventDispatcher } from 'svelte';
     import _ from 'lodash';
 

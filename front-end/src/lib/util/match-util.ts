@@ -1,15 +1,14 @@
-import type { Player } from "$src/models/player";
-import type { Match } from "$src/models/match";
-import type { Game } from "$src/models/game";
+import type { Player } from "$src/models/player/player";
+import type { MatchCaptureRequest, GameCaptureRequest } from "$src/models/match/capture-request";
 import _ from 'lodash';
 
-export const getWinner = (match: Match, players: Player[]): Player | null => {
+export const getWinner = (match: MatchCaptureRequest, players: Player[]): Player | null => {
     if (_.isNil(match) || _.isEmpty(players)) {
         return null;
     }
 
     const winners = players.filter((player) =>
-        match.games.every((game: Game) => game.isDraw() || game.isWinner(player))
+        match.games.every((game: GameCaptureRequest) => game.isDraw() || game.isWinner(player))
     );
 
     if (winners.length !== 1) {
@@ -19,13 +18,13 @@ export const getWinner = (match: Match, players: Player[]): Player | null => {
     return winners[0];
 }
 
-export const getLoser = (match: Match, players: Player[]): Player | null => {
+export const getLoser = (match: MatchCaptureRequest, players: Player[]): Player | null => {
     if (_.isNil(match) || _.isEmpty(players)) {
         return null;
     }
 
     const losers = players.filter((player) =>
-        match.games.every((game: Game) => game.isDraw() || game.isLoser(player))
+        match.games.every((game: GameCaptureRequest) => game.isDraw() || game.isLoser(player))
     );
 
     if (losers.length !== 1) {

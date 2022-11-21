@@ -1,11 +1,11 @@
 import api from '$src/lib/api';
 import _ from 'lodash';
-import type { Player } from '$src/models/player';
+import type { Player } from 'front-end/src/models/player/player';
 import type { RequestHandler } from '@sveltejs/kit';
 import { json } from '@sveltejs/kit';
 
-export const GET: RequestHandler = async ({ url }) => {
-    let response = await api.get(`players`);
+export const GET: RequestHandler = async ({ params }) => {
+    let response = await api.get(`/leagues/${ params.slug }/players`);
 
     return json(rankPlayers(await response.json()));
 }

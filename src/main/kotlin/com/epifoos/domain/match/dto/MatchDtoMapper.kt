@@ -57,7 +57,8 @@ object MatchDtoMapper {
             team.id.value,
             team.scores.map { it.score },
             team.players.map { it.id.value },
-            gameStats.winner == team
+            gameStats.winner == team,
+            gameStats.loser == team
         )
     }
 }

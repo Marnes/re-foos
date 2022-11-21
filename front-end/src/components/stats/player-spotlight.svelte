@@ -5,6 +5,7 @@
     import { PlayerMin, PlayerSpotlight } from '$src/models/player/player.ts';
     import { formatElo } from '$src/lib/util/elo-util.js';
     import { humanDate } from '$src/lib/util/date-util.js';
+    import { Team } from '$src/models/match/match';
 
     export let playerSpotlight: PlayerSpotlight;
 
@@ -13,6 +14,17 @@
 
     const getPlayer = (playerId: number): PlayerMin => {
         return match.players[playerId];
+    }
+
+    const getGameClass = (team: Team): string => {
+        if (team.players.includes(player.id)) {
+            if (team.winner === true)
+                return 'text-positive';
+            else if (team.loser === true)
+                return 'text-negative';
+        }
+
+        return '';
     }
 
     $: winner = match.players[match.winner]
@@ -70,12 +82,12 @@
       </div>
       <div class="grid grid-cols-3 gap-4 mb-3 text-right">
         <StatItem
-            class={winner?.id === player.id ? 'text-tertiary-500' : ''}
+            class={winner?.id === player.id ? 'text-positive' : ''}
             title="Winner"
             value={winner?.username}
         />
         <StatItem
-            class={loser?.id === player.id ? 'text-warning-500' : ''}
+            class={loser?.id === player.id ? 'text-negative' : ''}
             title="Loser"
             value={loser?.username}
         />
@@ -93,18 +105,18 @@
             {#each match.games as game}
               <tr>
                 {#each game.teams[0].players as playerId}
-                  <td class:text-primary-500={playerId === player.id}>
+                  <td class="{getGameClass(game.teams[0])}">
                     {getPlayer(playerId).username}
                   </td>
                 {/each}
                 {#each game.teams[0].scores as score}
-                  <td class="text-center">{score}</td>
+                  <td class="text-center {getGameClass(game.teams[0])}">{score}</td>
                 {/each}
                 {#each game.teams[1].scores as score}
-                  <td class="text-center">{score}</td>
+                  <td class="text-center {getGameClass(game.teams[1])}">{score}</td>
                 {/each}
                 {#each game.teams[1].players as playerId}
-                  <td class:text-primary-500={playerId === player.id}>
+                  <td class="{getGameClass(game.teams[1])}">
                     {getPlayer(playerId).username}
                   </td>
                 {/each}

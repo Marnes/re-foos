@@ -22,6 +22,7 @@ export class Game {
 
 export class Team {
     winner!: boolean;
+    loser!: boolean;
     scores!: number[];
     players!: number[];
 }

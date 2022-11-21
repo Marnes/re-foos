@@ -30,5 +30,6 @@ data class TeamDto(
     val id: Int,
     val scores: List<Int>,
     val players: List<Int>,
-    val winner: Boolean
+    val winner: Boolean,
+    val loser: Boolean
 )

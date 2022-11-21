@@ -30,6 +30,12 @@ const config = {
                         500: '#864B11',
                         600: '#6E3A06',
                         700: '#391506',
+                    },
+                    'positive': {
+                        DEFAULT: '#22c55e',
+                    },
+                    'negative': {
+                        DEFAULT: '#dc2626',
                     }
                 },
             }

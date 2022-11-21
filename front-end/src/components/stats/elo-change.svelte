@@ -5,11 +5,11 @@
 </script>
 
 {#if elo > 0}
-  <span class="text-tertiary-500">
+  <span class="text-positive">
     +{formatElo(elo)}
   </span>
 {:else }
-  <span class="text-warning-500">
+  <span class="text-negative">
     {formatElo(elo)}
   </span>
 {/if}

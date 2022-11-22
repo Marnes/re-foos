@@ -37,7 +37,7 @@
   <table class="table">
     <thead>
     <tr class>
-      <th class="hidden sm:table-cell sm:w-1"></th>
+      <th class="w-1"></th>
       <th>Player</th>
       <th class="sm:w-1 text-center">#</th>
       <th class="sm:w-1 text-center">W</th>
@@ -49,13 +49,13 @@
     <tbody>
     {#each players as player, index}
       <tr class="rank-{player.rank}">
-        <td class="hidden sm:table-cell">{player.rank}</td>
+        <td>{player.rank}</td>
         <td>{player.username}</td>
         <td class="text-center">{player.played}</td>
         <td class="text-center">{player.wins}</td>
         <td class="text-center">{player.losses}</td>
-        <td class="sm:w-2 text-center">{formatElo(player.elo)}</td>
-        <td class="sm:w-2 text-center">
+        <td class="text-center w-1">{formatElo(player.elo)}</td>
+        <td class="hidden sm:table-cell text-center w-1">
           <EloChange elo={player.eloChange}/>
         </td>
         <td class="hidden sm:table-cell text-center">

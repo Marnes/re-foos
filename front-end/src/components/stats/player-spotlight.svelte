@@ -38,7 +38,7 @@
     <div class="card-body space-y-4">
       <h3>
         <div class="flex items-center space-x-4 relative">
-          <Avatar initials={player.username[0]}>M</Avatar>
+          <Avatar initials={player.username[0]} />
           <span>{player.username}</span>
         </div>
       </h3>
@@ -91,7 +91,7 @@
             title="Loser"
             value={loser?.username}
         />
-        <StatItem title="Elo Change" value="+30"/>
+        <StatItem title="Elo Change" eloChange={match.playerStats[player.id].eloChange}/>
       </div>
       <div class="grid grid-cols-3 gap-4 mb-3 text-right">
         <div/>

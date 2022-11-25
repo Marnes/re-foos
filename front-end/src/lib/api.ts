@@ -1,6 +1,8 @@
 import { PUBLIC_HOST } from '$env/static/public'
 import _ from 'lodash';
 
+const BASE = import.meta.env.VITE_HOST;
+
 type Request = {
     method: string;
     path: string;

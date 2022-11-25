@@ -27,7 +27,7 @@ jobs:
         working-directory: front-end
       - run: npm run build && npm prune --production
         working-directory: front-end
-  build-image:
+  create-docker-image:
     runs-on: ubuntu-latest
     environment: 'prod'
     needs: [build-backend, build-frontend]

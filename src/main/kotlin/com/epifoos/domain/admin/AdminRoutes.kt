@@ -2,6 +2,7 @@ package com.epifoos.domain.admin
 
 import com.epifoos.domain.calculation.CalculationService
 import com.epifoos.domain.league.League
+import com.epifoos.domain.user.profile.AvatarService
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.auth.*
@@ -23,6 +24,11 @@ fun Route.adminRoutes() {
 
             post("/migrate") {
                 AdminService.migrate()
+                call.respond(HttpStatusCode.OK)
+            }
+
+            post("/avatars") {
+                AvatarService.populateAvatars()
                 call.respond(HttpStatusCode.OK)
             }
         }

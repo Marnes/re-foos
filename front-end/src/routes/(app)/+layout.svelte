@@ -1,0 +1,60 @@
+<script lang="ts">
+    import '@brainandbones/skeleton/themes/theme-skeleton.css';
+    import '@brainandbones/skeleton/styles/all.css';
+    import '$src/app.postcss';
+
+    import TopBar from '$src/components/layout/TopBar.svelte';
+    import AppRail from '$src/components/layout/AppRail.svelte';
+    import Match from '$src/components/game/match.svelte';
+
+    import { AppShell, Drawer } from '@brainandbones/skeleton';
+    import { MatchSettings } from '$src/models/constants';
+    import { drawerStore } from '$src/stores/game-store';
+    import { page } from '$app/stores';
+
+    import type { PageData } from '$src/$types';
+    import PlayerSpotlight from '$src/components/stats/PlayerSpotlight.svelte';
+
+    export let data: PageData;
+
+    const rails = [
+        { title: 'Leaderboard', link: '/', icon: 'iconoir:leaderboard-star', selected: $page.route.id === '(app)' },
+    ]
+
+    const captureGame = () => {
+        $drawerStore = true
+    };
+</script>
+
+<Drawer open={drawerStore} position="right">
+  <Match
+      players={data.players}
+      maxScore={MatchSettings.MAX_SCORE}
+  />
+</Drawer>
+
+<AppShell>
+  <svelte:fragment slot="header">
+    <TopBar>
+      <svelte:fragment slot="actions">
+        <button class="btn bg-primary-500 btn-md text-white" on:click={captureGame}>Capture</button>
+      </svelte:fragment>
+    </TopBar>
+  </svelte:fragment>
+  <svelte:fragment slot="sidebarLeft">
+    <AppRail rails={rails}/>
+  </svelte:fragment>
+  <div
+      class="sidebar-right h-full hidden xl:block"
+      slot="sidebarRight"
+  >
+    <div class="card card-body h-full">
+      <PlayerSpotlight/>
+    </div>
+  </div>
+  <div class="card card-body h-full 2xl:flex place-content-center">
+    <slot players={data.players}></slot>
+  </div>
+</AppShell>
+
+

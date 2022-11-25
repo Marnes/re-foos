@@ -9,7 +9,9 @@ object PlayerDtoMapper {
         return PlayerDto(
             player.id.value,
             player.createdDate,
+            player.user.id.value,
             player.user.username,
+            player.user.avatar,
             stats.elo,
             stats.played,
             stats.wins,
@@ -27,7 +29,9 @@ object PlayerDtoMapper {
     }
 
     fun mapMinified(player: Player, elo: Float): PlayerMinifiedDto {
-        return PlayerMinifiedDto(player.id.value, player.user.username, elo)
+        return PlayerMinifiedDto(
+            player.id.value, player.user.id.value, player.user.username, player.user.avatar, elo
+        )
     }
 
 }

@@ -11,6 +11,7 @@ import com.epifoos.domain.stats.StatsService
 import com.epifoos.domain.user.User
 import org.jetbrains.exposed.dao.with
 import org.jetbrains.exposed.sql.SortOrder
+import org.jetbrains.exposed.sql.and
 import org.jetbrains.exposed.sql.select
 import org.jetbrains.exposed.sql.transactions.transaction
 
@@ -28,6 +29,18 @@ object PlayerService {
         }
     }
 
+    fun getPlayer(userId: Int, leagueId: Int): PlayerDto? {
+        return transaction {
+            val player = Player.find { PlayerTable.user eq userId and (PlayerTable.league eq leagueId) }
+                .with(Player::user)
+                .with(Player::stats)
+                .limit(1)
+                .firstOrNull()
+
+            player?.let { PlayerDtoMapper.map(it, it.stats) }
+        }
+    }
+
     fun getPlayers(leagueId: Int): List<PlayerDto> {
         return transaction {
             Player.find { PlayerTable.league eq leagueId }
@@ -37,9 +50,10 @@ object PlayerService {
         }
     }
 
-    fun getPlayerSpotlight(leagueId: Int): PlayerSpotlightDto {
+    fun getPlayerSpotlight(leagueId: Int, playerId: Int?): PlayerSpotlightDto {
         return transaction {
-            val player = PlayerSpotlightService.getSpotlight(leagueId)
+            val player = playerId?.let { Player.findById(it) } ?: PlayerSpotlightService.getSpotlight(leagueId)
+
             val matchId = (MatchTable innerJoin MatchPlayerStatsTable)
                 .slice(MatchTable.id)
                 .select { MatchPlayerStatsTable.player eq player.id }

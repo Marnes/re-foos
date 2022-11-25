@@ -6,8 +6,13 @@ body {
   background-image: radial-gradient(at 35% 35%, hsla(160, 84%, 39%, .18) 0px, transparent 50%), radial-gradient(at 61% 60%, hsla(238, 83%, 66%, .18) 0px, transparent 50%);
 }
 
-.dialog-actions {
-  display: none;
+.wrapper-link {
+  text-decoration: inherit !important;
+  color: inherit !important;
+}
+
+.sidebar-right {
+  width: 40rem;
 }
 
 :root {

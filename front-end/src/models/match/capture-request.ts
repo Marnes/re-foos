@@ -1,5 +1,5 @@
 import { MatchSettings } from '$src/models/constants';
-import type { Player } from 'front-end/src/models/player/player';
+import type { Player } from '$src/models/player/player';
 import _ from 'lodash';
 
 export class MatchCaptureRequest {

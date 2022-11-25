@@ -1,20 +1,16 @@
-import jwt_decode from 'jwt-decode';
-import type { User } from '$src/models/user';
-import _ from 'lodash';
 import moment from 'moment';
+import jwt_decode from 'jwt-decode';
 
-export const parseJwt = (jwt: string): User | null => {
-    if (_.isEmpty(jwt)) {
-        return null;
-    }
+export const JWT_KEY = 'jwt';
 
-    return jwt_decode(jwt);
+const decodeJwt = (jwt: string): any => {
+    return jwt_decode(jwt)
 }
 
-export const isExpired = (exp: number): boolean => {
-    return moment().isAfter(moment.unix(exp));
+export const isExpired = (jwt: string): boolean => {
+    return moment().isAfter(moment.unix(decodeJwt(jwt).exp));
 }
 
-export const getExpiryDate = (exp: number): Date => {
-    return moment.unix(exp).toDate();
+export const getExpiryDate = (jwt: string): Date => {
+    return moment.unix(decodeJwt(jwt).exp).toDate();
 }

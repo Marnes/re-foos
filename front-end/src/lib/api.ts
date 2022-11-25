@@ -1,4 +1,6 @@
 const base = import.meta.env.VITE_HOST; //Base path. Required
+const assets = import.meta.env.VITE_ASSETS_BASE; //Base path for assets. Required
+import _ from 'lodash';
 
 type Request = {
     method: string;
@@ -10,13 +12,18 @@ type Request = {
 type RequestOptions = {
     method: string;
     headers: { 'content-type': string, 'Authorization'?: string };
-    body?: string;
+    body?: string | FormData;
 }
 
 const send = async ({ method, path, data, token }: Request): Promise<Response> => {
     const opts: RequestOptions = { method, headers: { 'content-type': 'application/json' } };
 
-    if (data) {
+    if (_.isString(data)) {
+        opts.body = data;
+    } else if (data instanceof FormData) {
+        opts.headers['content-type'] = 'x-www-form-urlencoded';
+        opts.body = data;
+    } else {
         opts.body = JSON.stringify(data);
     }
 
@@ -25,6 +32,10 @@ const send = async ({ method, path, data, token }: Request): Promise<Response> =
     }
 
     return await fetch(`${ base }${ path }`, opts);
+}
+
+export const getAvatarUrl = (path: string): string => {
+    return `${ assets }/${ path }`;
 }
 
 export default {
@@ -39,5 +50,5 @@ export default {
     },
     put(path: string, data: unknown, token?: string): Promise<Response> {
         return send({ method: 'PUT', path, data, token });
-    }
+    },
 };

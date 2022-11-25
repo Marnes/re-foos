@@ -1,7 +1,7 @@
 <script lang="ts">
     import GameBoard from '$src/components/game/match/game-board.svelte';
-    import type { MatchCaptureRequest } from 'front-end/src/models/matchCaptureRequest';
-    import type { Player } from 'front-end/src/models/player/player';
+    import type { MatchCaptureRequest } from '$src/models/matchCaptureRequest';
+    import type { Player } from '$src/models/player/player';
 
     export let match: MatchCaptureRequest;
     export let maxScore: number;

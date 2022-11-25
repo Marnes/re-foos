@@ -11,7 +11,7 @@ import org.mindrot.jbcrypt.BCrypt
 object AuthService {
 
     fun login(loginRequest: LoginRequest): UserAuthResponse {
-        var user: User = transaction { User.findByUsername(loginRequest.username) ?: throw AuthenticationException() }
+        val user: User = transaction { User.findByUsername(loginRequest.username) ?: throw AuthenticationException() }
 
         if (!BCrypt.checkpw(loginRequest.password, user.password)) {
             throw AuthenticationException()

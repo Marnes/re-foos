@@ -1,7 +1,7 @@
 <script lang="ts">
     import { createEventDispatcher } from 'svelte';
     import { Avatar } from "@brainandbones/skeleton";
-    import type { Player } from 'front-end/src/models/player/player';
+    import type { Player } from '$src/models/player/player';
     import { formatElo } from "$src/lib/util/elo-util";
 
     export let player: Player;

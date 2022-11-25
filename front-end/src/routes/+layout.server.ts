@@ -1,6 +1,6 @@
-import type { PageServerLoad } from "./$types";
+import type { LayoutServerLoad } from './$types';
 
-export const load: PageServerLoad = async ({ locals, fetch }) => {
-    return { jwt: locals.jwt, user: locals.user }
+export const load: LayoutServerLoad = async ({ locals }) => {
+    return { ...locals }
 }
 

@@ -1,16 +1,8 @@
+import { humanDate } from '$src/lib/util/date-util';
+
 export class User {
-    username!: string;
-    avatar!: string;
-    exp!: number;
-
-    static fromJwt(jwt: any): User {
-        const user = new User();
-
-        return user;
-    }
-}
-
-export class UserMin {
     id!: number;
     username!: string;
+    avatar!: string;
+    createdDate!: Date;
 }

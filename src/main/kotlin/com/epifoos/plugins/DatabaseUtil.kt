@@ -1,6 +1,6 @@
 package com.epifoos.plugins
 
-import com.epifoos.domain.stats.PlayerStatsSnapshotTable
+import com.epifoos.domain.user.profile.AvatarTable
 import org.jetbrains.exposed.sql.SchemaUtils
 import org.jetbrains.exposed.sql.Table
 import org.jetbrains.exposed.sql.transactions.transaction
@@ -10,7 +10,7 @@ object DatabaseUtil {
 
     fun writeSchema() {
         transaction {
-            val schema = getCreateSchemas(PlayerStatsSnapshotTable).joinToString("\n\n") { "$it;" }
+            val schema = getCreateSchemas(AvatarTable).joinToString("\n\n") { "$it;" }
             File("schema.sql").writeText(schema)
         }
     }

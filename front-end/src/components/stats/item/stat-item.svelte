@@ -1,5 +1,5 @@
 <script lang="ts">
-    import EloChange from '$src/components/stats/elo-change.svelte';
+    import EloChange from '$src/components/stats/EloChange.svelte';
 
     export let title: string;
     export let value: number | string = undefined;

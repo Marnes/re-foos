@@ -14,6 +14,10 @@ object AuthUtil {
         }
     }
 
+    fun getCurrentUserId(call: ApplicationCall): Int {
+        return getId(call)
+    }
+
     private fun getId(call: ApplicationCall): Int {
         return when (val principal = call.principal<Principal>()) {
             is UserIdPrincipal -> principal.name.toInt()

@@ -1,17 +1,22 @@
-import { isExpired, parseJwt } from '$src/lib/util/jwt-util';
-import _ from 'lodash';
-import type { Handle } from "@sveltejs/kit";
+import api from '$src/lib/api';
+import { isExpired, JWT_KEY } from '$src/lib/util/jwt-util';
+import { sequence } from '@sveltejs/kit/hooks';
+import type { Handle } from '@sveltejs/kit';
 
-/** @type {import('@sveltejs/kit').Handle} */
-export async function handle({ event, resolve }) {
-    const jwt = event.cookies.get('jwt');
+const userSessionHandler = async ({ event, resolve }: any) => {
+    const jwt = event.cookies.get(JWT_KEY);
 
-    if (!_.isEmpty(jwt) && !isExpired(jwt.exp)) {
-        event.locals.jwt = jwt;
-        event.locals.user = parseJwt(jwt);
-    } else if (!_.isEmpty(jwt)) {
-        event.cookies.delete('jwt');
+
+    if (jwt && !isExpired(jwt)) {
+        let response = await api.get(`/users/current`, jwt);
+        event.locals.session = { user: await response.json(), jwt };
+    } else {
+        event.cookies.delete(JWT_KEY, { path: '/' });
     }
 
-    return await resolve(event);
+    return resolve(event);
 }
+
+export const handle: Handle = sequence(userSessionHandler);
+
+

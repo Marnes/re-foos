@@ -3,7 +3,7 @@
     import { MatchCaptureRequest } from '$src/models/match/capture-request';
     import { createEventDispatcher } from 'svelte';
     import { getLoser, getSubmitString, getWinner } from '$src/lib/util/match-util';
-    import type { Player } from 'front-end/src/models/player/player';
+    import type { Player } from '$src/models/player/player';
 
     export let maxScore: Number;
     export let players: Player[];

@@ -1,10 +1,18 @@
 <script lang='ts'>
     import Icon from '@iconify/svelte';
-    import EloChange from '$src/components/stats/elo-change.svelte';
+    import EloChange from '$src/components/stats/EloChange.svelte';
+    import PlayerAvatar from '$src/components/player/PlayerAvatar.svelte'
     import type { Player } from '$src/models/player/player';
     import { formatElo } from '$src/lib/util/elo-util';
+    import { createEventDispatcher } from 'svelte';
+    import { get } from '$src/lib/utils';
+    import { spotlightStore } from '$src/stores/spotlightStore';
+
+    const dispatch = createEventDispatcher();
 
     export let players: Player[];
+
+    let selected: Player;
 
     const shouldDisplayIcon = (rank: Number): Boolean => {
         return rank <= 3;
@@ -31,25 +39,40 @@
             return 'text-bronze-600 text-lg'
         }
     }
+
+    const setSelected = (player: Player) => {
+        return async () => {
+            selected = player;
+            dispatch('selected', player);
+        }
+    }
 </script>
 
 <div class="table-container">
-  <table class="table">
+  <table class="table leaderboard">
     <thead>
-    <tr class>
+    <tr>
       <th class="w-1"></th>
+      <th class="hidden sm:table-cell w-1 text-center"></th>
       <th>Player</th>
       <th class="sm:w-1 text-center">#</th>
       <th class="sm:w-1 text-center">W</th>
       <th class="sm:w-1 text-center">L</th>
       <th class="text-center" colspan="2">Elo</th>
-      <th class="hidden sm:table-cell sm:w-1 text-center"></th>
+      <th class="hidden sm:table-cell w-1 text-center"></th>
     </tr>
     </thead>
     <tbody>
     {#each players as player, index}
-      <tr class="rank-{player.rank}">
+      <tr
+          class="rank-{player.rank}"
+          class:selected={selected === player}
+          on:click={setSelected(player)}
+      >
         <td>{player.rank}</td>
+        <td class="hidden sm:table-cell text-center">
+          <PlayerAvatar player={player} width="w-10"/>
+        </td>
         <td>{player.username}</td>
         <td class="text-center">{player.played}</td>
         <td class="text-center">{player.wins}</td>
@@ -72,7 +95,17 @@
 </div>
 
 <style lang='scss'>
-  .rank-1 {
-    border: 4px double #B18601;
+  .leaderboard {
+    .rank-1 {
+      border: 4px double #B18601;
+    }
+
+    .selected {
+      background-color: theme('colors.accent.600') !important;
+    }
+
+    tr {
+      cursor: pointer;
+    }
   }
 </style>

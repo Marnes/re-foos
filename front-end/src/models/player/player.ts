@@ -3,7 +3,9 @@ import type { Match } from '$src/models/match/match';
 export class Player {
     id!: number;
     createdDate!: Date;
+    userId!: number;
     username!: string;
+    avatar!: string;
     rank!: number;
     elo!: number;
     eloChange!: number;
@@ -22,7 +24,9 @@ export class Player {
 
 export class PlayerMin {
     id!: number;
+    userId!: number;
     username!: string;
+    avatar!: string;
     elo!: number;
 }
 

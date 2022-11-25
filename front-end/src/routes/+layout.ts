@@ -1,20 +1,16 @@
-import { sessionStore } from '$src/stores/session-store';
-import { isExpired } from '$src/lib/util/jwt-util';
-import type { PageLoad } from './$types';
+import { sessionStore } from '$src/stores/sessionStore';
+import { Session } from '$src/models/session/session';
+import type { LayoutLoad } from './$types';
 
-export const load: PageLoad = async ({ data, fetch }) => {
-    let playersResponse = await fetch('/leagues/1/players');
-    let playerSpotlightResponse = await fetch('/leagues/1/players/spotlight')
-
-    if (data?.user && !isExpired(data.user.exp)) {
-        sessionStore.set(data.user);
+const setSession = async (data: any) => {
+    if (data.session) {
+        sessionStore.set(new Session(data.session.user, data.session.jwt))
     } else {
         sessionStore.set(null);
     }
-
-    const players = await playersResponse.json();
-    const playerSpotlight = await playerSpotlightResponse.json();
-
-    return { ...data, players, playerSpotlight };
 }
 
+export const load: LayoutLoad = async ({ data }) => {
+    await setSession(data)
+    return {};
+}

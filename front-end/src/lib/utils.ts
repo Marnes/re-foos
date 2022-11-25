@@ -19,7 +19,18 @@ export const post = (endpoint: string, data?: unknown): Promise<Response> => {
     });
 }
 
-export const del = (endpoint: string, data: unknown): Promise<Response> => {
+export const put = (endpoint: string, data?: unknown): Promise<Response> => {
+    return fetch(endpoint, {
+        method: 'put',
+        credentials: 'include',
+        body: JSON.stringify(data || {}),
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    });
+}
+
+export const del = (endpoint: string, data?: unknown): Promise<Response> => {
     return fetch(endpoint, {
         method: 'delete',
         credentials: 'include',

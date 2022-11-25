@@ -6,7 +6,9 @@ import java.time.LocalDateTime
 data class PlayerDto(
     val id: Int,
     val createdDate: LocalDateTime,
+    val userId: Int,
     val username: String,
+    val avatar: String?,
     val elo: Float,
     val played: Int,
     val wins: Int,
@@ -24,7 +26,9 @@ data class PlayerDto(
 
 data class PlayerMinifiedDto (
     val id: Int,
+    val userId: Int,
     val username: String,
+    val avatar: String?,
     val elo: Float
 )
 

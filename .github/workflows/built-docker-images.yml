@@ -29,6 +29,7 @@ jobs:
         working-directory: front-end
   build-image:
     runs-on: ubuntu-latest
+    environment: 'prod'
     needs: [build-backend, build-frontend]
     steps:
       - uses: actions/checkout@v3

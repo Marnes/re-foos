@@ -1,0 +1,23 @@
+name: build-front-end-docker
+
+on:
+  push:
+    branches: [ master, docker ]
+
+defaults:
+  run:
+    working-directory: dart_project
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 16
+          cache: 'npm'
+      - run: npm ci
+        working-directory: front-end
+      - run: npm run build && npm prune --production
+        working-directory: front-end

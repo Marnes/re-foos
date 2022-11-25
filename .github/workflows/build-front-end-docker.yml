@@ -6,7 +6,7 @@ on:
 
 defaults:
   run:
-    working-directory: dart_project
+    working-directory: front-end
 
 jobs:
   build:
@@ -19,6 +19,4 @@ jobs:
           cache: 'npm'
           cache-dependency-path: front-end/package-lock.json
       - run: npm ci
-        working-directory: front-end
       - run: npm run build && npm prune --production
-        working-directory: front-end

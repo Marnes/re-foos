@@ -27,8 +27,6 @@ jobs:
         working-directory: front-end
       - run: npm run build && npm prune --production
         working-directory: front-end
-  approve-image:
-
   build-image:
     runs-on: ubuntu-latest
     needs: [build-backend, build-frontend]

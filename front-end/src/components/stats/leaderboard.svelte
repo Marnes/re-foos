@@ -48,7 +48,7 @@
     }
 </script>
 
-<div class="table-container">
+<div class="table-container sticky-header">
   <table class="table leaderboard">
     <thead>
     <tr>

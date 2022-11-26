@@ -9,7 +9,8 @@
 
     import { AppShell, Drawer } from '@brainandbones/skeleton';
     import { MatchSettings } from '$src/models/constants';
-    import { drawerStore } from '$src/stores/game-store';
+    import { menuDrawerStore } from "$src/stores/menu-store";
+    import { captureDrawerStore } from '$src/stores/game-store';
     import { page } from '$app/stores';
 
     import type { PageData } from '$src/$types';
@@ -22,15 +23,19 @@
     ]
 
     const captureGame = () => {
-        $drawerStore = true
+        $captureDrawerStore = true
     };
 </script>
 
-<Drawer open={drawerStore} position="right">
+<Drawer open={captureDrawerStore} position="right">
   <Match
       players={data.players}
       maxScore={MatchSettings.MAX_SCORE}
   />
+</Drawer>
+
+<Drawer open={menuDrawerStore} position="left" width="w-24" class="lg:hidden">
+  <AppRail rails={rails}/>
 </Drawer>
 
 <AppShell>
@@ -42,7 +47,9 @@
     </TopBar>
   </svelte:fragment>
   <svelte:fragment slot="sidebarLeft">
-    <AppRail rails={rails}/>
+    <div class="hidden lg:block">
+      <AppRail rails={rails}/>
+    </div>
   </svelte:fragment>
   <div
       class="sidebar-right h-full hidden xl:block"

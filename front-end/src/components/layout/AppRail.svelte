@@ -15,7 +15,7 @@
     const railStore: Writable<number> = writable(getInitialValue());
 </script>
 
-<AppRail selected={railStore} class="hidden lg:block">
+<AppRail selected={railStore} width="w-24 lg:w-20">
   {#each rails as rail, index}
     <AppRailTile
         tag="a"

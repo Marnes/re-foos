@@ -3,12 +3,16 @@
     import PlayerAvatar from '$src/components/player/PlayerAvatar.svelte'
     import Icon from '@iconify/svelte';
     import { AppBar, Divider, menu, toastStore } from '@brainandbones/skeleton';
+    import { menuDrawerStore } from "$src/stores/menu-store";
     import { dialogStore } from '$src/stores/dialogStore';
     import { sessionStore } from '$src/stores/sessionStore';
     import { del } from '$src/lib/utils';
     import { goto } from '$app/navigation';
     import { Dialog } from '$src/models/dialog';
 
+    const menuDrawerOpen: any = () => {
+      $menuDrawerStore = true
+    };
 
     function showLogin() {
         $dialogStore = Dialog.create('Login to <strong>RE-Foos</strong>', LoginForm);
@@ -24,7 +28,10 @@
 
 <AppBar class='navbar bg-transparent' padding='p-3'>
   <svelte:fragment slot='lead'>
-    <a href="/" class="text-sm sm:text-lg md:text-3xl font-bold uppercase mr-4" title="Return to Homepage">Re-foos</a>
+    <button class="lg:!hidden btn btn-sm" on:click={menuDrawerOpen}>
+      <Icon icon="material-symbols:menu" class="text-2xl" />
+    </button>
+    <a href="/" class="text-xl font-bold uppercase mr-4" title="Return to Homepage">Re-foos</a>
     <Divider borderWidth="border-l" vertical={true} class="mr-4 ml-2"/>
     <a href="/">Home</a>
   </svelte:fragment>

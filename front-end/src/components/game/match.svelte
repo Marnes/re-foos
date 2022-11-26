@@ -4,7 +4,7 @@
     import { Player } from '$src/models/player/player';
     import { post } from '$src/lib/utils';
     import { toastStore } from '@brainandbones/skeleton';
-    import { drawerStore } from '$src/stores/game-store';
+    import { captureDrawerStore } from '$src/stores/game-store';
     import { invalidateAll } from '$app/navigation';
 
     export let players;
@@ -13,7 +13,7 @@
     let captureScore: boolean = false;
     let selectedPlayers: Player[] = [];
 
-    drawerStore.subscribe(value => {
+    captureDrawerStore.subscribe(value => {
         if (!value) {
             reset();
         }
@@ -38,7 +38,7 @@
 
         if (response.ok) {
             await invalidateAll();
-            $drawerStore = false;
+            $captureDrawerStore = false;
             toastStore.trigger({ message: 'Match Captured', autohide: true, timeout: 3000 });
         }
     }

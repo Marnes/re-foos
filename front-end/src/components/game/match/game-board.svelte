@@ -1,80 +1,90 @@
 <script lang="ts">
-    import ScoreInput from '$src/components/game/match/score-input.svelte'
     import type { Game } from '$src/models/match/game';
     import type { Player } from '$src/models/player/player';
+    import ScoreInput from '$src/components/game/match/score-input.svelte'
+    import PlayerCard from '$src/components/game/player/player-card.svelte';
+    import { onMount } from 'svelte';
+    import _ from 'lodash';
 
     export let game: Game;
+    export let minScore: number;
     export let maxScore: number;
     export let winner: Player = null;
     export let loser: Player = null;
+    export let focus: boolean;
 
     $: currentPlayer = null;
 
-    function updateScore(game: Game, left: boolean, first: boolean) {
-        return ({ detail }) => {
-            setScore(game, detail, left, first);
-            setScore(game, detail === maxScore ? null : maxScore, !left, first);
-        };
+    onMount(async () => {
+        document.querySelector('input.focus').focus();
+    });
+
+    function updateScore(scoreSide: string, scoreNumber: number) {
+        return (event) => {
+            let score = event.detail.score;
+            let inputElement = event.detail.inputElement;
+            let scoreId = `${scoreSide}Score${scoreNumber}`;
+
+            game[scoreId] = score;
+            let inverseScoreId = `${scoreSide === 'left' ? 'right' : 'left'}Score${scoreNumber}`;
+            game[inverseScoreId] = score < maxScore ? maxScore : minScore;
+
+            if (inputElement && !_.isNull(score))
+                focusNext(inputElement, !(score === maxScore || scoreSide === 'right'));
+        }
     }
 
-    function setScore(game: Game, score: number, left: boolean, first: boolean) {
-        if (left) {
-            if (first) {
-                game.leftScore1 = score;
-            } else {
-                game.leftScore2 = score;
-            }
-        } else {
-            if (first) {
-                game.rightScore1 = score;
-            } else {
-                game.rightScore2 = score;
-            }
-        }
+    function focusNext(inputElement: HTMLInputElement, skipOne = false) {
+        let inputs = document.querySelectorAll('input.score-input');
+        let updatedInputIndex = Array.prototype.indexOf.call(inputs, inputElement);
+        let nextInputIndex = updatedInputIndex + (skipOne ? 2 : 1);
+
+        if (nextInputIndex < inputs.length)
+            setTimeout(() => {
+                inputs[nextInputIndex].focus()
+            });
     }
 </script>
 
-<div class="flex items-center gap-4">
-  <div class="grow">
-    <div class="mb-1">
-      <ScoreInput
-          player={game.leftPlayer1}
-          maxScore={maxScore}
-          bind:value={game.leftScore1}
-          on:input={updateScore(game, true, true)}
-      />
+<div class="flex mb-2">
+    <PlayerCard tiny player={game.leftPlayer1} class="w-full"/>
+
+    <ScoreInput minScore={minScore}
+                maxScore={maxScore}
+                focus={focus}
+                bind:value={game.leftScore1}
+                on:input={updateScore('left', 1)}
+    />
+
+    <div class="hidden lg:block w-64 text-center text-xl relative bottom-[-4rem]">
+        VS
     </div>
-    <div>
-      <ScoreInput
-          player={game.leftPlayer2}
-          maxScore={maxScore}
-          bind:value={game.leftScore2}
-          on:input={updateScore(game, true, false)}
-      />
-    </div>
-  </div>
-  <div class="grow-0">
-    <span class="text-lg font-bold">VS</span>
-  </div>
-  <div class="grow">
-    <div class="mb-1">
-      <ScoreInput
-          reverse
-          player={game.rightPlayer1}
-          maxScore={maxScore}
-          bind:value={game.rightScore1}
-          on:input={updateScore(game, false, true)}
-      />
-    </div>
-    <div>
-      <ScoreInput
-          reverse
-          player={game.rightPlayer2}
-          maxScore={maxScore}
-          bind:value={game.rightScore2}
-          on:input={updateScore(game, false, false)}
-      />
-    </div>
-  </div>
+
+    <ScoreInput minScore={minScore}
+                maxScore={maxScore}
+                bind:value={game.rightScore1}
+                on:input={updateScore('right', 1)}
+    />
+
+    <PlayerCard reverse tiny player={game.rightPlayer1} class="w-full"/>
 </div>
 
+<div class="flex">
+    <PlayerCard tiny player={game.leftPlayer2} class="w-full"/>
+
+    <ScoreInput minScore={minScore}
+                maxScore={maxScore}
+                bind:value={game.leftScore2}
+                on:input={updateScore('left', 2)}
+    />
+
+    <div class="hidden lg:block w-64"></div>
+
+    <ScoreInput minScore={minScore}
+                maxScore={maxScore}
+                bind:value={game.rightScore2}
+                on:input={updateScore('right', 2)}
+    />
+
+    <PlayerCard reverse tiny player={game.rightPlayer2} class="w-full"/>
+</div>

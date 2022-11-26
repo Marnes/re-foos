@@ -30,6 +30,7 @@
 <Drawer open={captureDrawerStore} position="right">
   <Match
       players={data.players}
+      minScore={MatchSettings.MIN_SCORE}
       maxScore={MatchSettings.MAX_SCORE}
   />
 </Drawer>

@@ -2,25 +2,36 @@
     import PlayerBoard from '$src/components/game/player/player-board.svelte';
     import { Player } from '$src/models/player/player';
     import { createEventDispatcher } from 'svelte';
+    import { MatchSettings } from '$src/models/constants';
 
     const dispatch = createEventDispatcher();
 
     export let players;
 
-    let selectedPlayers: Player[] = []
+    let selectedPlayers: Player[] = [];
+
+    $: readyToStart = selectedPlayers.length == MatchSettings.NUMBER_OF_PLAYERS;
+    $: startButtonText = readyToStart ? 'Start game' : `Select another ${MatchSettings.NUMBER_OF_PLAYERS - selectedPlayers.length} player(s)`
 
     function startGame() {
         dispatch('startGame', selectedPlayers);
     }
 </script>
+<div class="flex flex-col">
+    <PlayerBoard players="{players}" bind:selectedPlayers/>
+    <button
+            class="start-game sticky bottom-0 btn btn-xl"
+            disabled={!readyToStart}
+            class:btn-filled-primary={readyToStart}
+            class:btn-filled-surface={!readyToStart}
+            on:click={startGame}>
 
-<PlayerBoard players="{players}" bind:selectedPlayers/>
-<div class="absolute bottom-0 left-0 right-0">
-  <button
-      class="btn bg-primary-500 btn-lg text-white w-full"
-      disabled={selectedPlayers.length !== 4}
-      on:click={startGame}
-  >
-    Start Game
-  </button>
+        {startButtonText}
+    </button>
 </div>
+
+<style lang='scss'>
+  button.start-game {
+    opacity: 1 !important;
+  }
+</style>

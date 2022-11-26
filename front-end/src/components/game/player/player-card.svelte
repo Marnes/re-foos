@@ -7,6 +7,7 @@
     export let player: Player;
     export let selected = false;
     export let reverse = false;
+    export let tiny = false;
 
     const dispatch = createEventDispatcher();
 
@@ -17,38 +18,33 @@
     }
 </script>
 
-<div
-    class="player card flex  !bg-surface-500 {$$props.class}"
-    class:flex-row={!reverse}
-    class:flex-row-reverse={reverse}
-    class:selected
-    on:click="{onClick(player)}"
->
-  <div class="flex">
-    <Avatar
-        width="w-16"
-        rounded="rounded-none"
-        background="bg-tertiary-500"
-        initials={player.username[0]}
-    />
+<div class="player card flex p-{tiny ? 1 : 2} lg:p-2 !bg-surface-600 {$$props.class}"
+     class:flex-row={!reverse}
+     class:flex-row-reverse={reverse}
+     class:selected
+     on:click="{onClick(player)}">
+
+  <div class="flex items-center">
+    <Avatar width="{tiny ? 'w-10' : 'w-14'} lg:w-14"
+            border="border-2 border-primary-500"
+            background="bg-{selected ? 'primary' : 'surface'}-500"
+            initials={player.username[0]}/>
   </div>
-  <div class="flex flex-col grow ml-2 justify-between py-1">
+
+  <div class="flex flex-col grow ml-2 justify-center py-1">
     <div class="flex">
       <div>
-        <h1 class="text-xl font-extrabold">{player.username}</h1>
+        <h1 class="text-{tiny ? 'sm' : 'xl'} lg:text-xl font-extrabold">{player.username}</h1>
       </div>
     </div>
     <div class="flex justify-between">
-      <span class="text-sm">{formatElo(player.elo)}</span>
+      <span class="text-{tiny ? 'xs' : 'sm'} lg:text-sm">{formatElo(player.elo)}</span>
     </div>
   </div>
 </div>
 
 <style lang="scss">
   .player {
-    opacity: 1;
-    transition: opacity 0.5s;
-
     &.selected {
       background-image: url('$lib/assets/football.png');
       background-position: 95% center;

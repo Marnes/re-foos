@@ -5,7 +5,8 @@
     import { getLoser, getSubmitString, getWinner } from '$src/lib/util/match-util';
     import type { Player } from '$src/models/player/player';
 
-    export let maxScore: Number;
+    export let minScore: number;
+    export let maxScore: number;
     export let players: Player[];
 
     let match = MatchCaptureRequest.create(players);
@@ -21,17 +22,16 @@
     }
 </script>
 
-<ScoreBoard bind:match maxScore={maxScore}/>
+<ScoreBoard bind:match minScore="{minScore}" maxScore={maxScore}/>
 <div class="absolute bottom-0 left-0 right-0">
 
-  <button
-      class="btn btn-lg text-white w-full"
-      class:bg-primary-500={winner}
-      class:bg-warning-500={loser}
-      class:bg-neutral-500={(winner && loser) || (!winner && !loser) || !match.canSubmit() }
-      disabled={!match.canSubmit()}
-      on:click={submitGame}
-  >
+  <button class="btn btn-lg text-white w-full"
+          class:bg-primary-500={winner}
+          class:bg-warning-500={loser}
+          class:bg-neutral-500={(winner && loser) || (!winner && !loser) || !match.canSubmit() }
+          disabled={!match.canSubmit()}
+          on:click={submitGame}>
+
     { @html submitString }
   </button>
 </div>

@@ -8,9 +8,10 @@
     import { invalidateAll } from '$app/navigation';
 
     export let players;
+    export let minScore;
     export let maxScore;
 
-    let captureScore: boolean = false;
+    let captureScore = false;
     let selectedPlayers: Player[] = [];
 
     captureDrawerStore.subscribe(value => {
@@ -47,7 +48,7 @@
 <div class="w-full h-full">
   <div class="w-full h-full relative">
     {#if captureScore}
-      <ScoreCapture players={selectedPlayers} maxScore={maxScore} on:submitGame={submitGame}/>
+      <ScoreCapture players={selectedPlayers} minScore="{minScore}" maxScore={maxScore} on:submitGame={submitGame}/>
     {:else }
       <PlayerSelect players={players} on:startGame={startGame}/>
     {/if}

@@ -1,108 +1,83 @@
 <script lang="ts">
-    import PlayerCard from '$src/components/game/player/player-card.svelte';
-    import { Player } from '$src/models/player/player';
     import { createEventDispatcher } from 'svelte';
-    import _ from 'lodash';
+    import _ from "lodash";
 
-    export let player: Player[];
+    export let minScore: number;
     export let maxScore: number;
     export let value: number;
-    export let reverse = false;
+    export let focus = false;
 
     const dispatch = createEventDispatcher();
-
     const scores = _.times(maxScore + 1, (score) => score);
 
-    function onSelect(score) {
+    function onInput(event) {
+        let inputElement = event.target;
+        let score = inputElement.valueAsNumber;
+
+        if (_.isNaN(score))
+            score = minScore;
+        else if (score < minScore)
+            score = minScore
+        else if (score > maxScore)
+            score = maxScore;
+
+        dispatch('input', {score: score, inputElement: inputElement});
+    }
+
+    function onSelect(score: number) {
         return () => {
             value = score;
-            dispatch('input', value);
+            dispatch('input', {score: score});
         };
     }
 </script>
 
-<div
-    class="flex"
-    class:flex-row={!reverse}
-    class:flex-row-reverse={reverse}
+<input class="score-input lg:hidden h-18 w-12 no-spinner text-center text-2xl stat-{value}"
+       class:focus={focus}
+       type="number"
+       pattern="[0-9]*"
+       min="{minScore}"
+       max="{maxScore}"
+       bind:value
+       on:input={onInput}
+       on:focus={(e) => e.target.select()}
 >
-  <div class="shrink">
-    <PlayerCard
-        reverse={reverse}
-        player={player}
-        class="w-64"
-    />
-  </div>
-  {#each scores as i}
-    <div
-        class="basis-1/6 stat stat-{i} bg-surface-700 relative"
-        class:shadow-2xl="{i === value}"
-        class:shadow-black="{i === value}"
-        class:selected="{i === value}"
-        on:click={onSelect(i)}
-    >
-      <div class="text-2xl absolute stat-text">{i}</div>
+
+{#each scores as i}
+    <div class="hidden lg:flex
+                basis-1/6 justify-center items-center
+                text-2xl cursor-pointer bg-surface-700 stat-{i}"
+         class:shadow-2xl="{i === value}"
+         class:shadow-black="{i === value}"
+         class:selected="{i === value}"
+         on:click={onSelect(i)}>
+
+        {i}
     </div>
-  {/each}
-</div>
+{/each}
 
 <style lang="scss">
-  .stat {
-    cursor: pointer;
-
-    &-text {
-      top: 50%;
-      left: 50%;
-      -ms-transform: translateX(-50%) translateY(-50%);
-      -webkit-transform: translate(-50%, -50%);
-      transform: translate(-50%, -50%);
-    }
-
-    &.selected {
-      opacity: 1;
-      transition: opacity 0.5s;
-    }
+  input.stat-0, .stat-0.selected {
+    background-color: #ff3e00;
   }
 
-  .stat-0 {
-    &.selected {
-      background-color: #ff3e00;
-      color: white;
-    }
-  }
-
-  .stat-1 {
-    &.selected {
+  input.stat-1, .stat-1.selected {
       background-color: #e64749;
-      color: white;
-    }
   }
 
-  .stat-2 {
-    &.selected {
+  input.stat-2, .stat-2.selected {
       background-color: #f2a950;
-      color: white;
-    }
   }
 
-  .stat-3 {
-    &.selected {
+  input.stat-3, .stat-3.selected {
       background-color: #e5c269;
-      color: white;
-    }
   }
 
-  .stat-4 {
-    &.selected {
+  input.stat-4, .stat-4.selected {
       background-color: #7bb173;
-      color: white;
-    }
   }
 
-  .stat-5 {
-    &.selected {
-      background-color: #24443b;
-      color: white;
-    }
+  input.stat-5, .stat-5.selected {
+      background-color: #054d00;
   }
 </style>

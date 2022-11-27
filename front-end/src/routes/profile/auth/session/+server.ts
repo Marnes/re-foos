@@ -4,6 +4,8 @@ import { error, json } from '@sveltejs/kit';
 import { getExpiryDate, JWT_KEY } from '$src/lib/util/jwt-util';
 import { isSuccess } from '$src/lib/utils';
 
+const DOMAIN = import.meta.env.VITE_DOMAIN;
+
 export const POST: RequestHandler = async ({ cookies, request }) => {
     const user = await request.json();
 
@@ -16,10 +18,11 @@ export const POST: RequestHandler = async ({ cookies, request }) => {
     const userJson = await response.json();
 
     cookies.set(JWT_KEY, userJson.jwt, {
+        domain: DOMAIN,
         path: '/',
         httpOnly: true,
-        sameSite: 'strict',
-        expires: getExpiryDate(userJson.jwt)
+        expires: getExpiryDate(userJson.jwt),
+        secure: false
     });
 
     return json(userJson);

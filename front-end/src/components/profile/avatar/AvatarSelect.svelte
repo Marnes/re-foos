@@ -2,7 +2,7 @@
     import Section from '$src/components/layout/Section.svelte';
 
     import { Avatar } from '@brainandbones/skeleton';
-    import { getAssetPath } from '$src/lib/api.js';
+    import { getAssetPath } from '$src/lib/utils';
     import { createEventDispatcher } from 'svelte';
 
     const dispatch = createEventDispatcher();

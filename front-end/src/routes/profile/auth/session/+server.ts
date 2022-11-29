@@ -1,10 +1,9 @@
+import { PUBLIC_DOMAIN, PUBLIC_ENV } from '$env/static/public'
 import api from '$src/lib/api';
 import type { RequestHandler } from '@sveltejs/kit';
 import { error, json } from '@sveltejs/kit';
 import { getExpiryDate, JWT_KEY } from '$src/lib/util/jwt-util';
 import { isSuccess } from '$src/lib/utils';
-
-const DOMAIN = import.meta.env.VITE_DOMAIN;
 
 export const POST: RequestHandler = async ({ cookies, request }) => {
     const user = await request.json();
@@ -18,11 +17,11 @@ export const POST: RequestHandler = async ({ cookies, request }) => {
     const userJson = await response.json();
 
     cookies.set(JWT_KEY, userJson.jwt, {
-        domain: DOMAIN,
+        domain: PUBLIC_DOMAIN,
         path: '/',
         httpOnly: true,
         expires: getExpiryDate(userJson.jwt),
-        secure: false
+        secure: PUBLIC_ENV === 'PROD'
     });
 
     return json(userJson);

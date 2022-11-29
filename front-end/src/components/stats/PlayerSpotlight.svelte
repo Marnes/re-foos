@@ -18,11 +18,13 @@
 
     onMount(() => {
         spotlightUnsubscribe = spotlightStore.subscribe(async p => {
-            const response = await get(`leagues/1/players/${ p.id }/spotlight`)
-            const playerSpotlight = await response.json();
+            if (p) {
+                const response = await get(`leagues/1/players/${ p.id }/spotlight`)
+                const playerSpotlight = await response.json();
 
-            player = playerSpotlight.player
-            match = playerSpotlight.match
+                player = playerSpotlight.player
+                match = playerSpotlight.match
+            }
         })
     })
 

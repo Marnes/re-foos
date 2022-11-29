@@ -18,7 +18,7 @@
 
     onMount(() => {
         spotlightUnsubscribe = spotlightStore.subscribe(async p => {
-            const response = await get(`leagues/1/players/${ p.id }/spotlight?playerId=1`)
+            const response = await get(`leagues/1/players/${ p.id }/spotlight`)
             const playerSpotlight = await response.json();
 
             player = playerSpotlight.player
@@ -50,8 +50,8 @@
 
 </script>
 
-{#if player}
-  <div class="h-full" style="width: 34rem">
+<div class="h-full" style="width: 34rem">
+  {#if player}
     <PlayerProfile player={player}>
       <h6 class="font-bold text-surface-500 mb-3 text-center">Stats</h6>
       <div class="grid grid-cols-3 gap-4 mb-3 text-right">
@@ -81,7 +81,7 @@
       </div>
       {#if match}
         <div class="pl-7 pr-7 mt-5 mb-5">
-          <Divider />
+          <Divider/>
         </div>
         <div class="py-3 mb-3">
           <h6 class="font-bold text-surface-500 text-center">Latest Match</h6>
@@ -140,5 +140,5 @@
         </div>
       {/if}
     </PlayerProfile>
-  </div>
-{/if}
+  {/if}
+</div>

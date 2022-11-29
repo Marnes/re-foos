@@ -58,7 +58,7 @@
   </svelte:fragment>
   <MainPage>
     <slot players={data.players}></slot>
-    <div class="block md:hidden h-14">
+    <div class="flex md:hidden h-14">
       <button class="md:hidden btn bg-primary-500 absolute bottom-4 right-6" on:click={captureGame}>
         Capture
       </button>

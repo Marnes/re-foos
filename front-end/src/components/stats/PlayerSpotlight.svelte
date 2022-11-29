@@ -51,7 +51,7 @@
 </script>
 
 {#if player}
-  <div class="h-full">
+  <div class="h-full" style="width: 34rem">
     <PlayerProfile player={player}>
       <h6 class="font-bold text-surface-500 mb-3 text-center">Stats</h6>
       <div class="grid grid-cols-3 gap-4 mb-3 text-right">

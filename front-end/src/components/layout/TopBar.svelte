@@ -15,7 +15,7 @@
     };
 
     function showLogin() {
-        $dialogStore = Dialog.create('Login to <strong>RE-Foos</strong>', LoginForm);
+        $dialogStore = Dialog.create('Login to <strong>ELOMusk</strong>', LoginForm);
     }
 
     async function logout() {
@@ -31,9 +31,9 @@
     <button class="lg:!hidden btn btn-sm" on:click={menuDrawerOpen}>
       <Icon icon="material-symbols:menu" class="text-2xl" />
     </button>
-    <a href="/" class="text-xl font-bold uppercase mr-4" title="Return to Homepage">Re-foos</a>
-    <Divider borderWidth="border-l" vertical={true} class="mr-4 ml-2"/>
-    <a href="/">Home</a>
+    <a href="/" class="text-xl font-bold uppercase mr-4" title="Return to Homepage">Elomusk</a>
+    <Divider borderWidth="border-l" vertical={true} class="mr-4 ml-2 hidden lg:block"/>
+    <a href="/" class="hidden lg:block">Home</a>
   </svelte:fragment>
   <svelte:fragment slot='trail'>
     {#if $sessionStore}

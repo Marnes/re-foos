@@ -8,7 +8,6 @@
     import Match from '$src/components/game/match.svelte';
     import PlayerSpotlight from '$src/components/stats/PlayerSpotlight.svelte';
     import MainPage from '$src/components/layout/MainPage.svelte';
-    import Icon from '@iconify/svelte';
 
     import { AppShell, Drawer } from '@brainandbones/skeleton';
     import { MatchSettings } from '$src/models/constants';
@@ -41,16 +40,14 @@
   <AppRail rails={rails}/>
 </Drawer>
 
+
 <AppShell>
   <svelte:fragment slot="header">
     <TopBar>
       <svelte:fragment slot="actions">
-        <button class="md:hidden btn-icon btn-filled-primary" on:click={captureGame}>
-          <span>
-            <Icon icon="system-uicons:capture" class="text-2xl"/>
-          </span>
+        <button class="hidden md:inline-flex btn bg-primary-500" on:click={captureGame}>
+          Capture
         </button>
-        <button class="hidden md:block btn bg-primary-500 btn-md text-white" on:click={captureGame}>Capture</button>
       </svelte:fragment>
     </TopBar>
   </svelte:fragment>
@@ -61,9 +58,15 @@
   </svelte:fragment>
   <MainPage>
     <slot players={data.players}></slot>
-
+    <div class="block md:hidden h-14">
+      <button class="md:hidden btn bg-primary-500 absolute bottom-4 right-6" on:click={captureGame}>
+        Capture
+      </button>
+    </div>
     <PlayerSpotlight slot="right-content"/>
   </MainPage>
+
 </AppShell>
+
 
 

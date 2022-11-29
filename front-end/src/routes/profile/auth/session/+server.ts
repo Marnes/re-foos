@@ -1,4 +1,4 @@
-import { PUBLIC_DOMAIN, PUBLIC_ENV } from '$env/dynamic/public'
+import { env } from '$env/dynamic/public'
 import api from '$src/lib/api';
 import type { RequestHandler } from '@sveltejs/kit';
 import { error, json } from '@sveltejs/kit';
@@ -17,11 +17,11 @@ export const POST: RequestHandler = async ({ cookies, request }) => {
     const userJson = await response.json();
 
     cookies.set(JWT_KEY, userJson.jwt, {
-        domain: PUBLIC_DOMAIN,
+        domain: env.PUBLIC_DOMAIN,
         path: '/',
         httpOnly: true,
         expires: getExpiryDate(userJson.jwt),
-        secure: PUBLIC_ENV === 'PROD'
+        secure: env.PUBLIC_ENV === 'PROD'
     });
 
     return json(userJson);

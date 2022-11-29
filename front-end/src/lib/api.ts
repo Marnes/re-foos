@@ -1,4 +1,4 @@
-import { PUBLIC_HOST } from '$env/dynamic/public'
+import { env } from '$env/dynamic/public'
 import _ from 'lodash';
 
 type Request = {
@@ -27,7 +27,7 @@ const send = async ({ method, path, data, token }: Request): Promise<Response> =
         opts.headers['Authorization'] = `Bearer ${ token }`;
     }
 
-    return await fetch(`${ PUBLIC_HOST }/api${ path }`, opts);
+    return await fetch(`${ env.PUBLIC_HOST }/api${ path }`, opts);
 }
 
 export default {

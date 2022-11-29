@@ -1,4 +1,4 @@
-import { PUBLIC_HOST } from '$env/dynamic/public';
+import { env } from '$env/dynamic/public';
 
 export const get = (endpoint: string): Promise<Response> => {
     return fetch(endpoint, {
@@ -52,7 +52,7 @@ export const url = (path: string, params: any): string => {
 }
 
 export const getAssetPath = (path: string): string => {
-    return `${ PUBLIC_HOST }/assets${ path }`;
+    return `${ env.PUBLIC_HOST }/assets${ path }`;
 }
 
 export const isSuccess = (statusCode: Number): boolean => {

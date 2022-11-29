@@ -1,4 +1,4 @@
 import { writable, type Writable } from 'svelte/store';
-import type { PlayerSpotlight } from '$src/models/player/player';
+import type { Player, PlayerMin} from '$src/models/player/player';
 
-export const spotlightStore: Writable<PlayerSpotlight> = writable();
+export const spotlightStore: Writable<Player | PlayerMin | null> = writable(null);

@@ -5,6 +5,7 @@ import com.epifoos.domain.match.MatchService
 import com.epifoos.domain.match.MatchTable
 import com.epifoos.domain.player.dto.PlayerDto
 import com.epifoos.domain.player.dto.PlayerDtoMapper
+import com.epifoos.domain.player.dto.PlayerMinifiedDto
 import com.epifoos.domain.player.dto.PlayerSpotlightDto
 import com.epifoos.domain.stats.MatchPlayerStatsTable
 import com.epifoos.domain.stats.StatsService
@@ -50,9 +51,9 @@ object PlayerService {
         }
     }
 
-    fun getPlayerSpotlight(leagueId: Int, playerId: Int?): PlayerSpotlightDto {
+    fun getPlayerSpotlight(leagueId: Int, playerId: Int): PlayerSpotlightDto {
         return transaction {
-            val player = playerId?.let { Player.findById(it) } ?: PlayerSpotlightService.getSpotlight(leagueId)
+            val player = Player.find { PlayerTable.league eq leagueId and (PlayerTable.id eq playerId) }.first()
 
             val matchId = (MatchTable innerJoin MatchPlayerStatsTable)
                 .slice(MatchTable.id)
@@ -61,10 +62,18 @@ object PlayerService {
                 .limit(1)
                 .firstOrNull()
 
+
             PlayerSpotlightDto(
                 PlayerDtoMapper.map(player, player.stats),
                 if (matchId == null) null else MatchService.getMatch(matchId[MatchTable.id].value)
             )
+        }
+    }
+
+    fun getOrUpdateSpotlight(leagueId: Int): PlayerMinifiedDto {
+        return transaction {
+            val player = PlayerSpotlightService.getSpotlight(leagueId)
+            PlayerDtoMapper.mapMinified(player, player.stats.elo)
         }
     }
 }

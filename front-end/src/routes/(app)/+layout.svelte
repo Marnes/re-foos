@@ -6,17 +6,24 @@
     import TopBar from '$src/components/layout/TopBar.svelte';
     import AppRail from '$src/components/layout/AppRail.svelte';
     import Match from '$src/components/game/match.svelte';
+    import PlayerSpotlight from '$src/components/stats/PlayerSpotlight.svelte';
+    import MainPage from '$src/components/layout/MainPage.svelte';
+    import Icon from '@iconify/svelte';
 
     import { AppShell, Drawer } from '@brainandbones/skeleton';
     import { MatchSettings } from '$src/models/constants';
-    import { menuDrawerStore } from "$src/stores/menu-store";
+    import { menuDrawerStore } from '$src/stores/menu-store';
     import { captureDrawerStore } from '$src/stores/game-store';
     import { page } from '$app/stores';
 
     import type { PageData } from '$src/$types';
-    import PlayerSpotlight from '$src/components/stats/PlayerSpotlight.svelte';
+    import { onMount } from 'svelte';
 
     export let data: PageData;
+
+    onMount(async () => {
+
+    })
 
     const rails = [
         { title: 'Leaderboard', link: '/', icon: 'iconoir:leaderboard-star', selected: $page.route.id === '(app)' },
@@ -43,26 +50,23 @@
   <svelte:fragment slot="header">
     <TopBar>
       <svelte:fragment slot="actions">
-        <button class="btn bg-primary-500 btn-md text-white" on:click={captureGame}>Capture</button>
+        <button class="md:hidden btn-icon btn-filled-primary">
+          <Icon icon="material-symbols:play-arrow-rounded"/>
+        </button>
+        <button class="hidden md:block btn bg-primary-500 btn-md text-white" on:click={captureGame}>Capture</button>
       </svelte:fragment>
     </TopBar>
   </svelte:fragment>
   <svelte:fragment slot="sidebarLeft">
-    <div class="hidden lg:block">
+    <div class="hidden lg:block h-full">
       <AppRail rails={rails}/>
     </div>
   </svelte:fragment>
-  <div
-      class="sidebar-right h-full hidden xl:block"
-      slot="sidebarRight"
-  >
-    <div class="card card-body h-full">
-      <PlayerSpotlight/>
-    </div>
-  </div>
-  <div class="card card-body h-full 2xl:flex place-content-center">
+  <MainPage>
     <slot players={data.players}></slot>
-  </div>
+
+    <PlayerSpotlight slot="right-content"/>
+  </MainPage>
 </AppShell>
 
 

@@ -14,14 +14,8 @@ fun Route.playersRoutes() {
             call.respond(HttpStatusCode.OK, PlayerService.getPlayers(call.parameters["leagueId"]!!.toInt()))
         }
 
-        get("/spotlight") {
-            call.respond(
-                HttpStatusCode.OK,
-                PlayerService.getPlayerSpotlight(
-                    call.parameters["leagueId"]!!.toInt(),
-                    call.request.queryParameters["playerId"]?.toInt()
-                )
-            )
+        put("spotlight") {
+            call.respond(HttpStatusCode.OK, PlayerService.getOrUpdateSpotlight(call.parameters["leagueId"]!!.toInt()))
         }
 
         authenticate {
@@ -34,6 +28,18 @@ fun Route.playersRoutes() {
                     )!!
                 )
             }
+        }
+    }
+
+    route("/players/{playerId}") {
+        get("/spotlight") {
+            call.respond(
+                HttpStatusCode.OK,
+                PlayerService.getPlayerSpotlight(
+                    call.parameters["leagueId"]!!.toInt(),
+                    call.parameters["playerId"]!!.toInt()
+                )
+            )
         }
     }
 }

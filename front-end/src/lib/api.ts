@@ -1,5 +1,4 @@
-const base = import.meta.env.VITE_HOST; //Base path. Required
-const assets = import.meta.env.VITE_ASSETS_BASE; //Base path for assets. Required
+import { PUBLIC_HOST } from '$env/static/public'
 import _ from 'lodash';
 
 type Request = {
@@ -31,11 +30,11 @@ const send = async ({ method, path, data, token }: Request): Promise<Response> =
         opts.headers['Authorization'] = `Bearer ${ token }`;
     }
 
-    return await fetch(`${ base }${ path }`, opts);
+    return await fetch(`${ PUBLIC_HOST }/api${ path }`, opts);
 }
 
-export const getAvatarUrl = (path: string): string => {
-    return `${ assets }/${ path }`;
+export const getAssetPath = (path: string): string => {
+    return `${ PUBLIC_HOST }/assets${ path }`;
 }
 
 export default {

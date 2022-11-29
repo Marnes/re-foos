@@ -24,6 +24,7 @@ export class Player {
 
 export class PlayerMin {
     id!: number;
+    createdDate!: Date;
     userId!: number;
     username!: string;
     avatar!: string;

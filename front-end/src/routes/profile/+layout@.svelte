@@ -6,10 +6,12 @@
     import TopBar from '$src/components/layout/TopBar.svelte'
     import AppRail from '$src/components/layout/AppRail.svelte';
     import PlayerProfile from '$src/components/profile/PlayerProfile.svelte';
+    import MainPage from '$src/components/layout/MainPage.svelte';
 
-    import { AppShell } from '@brainandbones/skeleton';
+    import { AppShell, Drawer } from '@brainandbones/skeleton';
     import { sessionStore } from '$src/stores/sessionStore';
     import { page } from '$app/stores';
+    import { menuDrawerStore } from '$src/stores/menu-store.js';
 
     const rails = [
         {
@@ -25,25 +27,24 @@
             selected: $page.route.id === '/profile/password'
         },
     ]
-
 </script>
+
+<Drawer open={menuDrawerStore} position="left" width="w-24" class="lg:hidden">
+  <AppRail rails={rails}/>
+</Drawer>
 
 <AppShell>
   <svelte:fragment slot="header">
     <TopBar/>
   </svelte:fragment>
   <svelte:fragment slot="sidebarLeft">
-    <AppRail rails={rails}/>
-  </svelte:fragment>
-  <div
-      class="sidebar-right h-full hidden xl:block"
-      slot="sidebarRight"
-  >
-    <div class="card card-body h-full">
-      <PlayerProfile user={$sessionStore.user}/>
+    <div class="hidden lg:block h-full">
+      <AppRail rails={rails}/>
     </div>
-  </div>
-  <div class="card card-body h-full">
+  </svelte:fragment>
+  <MainPage>
     <slot/>
-  </div>
+
+    <PlayerProfile slot="right-content" player={$sessionStore.user}/>
+  </MainPage>
 </AppShell>

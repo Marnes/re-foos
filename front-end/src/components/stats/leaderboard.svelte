@@ -5,8 +5,6 @@
     import type { Player } from '$src/models/player/player';
     import { formatElo } from '$src/lib/util/elo-util';
     import { createEventDispatcher } from 'svelte';
-    import { get } from '$src/lib/utils';
-    import { spotlightStore } from '$src/stores/spotlightStore';
 
     const dispatch = createEventDispatcher();
 
@@ -40,7 +38,7 @@
         }
     }
 
-    const setSelected = (player: Player) => {
+    const select = (player: Player) => {
         return async () => {
             selected = player;
             dispatch('selected', player);
@@ -66,8 +64,8 @@
     {#each players as player, index}
       <tr
           class="rank-{player.rank}"
-          class:selected={selected === player}
-          on:click={setSelected(player)}
+          class:table-row-checked={selected === player}
+          on:click={select(player)}
       >
         <td>{player.rank}</td>
         <td class="hidden sm:table-cell text-center">
@@ -98,10 +96,6 @@
   .leaderboard {
     .rank-1 {
       border: 4px double #B18601;
-    }
-
-    .selected {
-      background-color: theme('colors.accent.600') !important;
     }
 
     tr {

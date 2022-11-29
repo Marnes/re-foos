@@ -26,6 +26,7 @@ data class PlayerDto(
 
 data class PlayerMinifiedDto (
     val id: Int,
+    val createdDate: LocalDateTime,
     val userId: Int,
     val username: String,
     val avatar: String?,

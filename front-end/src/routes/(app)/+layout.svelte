@@ -58,16 +58,17 @@
   </svelte:fragment>
   <MainPage>
     <slot players={data.players}></slot>
-    <PlayerSpotlight slot="right-content"/>
+
+    <div class="flex md:hidden h-14">
+      <button class="btn bg-primary-500 absolute bottom-4 right-6" on:click={captureGame}>
+        Capture
+      </button>
+    </div>
+
+    <svelte:fragment slot="right-content">
+      <PlayerSpotlight/>
+    </svelte:fragment>
   </MainPage>
-
-  <div class="flex md:hidden h-14">
-    <button class="btn bg-primary-500 absolute bottom-4 right-6" on:click={captureGame}>
-      Capture
-    </button>
-  </div>
-
-
 </AppShell>
 
 

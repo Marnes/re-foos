@@ -20,12 +20,11 @@
 
     export let data: PageData;
 
-    const rails = [
-        { title: 'Leaderboard', link: '/', icon: 'iconoir:leaderboard-star', selected: $page.route.id === '(app)' },
+    $: rails = [
+        { title: 'Leaderboard', link: '/', icon: 'iconoir:leaderboard-star', selected: $page.route.id === '/(app)' },
     ]
 
     const captureGame = () => {
-        console.log('ploooop');
         $captureDrawerStore = true
     };
 </script>

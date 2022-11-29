@@ -13,7 +13,7 @@
     import { page } from '$app/stores';
     import { menuDrawerStore } from '$src/stores/menu-store.js';
 
-    const rails = [
+    $: rails = [
         {
             title: 'Avatar',
             link: '/profile/avatar',

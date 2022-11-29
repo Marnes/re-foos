@@ -1,4 +1,4 @@
-import { PUBLIC_HOST } from '$env/static/public'
+import { PUBLIC_HOST } from '$env/dynamic/public'
 import _ from 'lodash';
 
 type Request = {

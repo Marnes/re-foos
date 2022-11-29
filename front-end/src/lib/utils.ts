@@ -1,4 +1,4 @@
-import { PUBLIC_HOST } from '$env/static/public';
+import { PUBLIC_HOST } from '$env/dynamic/public';
 
 export const get = (endpoint: string): Promise<Response> => {
     return fetch(endpoint, {

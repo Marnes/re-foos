@@ -1,4 +1,4 @@
-import { PUBLIC_DOMAIN, PUBLIC_ENV } from '$env/static/public'
+import { PUBLIC_DOMAIN, PUBLIC_ENV } from '$env/dynamic/public'
 import api from '$src/lib/api';
 import type { RequestHandler } from '@sveltejs/kit';
 import { error, json } from '@sveltejs/kit';

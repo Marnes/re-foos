@@ -1,26 +1,7 @@
 server {
-    listen 80;
-    listen [::]:80;
-
-    server_name aluroth.com www.aluroth.com;
-    server_tokens off;
-
-    location /.well-known/acme-challenge/ {
-        root /var/www/certbot;
-    }
-
-    location / {
-        return 301 https://example.org$request_uri;
-    }
-}
-
-server {
-    listen 443 default_server ssl http2;
-    listen [::]:443 ssl http2;
-    server_name aluroth.com
-
-    ssl_certificate /etc/nginx/ssl/live/aluroth.com/fullchain.pem;
-    ssl_certificate_key /etc/nginx/ssl/live/aluroth.com/privkey.pem;
+    listen	 80;
+    listen  [::]:80;
+    server_name  aluroth.com www.aluroth.com;
 
     location / {
         proxy_pass  http://epifoos-frontend:5050;
@@ -36,7 +17,7 @@ server {
     }
 
     location /assets {
-        alias /var/www/assets;
+        alias /var/www;
         index index.html;
     }
 

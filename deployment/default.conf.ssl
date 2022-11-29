@@ -1,0 +1,48 @@
+server {
+    listen 80;
+    listen [::]:80;
+
+    server_name aluroth.com www.aluroth.com;
+    server_tokens off;
+
+    location /.well-known/acme-challenge/ {
+        root /var/www/certbot;
+    }
+
+    location / {
+        return 301 https://$host$request_uri;
+    }
+}
+
+# Uncomment once certificate has been obtained with certbot.
+#server {
+#    listen 443 default_server ssl http2;
+#    listen [::]:443 ssl http2;
+#    server_name aluroth.com;
+
+#    ssl_certificate /etc/nginx/ssl/live/aluroth.com/fullchain.pem;
+#    ssl_certificate_key /etc/nginx/ssl/live/aluroth.com/privkey.pem;
+
+#    location / {
+#        proxy_pass  http://epifoos-frontend:5050;
+#        proxy_set_header Cookie $http_cookie;
+#        proxy_set_header Host $host;
+#        proxy_set_header X-Forwarded-For $remote_addr;
+#        proxy_set_header X-Forwarded-Host $host;
+#        proxy_set_header X-Forwarded-Proto $scheme;
+#    }
+
+#    location /api {
+#        proxy_pass  http://epifoos-backend:8080/api;
+#    }
+
+#    location /assets {
+#        alias /var/www/assets;
+#        index index.html;
+#    }
+
+#    error_page   500 502 503 504  /50x.html;
+#    location = /50x.html {
+#        root   /usr/share/nginx/html;
+#    }
+#}

@@ -6,7 +6,7 @@ services:
     ports:
       - 8080:8080
     env_file:
-      - $(pwd)/.env-backend
+      - .env-backend
     networks:
       - epifoos
   epifoos-frontend:
@@ -14,7 +14,7 @@ services:
     ports:
       - 5050:5050
     env_file:
-      - $(pwd)/.env-frontend
+      - .env-frontend
     networks:
       - epifoos
   nginx-base:

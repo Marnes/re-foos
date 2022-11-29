@@ -1,38 +1,89 @@
-# create-svelte
+# EPI-FOOS
 
-Everything you need to build a Svelte project, powered by [`create-svelte`](https://github.com/sveltejs/kit/tree/master/packages/create-svelte).
 
-## Creating a project
 
-If you're seeing this, you've probably already done this step. Congrats!
+## Backend
+Create database with name `epifoos` and username and password `postgres:postgres`. Open in Intellij
+and run through Intellij
 
+## Frontend
+Add `.env` file in front-end folder with following contents:
 ```bash
-# create a new project in the current directory
-npm create svelte@latest
-
-# create a new project in my-app
-npm create svelte@latest my-app
+PUBLIC_HOST=http://localhost:8080
+PUBLIC_ENV=DEV
+PUBLIC_DOMAIN=localhost
 ```
 
-## Developing
+## Deployment to new server
 
-Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
+### Backend
 
-```bash
-npm run dev
+Get new AWS ECR Token `aws ecr get-login-password`\
+Build backend image `./gradlew buildFatJar --no-daemon`\
+Build docker image `docker build -t epifoos-backend:latest`
+Push docker image `docker push 051511754184.dkr.ecr.af-south-1.amazonaws.com/epifoos-backend`
 
-# or start the server and open the app in a new browser tab
-npm run dev -- --open
+### Frontend
+
+Change directory `cd front-end`
+Get new AWS ECR Token `aws ecr get-login-password`\
+Build npm `npm run build && npm prune --production`\
+Build docker image `docker build -t epifoos-frontend:latest`
+Push docker image `docker push 051511754184.dkr.ecr.af-south-1.amazonaws.com/epifoos-frontend`
+
+### EC2 Server
+SSH into server `ssh user@ip`
+Install docker `sudo yum install docker -y`\
+Install docker-compose
+```
+sudo curl -L https://github.com/docker/compose/releases/latest/download/docker-compose-$(uname -s)-$(uname -m) -o /usr/local/bin/docker-compose
+sudo chmod +x /usr/local/bin/docker-compose
+docker-compose version
+```
+Create `docker-compose.yml` file with contents of `deployment/docker-compose.yml`\
+Create `assets` folder
+Create `default.conf` file with either ssl (follow certbot) or no ssl (from `deployment` folder)
+Create `.env-frontend` file
+```
+#.env-frontend
+PUBLIC_ENV=PROD
+PUBLIC_HOST=https://host.com
+PUBLIC_DOMAIN=host.com
+```
+Create `.env-backend` file
+```
+#.env-backend
+PORT=8080
+ENV=PROD
+
+DATABASE.URL=dbUrl
+DATABASE.USER=dbUsername
+DATABASE.PASSWORD=dbPassword
+
+JWT.SECRET=generatedSecret
+JWT.ISSUER=https://host.com
+JWT.AUDIENCE=https://host.com/api/
 ```
 
-## Building
-
-To create a production version of your app:
-
-```bash
-npm run build
+Sign into ECR `$(aws ecr get-login --region af-south-1 --no-include-email)`\
+Create script `start-server.sh` and make it executable `chmod +x start-server.sh`
 ```
+#start-server.sh
+docker-compose -f docker-compose.yml down
+$(aws ecr get-login --region af-south-1 --no-include-email)
+docker pull 051511754184.dkr.ecr.af-south-1.amazonaws.com/epifoos-frontend:latest
+docker pull 051511754184.dkr.ecr.af-south-1.amazonaws.com/epifoos-backend:latest
+docker-compose -f docker-compose.yml up --build --force-recreate -d
+```
+Run `./start-server.sh`
 
-You can preview the production build with `npm run preview`.
+### Certbot
+Before starting the server, copy contents of `deployment default.conf.ssl` to `default.conf`\
+Run `docker-compose up`, ensuring nginx and Certbot starts up\
+In another window, run `docker compose run --rm  certbot certonly --webroot --webroot-path /var/www/certbot/ -d example.org`\
+Stop the `docker-compose up` instance.\
+Edit `default.conf` and remove the comments\
+Start the server again with `./start-server.sh`
 
-> To deploy your app, you may need to install an [adapter](https://kit.svelte.dev/docs/adapters) for your target environment.
+#### Renewing Certificate
+`docker compose run --rm certbot renew`

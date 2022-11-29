@@ -1,5 +1,5 @@
 import preprocess from 'svelte-preprocess';
-import adapter from '@sveltejs/adapter-netlify';
+import adapterNode from '@sveltejs/adapter-node';
 
 /** @type {import('@sveltejs/kit').Config} */
 const config = {
@@ -10,10 +10,7 @@ const config = {
 	],
 
 	kit: {
-		adapter: adapter({
-			edge: true,
-			split: false
-		})
+		adapter: adapterNode()
 	}
 };
 

@@ -1,0 +1,42 @@
+version: '3'
+
+services:
+  epifoos-backend:
+    image: 051511754184.dkr.ecr.af-south-1.amazonaws.com/epifoos-backend:latest
+    ports:
+      - 8080:8080
+    env_file:
+      - $(pwd)/.env-backend
+    networks:
+      - epifoos
+  epifoos-frontend:
+    image: 051511754184.dkr.ecr.af-south-1.amazonaws.com/epifoos-frontend:latest
+    ports:
+      - 5050:5050
+    env_file:
+      - $(pwd)/.env-frontend
+    networks:
+      - epifoos
+  nginx-base:
+    image: nginx:latest
+    ports:
+      - 80:80
+      - 443:443
+    restart: always
+    volumes:
+      - ./assets:/var/www/assets
+      - ./default.conf:/etc/nginx/conf.d/default.conf:ro
+      - ./certbot/www:/var/www/certbot/:ro
+      - ./certbot/conf/:/etc/nginx/ssl/:ro
+    networks:
+      - epifoos
+  certbot:
+    image: certbot/certbot:latest
+    volumes:
+      - ./certbot/www/:/var/www/certbot/:rw
+      - ./certbot/conf/:/etc/letsencrypt/:rw
+    networks:
+      - epifoos
+
+networks:
+  epifoos:

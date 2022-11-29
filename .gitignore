@@ -38,5 +38,5 @@ out/
 src/main/resources/application-prod.conf
 
 schema.sql
-
+deployment/.env*
 assets

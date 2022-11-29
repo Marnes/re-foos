@@ -19,9 +19,6 @@ const send = async ({ method, path, data, token }: Request): Promise<Response> =
 
     if (_.isString(data)) {
         opts.body = data;
-    } else if (data instanceof FormData) {
-        opts.headers['content-type'] = 'x-www-form-urlencoded';
-        opts.body = data;
     } else {
         opts.body = JSON.stringify(data);
     }
@@ -31,10 +28,6 @@ const send = async ({ method, path, data, token }: Request): Promise<Response> =
     }
 
     return await fetch(`${ PUBLIC_HOST }/api${ path }`, opts);
-}
-
-export const getAssetPath = (path: string): string => {
-    return `${ PUBLIC_HOST }/assets${ path }`;
 }
 
 export default {

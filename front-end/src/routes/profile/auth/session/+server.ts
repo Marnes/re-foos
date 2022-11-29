@@ -1,3 +1,4 @@
+import { PUBLIC_DOMAIN, PUBLIC_ENV } from '$env/static/public'
 import api from '$src/lib/api';
 import type { RequestHandler } from '@sveltejs/kit';
 import { error, json } from '@sveltejs/kit';
@@ -16,10 +17,11 @@ export const POST: RequestHandler = async ({ cookies, request }) => {
     const userJson = await response.json();
 
     cookies.set(JWT_KEY, userJson.jwt, {
+        domain: PUBLIC_DOMAIN,
         path: '/',
         httpOnly: true,
-        sameSite: 'strict',
-        expires: getExpiryDate(userJson.jwt)
+        expires: getExpiryDate(userJson.jwt),
+        secure: PUBLIC_ENV === 'PROD'
     });
 
     return json(userJson);

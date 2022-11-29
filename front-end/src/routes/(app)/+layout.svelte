@@ -17,19 +17,15 @@
     import { page } from '$app/stores';
 
     import type { PageData } from '$src/$types';
-    import { onMount } from 'svelte';
 
     export let data: PageData;
-
-    onMount(async () => {
-
-    })
 
     const rails = [
         { title: 'Leaderboard', link: '/', icon: 'iconoir:leaderboard-star', selected: $page.route.id === '(app)' },
     ]
 
     const captureGame = () => {
+        console.log('ploooop');
         $captureDrawerStore = true
     };
 </script>
@@ -50,8 +46,10 @@
   <svelte:fragment slot="header">
     <TopBar>
       <svelte:fragment slot="actions">
-        <button class="md:hidden btn-icon btn-filled-primary">
-          <Icon icon="material-symbols:play-arrow-rounded"/>
+        <button class="md:hidden btn-icon btn-filled-primary" on:click={captureGame}>
+          <span>
+            <Icon icon="system-uicons:capture" class="text-2xl"/>
+          </span>
         </button>
         <button class="hidden md:block btn bg-primary-500 btn-md text-white" on:click={captureGame}>Capture</button>
       </svelte:fragment>

@@ -36,3 +36,17 @@ class GamePlayerStats(id: EntityID<Int>) : BasePlayerStats(id, GamePlayerStatsTa
 
     var game by Game referencedOn GamePlayerStatsTable.game
 }
+
+object MatchPlayerStatsSnapshotTable : AbstractPlayerStatsTable("match_player_stats_snapshot") {
+    var match = reference("match_id", MatchTable)
+
+    init {
+        uniqueIndex("player_match_stats_snapshot_unique_idx", match, player)
+    }
+}
+
+class MatchPlayerStatsSnapshot(id: EntityID<Int>) : AbstractPlayerStats(id, MatchPlayerStatsSnapshotTable) {
+    companion object : IntEntityClass<MatchPlayerStatsSnapshot>(MatchPlayerStatsSnapshotTable)
+
+    var match by Match referencedOn MatchPlayerStatsSnapshotTable.match
+}

@@ -1,8 +1,8 @@
 <script lang="ts">
     import { createEventDispatcher } from 'svelte';
-    import { Avatar } from "@brainandbones/skeleton";
-    import type { Player } from '$src/models/player/player';
+    import { Avatar } from "@skeletonlabs/skeleton";
     import { formatElo } from "$src/lib/util/elo-util";
+    import type { Player } from '$src/models/player/player';
 
     export let player: Player;
     export let selected = false;

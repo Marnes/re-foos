@@ -1,4 +1,4 @@
-import { humanDate } from '$src/lib/util/date-util';
+import { humanDate } from '$src/lib/util/dateUtil';
 
 export class User {
     id!: number;

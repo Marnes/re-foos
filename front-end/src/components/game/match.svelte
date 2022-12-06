@@ -1,9 +1,9 @@
 <script lang="ts">
-    import PlayerSelect from '$src/components/game/player-select.svelte'
-    import ScoreCapture from '$src/components/game/score-capture.svelte'
+    import PlayerSelect from '$src/components/game/PlayerSelect.svelte'
+    import ScoreCapture from '$src/components/game/ScoreCapture.svelte'
     import { Player } from '$src/models/player/player';
     import { post } from '$src/lib/utils';
-    import { toastStore } from '@brainandbones/skeleton';
+    import { toastStore } from '@skeletonlabs/skeleton';
     import { captureDrawerStore } from '$src/stores/game-store';
     import { invalidateAll } from '$app/navigation';
 

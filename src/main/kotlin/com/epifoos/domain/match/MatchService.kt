@@ -1,6 +1,5 @@
 package com.epifoos.domain.match
 
-import com.epifoos.domain.calculation.CalculationService
 import com.epifoos.domain.league.League
 import com.epifoos.domain.match.dto.GameSubmissionDto
 import com.epifoos.domain.match.dto.MatchDto
@@ -47,10 +46,9 @@ object MatchService {
             }
 
             matchSubmissionDto.games.map { buildGame(match, players, it) }
-            CalculationService.calculate(match)
+            MatchEngine.doMagic(match)
         }
     }
-
 
     //TODO: Refactor to separate class
     private fun buildGame(match: Match, players: Map<Int, Player>, gameSubmissionDto: GameSubmissionDto) {

@@ -1,5 +1,5 @@
 <script lang="ts">
-    import GameBoard from '$src/components/game/match/game-board.svelte';
+    import GameBoard from '$src/components/game/match/GameBoard.svelte';
     import type { MatchCaptureRequest } from '$src/models/matchCaptureRequest';
     import type { Player } from '$src/models/player/player';
 

@@ -9,7 +9,7 @@ object PlayerStatsSnapshotService {
     }
 
     private fun createSnapshot(match: Match, playerStats: PlayerStats) {
-        PlayerStatsSnapshot.new {
+        MatchPlayerStatsSnapshot.new {
             this.player = playerStats.player
             this.match = match
             elo = playerStats.elo

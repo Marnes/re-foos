@@ -1,7 +1,7 @@
 <script lang="ts">
     import Section from '$src/components/layout/Section.svelte';
 
-    import { Avatar } from '@brainandbones/skeleton';
+    import { Avatar } from '@skeletonlabs/skeleton';
     import { getAssetPath } from '$src/lib/utils';
     import { createEventDispatcher } from 'svelte';
 

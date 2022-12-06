@@ -1,6 +1,6 @@
 <script lang="ts">
-    import '@brainandbones/skeleton/themes/theme-skeleton.css';
-    import '@brainandbones/skeleton/styles/all.css';
+    import '@skeletonlabs/skeleton/themes/theme-skeleton.css';
+    import '@skeletonlabs/skeleton/styles/all.css';
     import '$src/app.postcss';
 
     import TopBar from '$src/components/layout/TopBar.svelte'
@@ -8,7 +8,7 @@
     import PlayerProfile from '$src/components/profile/PlayerProfile.svelte';
     import MainPage from '$src/components/layout/MainPage.svelte';
 
-    import { AppShell, Drawer } from '@brainandbones/skeleton';
+    import { AppShell, Drawer } from '@skeletonlabs/skeleton';
     import { sessionStore } from '$src/stores/sessionStore';
     import { page } from '$app/stores';
     import { menuDrawerStore } from '$src/stores/menu-store.js';

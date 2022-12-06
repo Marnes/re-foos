@@ -14,7 +14,7 @@ const userSessionHandler = async ({ event, resolve }: any) => {
         event.cookies.delete(JWT_KEY, { path: '/' });
     }
 
-    return resolve(event);
+    return await resolve(event);
 }
 
 export const handle: Handle = sequence(userSessionHandler);

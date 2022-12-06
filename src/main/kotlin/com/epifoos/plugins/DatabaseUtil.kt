@@ -1,6 +1,8 @@
 package com.epifoos.plugins
 
-import com.epifoos.domain.user.profile.AvatarTable
+import com.epifoos.domain.highlight.HighlightMessageTable
+import com.epifoos.domain.highlight.HighlightPlayerTable
+import com.epifoos.domain.highlight.HighlightTable
 import org.jetbrains.exposed.sql.SchemaUtils
 import org.jetbrains.exposed.sql.Table
 import org.jetbrains.exposed.sql.transactions.transaction
@@ -10,7 +12,7 @@ object DatabaseUtil {
 
     fun writeSchema() {
         transaction {
-            val schema = getCreateSchemas(AvatarTable).joinToString("\n\n") { "$it;" }
+            val schema = getCreateSchemas(HighlightPlayerTable, HighlightMessageTable, HighlightTable).joinToString("\n\n") { "$it;" }
             File("schema.sql").writeText(schema)
         }
     }

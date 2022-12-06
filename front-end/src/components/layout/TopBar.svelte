@@ -2,7 +2,7 @@
     import LoginForm from '$src/components/session/LoginForm.svelte'
     import PlayerAvatar from '$src/components/player/PlayerAvatar.svelte'
     import Icon from '@iconify/svelte';
-    import { AppBar, Divider, menu, toastStore } from '@brainandbones/skeleton';
+    import { AppBar, Divider, menu, toastStore } from '@skeletonlabs/skeleton';
     import { menuDrawerStore } from "$src/stores/menu-store";
     import { dialogStore } from '$src/stores/dialogStore';
     import { sessionStore } from '$src/stores/sessionStore';

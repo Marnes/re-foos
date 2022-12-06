@@ -2,8 +2,6 @@ package com.epifoos.domain.stats
 
 import com.epifoos.domain.BaseIntEntity
 import com.epifoos.domain.BaseIntIdTable
-import com.epifoos.domain.match.Match
-import com.epifoos.domain.match.MatchTable
 import com.epifoos.domain.player.Player
 import com.epifoos.domain.player.PlayerTable
 import org.jetbrains.exposed.dao.IntEntityClass
@@ -59,17 +57,4 @@ class PlayerStats(id: EntityID<Int>) : AbstractPlayerStats(id, PlayerStatsTable)
     companion object : IntEntityClass<PlayerStats>(PlayerStatsTable)
 }
 
-object PlayerStatsSnapshotTable : AbstractPlayerStatsTable("player_stats_snapshot") {
-    var match = reference("match_id", MatchTable)
-
-    init {
-        uniqueIndex("player_match_stats_snapshot_unique_idx", match, player)
-    }
-}
-
-class PlayerStatsSnapshot(id: EntityID<Int>) : AbstractPlayerStats(id, PlayerStatsSnapshotTable) {
-    companion object : IntEntityClass<PlayerStatsSnapshot>(PlayerStatsSnapshotTable)
-
-    var match by Match referencedOn PlayerStatsSnapshotTable.match
-}
 

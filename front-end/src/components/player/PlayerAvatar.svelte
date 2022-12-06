@@ -1,10 +1,10 @@
 <script lang="ts">
     import { Player, PlayerMin } from '$src/models/player/player';
-    import { Avatar } from '@brainandbones/skeleton';
+    import { Avatar } from '@skeletonlabs/skeleton';
     import { getAssetPath } from '$src/lib/utils';
     import { User } from '$src/models/user';
 
-    export let player: Player | PlayerMin | User
+    export let player: Player | PlayerMin | User;
 </script>
 
 {#if player?.avatar}

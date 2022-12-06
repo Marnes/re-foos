@@ -30,7 +30,7 @@ object StatsService {
             MatchStatsTable.deleteAll()
             GameStatsTable.deleteAll()
             PlayerStatsTable.deleteAll()
-            PlayerStatsSnapshotTable.deleteAll()
+            MatchPlayerStatsSnapshotTable.deleteAll()
             Player.all().forEach { createDefault(league, it) }
         }
     }

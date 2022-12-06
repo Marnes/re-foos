@@ -1,6 +1,7 @@
 package com.epifoos.domain.league
 
 import com.epifoos.domain.auth.AuthUtil
+import com.epifoos.domain.highlight.HighlightService
 import com.epifoos.domain.match.matchRoutes
 import com.epifoos.domain.player.playersRoutes
 import io.ktor.server.application.*
@@ -22,5 +23,9 @@ fun Route.leagueRoutes() {
     route("/leagues/{leagueId}") {
         playersRoutes()
         matchRoutes()
+
+        get("/highlights") {
+            call.respond(HighlightService.getLatestHighlights(call.parameters["leagueId"]!!.toInt()))
+        }
     }
 }

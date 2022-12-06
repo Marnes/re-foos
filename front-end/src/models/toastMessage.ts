@@ -1,4 +1,4 @@
-import type { ToastSettings } from '@brainandbones/skeleton';
+import type { ToastSettings } from '@skeletonlabs/skeleton';
 
 export class ToastMessage {
     static failure(message: string, classes: string = '', timeout: number = 3000, autohide: boolean = true): ToastSettings {

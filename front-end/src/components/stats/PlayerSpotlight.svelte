@@ -1,11 +1,11 @@
 <script lang="ts">
-    import StatItem from '$src/components/stats/item/stat-item.svelte'
+    import StatItem from '$src/components/stats/item/StatItem.svelte'
     import EloChange from '$src/components/stats/EloChange.svelte';
     import PlayerProfile from '$src/components/profile/PlayerProfile.svelte';
-    import { Divider } from '@brainandbones/skeleton';
+    import { Divider } from '@skeletonlabs/skeleton';
     import { Player, PlayerMin } from '$src/models/player/player.ts';
     import { formatElo } from '$src/lib/util/elo-util.js';
-    import { humanDateWithTime } from '$src/lib/util/date-util.js';
+    import { humanDateWithTime } from '$src/lib/util/dateUtil.js';
     import { Match, Team } from '$src/models/match/match';
     import { spotlightStore } from '$src/stores/spotlightStore';
     import { get } from '$src/lib/utils';
@@ -52,95 +52,103 @@
 
 </script>
 
-<div class="h-full" style="width: 34rem">
+<div class="spotlight-container h-full">
   {#if player}
-    <PlayerProfile player={player}>
-      <h6 class="font-bold text-surface-500 mb-3 text-center">Stats</h6>
-      <div class="grid grid-cols-3 gap-4 mb-3 text-right">
-        <StatItem title="Played" value="{player.played}"/>
-        <StatItem title="Wins" value="{player.wins}"/>
-        <StatItem title="Losses" value="{player.wins}"/>
-      </div>
-      <div class="grid grid-cols-3 gap-4 mb-3 text-right">
-        <StatItem title="Elo" value="{formatElo(player.elo)}"/>
-        <StatItem title="Highest Elo" value="{formatElo(player.highestElo)}"/>
-        <StatItem title="Lowest Elo" value="{formatElo(player.lowestElo)}"/>
-      </div>
-      <div class="grid grid-cols-3 gap-4 mb-3 text-right">
-        <div/>
-        <StatItem title="Total Goals" value="{player.scoreFor}"/>
-        <StatItem title="Total Goals Against" value={player.scoreAgainst}/>
-      </div>
-      <div class="grid grid-cols-3 gap-4 mb-3 text-right">
-        <div/>
-        <StatItem title="Current Winning Streak" value={player.currentWinningStreak}/>
-        <StatItem title="Longest Winning Streak" value={player.longestWinningStreak}/>
-      </div>
-      <div class="grid grid-cols-3 gap-4 mb-3 text-right">
-        <div/>
-        <StatItem title="Current Losing Streak" value={player.currentLosingStreak}/>
-        <StatItem title="Longest Losing Streak" value={player.longestLosingStreak}/>
-      </div>
-      {#if match}
-        <div class="pl-7 pr-7 mt-5 mb-5">
-          <Divider/>
-        </div>
-        <div class="py-3 mb-3">
-          <h6 class="font-bold text-surface-500 text-center">Latest Match</h6>
-          <div class="font-bold text-surface-700 text-center text-sm">
-            {humanDateWithTime(match.createdDate)}
-          </div>
+    <div class="h-full" style="width: 34rem">
+      <PlayerProfile player={player}>
+        <h6 class="font-bold text-surface-500 mb-3 text-center">Stats</h6>
+        <div class="grid grid-cols-3 gap-4 mb-3 text-right">
+          <StatItem title="Played" value="{player.played}"/>
+          <StatItem title="Wins" value="{player.wins}"/>
+          <StatItem title="Losses" value="{player.losses}"/>
         </div>
         <div class="grid grid-cols-3 gap-4 mb-3 text-right">
-          <StatItem
-              class={winner?.id === player.id ? 'text-positive' : ''}
-              title="Winner"
-              value={winner?.username}
-          />
-          <StatItem
-              class={loser?.id === player.id ? 'text-negative' : ''}
-              title="Loser"
-              value={loser?.username}
-          />
-          <StatItem title="Elo Change" eloChange={match.playerStats[player.id].eloChange}/>
+          <StatItem title="Elo" value="{formatElo(player.elo)}"/>
+          <StatItem title="Highest Elo" value="{formatElo(player.highestElo)}"/>
+          <StatItem title="Lowest Elo" value="{formatElo(player.lowestElo)}"/>
         </div>
         <div class="grid grid-cols-3 gap-4 mb-3 text-right">
           <div/>
-          <StatItem title="Total Goals" value={match.playerStats[player.id].scoreFor}/>
-          <StatItem title="Total Goals Against" value={match.playerStats[player.id].scoreAgainst}/>
+          <StatItem title="Total Goals" value="{player.scoreFor}"/>
+          <StatItem title="Total Goals Against" value={player.scoreAgainst}/>
         </div>
-        <div class="pt-3">
-          <div class="table-container">
-            <table class="table table-hover">
-              <tbody>
-              {#each match.games as game}
-                <tr>
-                  {#each game.teams[0].players as playerId}
-                    <td class="{getGameClass(game.teams[0])}">
-                      {getPlayer(playerId).username}
-                    </td>
-                  {/each}
-                  {#each game.teams[0].scores as score}
-                    <td class="text-center {getGameClass(game.teams[0])}">{score}</td>
-                  {/each}
-                  {#each game.teams[1].scores as score}
-                    <td class="text-center {getGameClass(game.teams[1])}">{score}</td>
-                  {/each}
-                  {#each game.teams[1].players as playerId}
-                    <td class="{getGameClass(game.teams[1])}">
-                      {getPlayer(playerId).username}
-                    </td>
-                  {/each}
-                  <td class="text-center">
-                    <EloChange elo={game.playerStats[player.id].eloChange}/>
-                  </td>
-                </tr>
-              {/each}
-              </tbody>
-            </table>
+        <div class="grid grid-cols-3 gap-4 mb-3 text-right">
+          <div/>
+          <StatItem title="Current Winning Streak" value={player.currentWinningStreak}/>
+          <StatItem title="Longest Winning Streak" value={player.longestWinningStreak}/>
+        </div>
+        <div class="grid grid-cols-3 gap-4 mb-3 text-right">
+          <div/>
+          <StatItem title="Current Losing Streak" value={player.currentLosingStreak}/>
+          <StatItem title="Longest Losing Streak" value={player.longestLosingStreak}/>
+        </div>
+        {#if match}
+          <div class="pl-7 pr-7 mt-5 mb-5">
+            <Divider/>
           </div>
-        </div>
-      {/if}
-    </PlayerProfile>
+          <div class="py-3 mb-3">
+            <h6 class="font-bold text-surface-500 text-center">Latest Match</h6>
+            <div class="font-bold text-surface-700 text-center text-sm">
+              {humanDateWithTime(match.createdDate)}
+            </div>
+          </div>
+          <div class="grid grid-cols-3 gap-4 mb-3 text-right">
+            <StatItem
+                class={winner?.id === player.id ? 'text-positive' : ''}
+                title="Winner"
+                value={winner?.username}
+            />
+            <StatItem
+                class={loser?.id === player.id ? 'text-negative' : ''}
+                title="Loser"
+                value={loser?.username}
+            />
+            <StatItem title="Elo Change" eloChange={match.playerStats[player.id].eloChange}/>
+          </div>
+          <div class="grid grid-cols-3 gap-4 mb-3 text-right">
+            <div/>
+            <StatItem title="Total Goals" value={match.playerStats[player.id].scoreFor}/>
+            <StatItem title="Total Goals Against" value={match.playerStats[player.id].scoreAgainst}/>
+          </div>
+          <div class="pt-3">
+            <div class="table-container">
+              <table class="table table-hover">
+                <tbody>
+                {#each match.games as game}
+                  <tr>
+                    {#each game.teams[0].players as playerId}
+                      <td class="{getGameClass(game.teams[0])}">
+                        {getPlayer(playerId).username}
+                      </td>
+                    {/each}
+                    {#each game.teams[0].scores as score}
+                      <td class="text-center {getGameClass(game.teams[0])}">{score}</td>
+                    {/each}
+                    {#each game.teams[1].scores as score}
+                      <td class="text-center {getGameClass(game.teams[1])}">{score}</td>
+                    {/each}
+                    {#each game.teams[1].players as playerId}
+                      <td class="{getGameClass(game.teams[1])}">
+                        {getPlayer(playerId).username}
+                      </td>
+                    {/each}
+                    <td class="text-center">
+                      <EloChange elo={game.playerStats[player.id].eloChange}/>
+                    </td>
+                  </tr>
+                {/each}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        {/if}
+      </PlayerProfile>
+    </div>
   {/if}
 </div>
+
+<style lang="scss">
+  .spotlight-container {
+    width: 34rem;
+  }
+</style>

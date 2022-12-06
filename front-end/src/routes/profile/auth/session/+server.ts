@@ -28,7 +28,7 @@ export const POST: RequestHandler = async ({ cookies, request }) => {
 }
 
 export const DELETE: RequestHandler = async ({ cookies }) => {
-    await cookies.delete("jwt", { path: '/' });
+    await cookies.delete(JWT_KEY, { path: '/' });
     return json({})
 }
 

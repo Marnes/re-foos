@@ -1,6 +1,6 @@
 <script lang="ts">
-    import '@brainandbones/skeleton/themes/theme-skeleton.css';
-    import '@brainandbones/skeleton/styles/all.css';
+    import '@skeletonlabs/skeleton/themes/theme-skeleton.css';
+    import '@skeletonlabs/skeleton/styles/all.css';
     import '$src/app.postcss';
 
     import TopBar from '$src/components/layout/TopBar.svelte';
@@ -9,7 +9,7 @@
     import PlayerSpotlight from '$src/components/stats/PlayerSpotlight.svelte';
     import MainPage from '$src/components/layout/MainPage.svelte';
 
-    import { AppShell, Drawer } from '@brainandbones/skeleton';
+    import { AppShell, Drawer } from '@skeletonlabs/skeleton';
     import { MatchSettings } from '$src/models/constants';
     import { menuDrawerStore } from '$src/stores/menu-store';
     import { captureDrawerStore } from '$src/stores/game-store';
@@ -26,6 +26,7 @@
     const captureGame = () => {
         $captureDrawerStore = true
     };
+
 </script>
 
 <Drawer open={captureDrawerStore} position="right">
@@ -39,7 +40,6 @@
 <Drawer open={menuDrawerStore} position="left" width="w-24" class="lg:hidden">
   <AppRail rails={rails}/>
 </Drawer>
-
 
 <AppShell>
   <svelte:fragment slot="header">
@@ -65,7 +65,6 @@
     </div>
     <PlayerSpotlight slot="right-content"/>
   </MainPage>
-
 </AppShell>
 
 

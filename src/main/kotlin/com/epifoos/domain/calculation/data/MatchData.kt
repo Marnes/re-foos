@@ -28,7 +28,8 @@ data class MatchData(
     }
 }
 
-class GameData(
+data class GameData(
+    val teams: Map<Team, List<Player>>,
     val playerTeamMap: Map<Player, Team>,
     val winner: Team?,
     val loser: Team?,
@@ -63,6 +64,11 @@ class GameData(
             .map { it.value }
             .average()
             .toFloat()
+    }
+
+    fun getOpponents(team: Team): List<Player> {
+        return teams.filter { it.key != team }
+            .flatMap { it.value }
     }
 
     fun getScoreFor(player: Player): Int {

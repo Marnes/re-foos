@@ -1,5 +1,5 @@
 <script lang='ts'>
-    import PlayerCard from '$src/components/game/player/player-card.svelte';
+    import PlayerCard from '$src/components/game/player/PlayerCard.svelte';
     import type { Player } from '$src/models/player/player';
     import _ from 'lodash';
 

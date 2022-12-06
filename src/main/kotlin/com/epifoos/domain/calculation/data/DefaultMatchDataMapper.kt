@@ -74,7 +74,8 @@ open class DefaultMatchDataMapper<W : WinConditionMapper>(winConditionMapper: W)
     }
 
     private fun getGameData(game: Game, initialEloMap: Map<Player, Float>): GameData {
-        val playerTeams = getPlayerTeamsMap(game)
+        val teams = getTeams(game)
+        val playerTeams = getPlayerTeamsMap(game, teams)
         val totalPlayed = getTotalPlayedMap(game)
         val totalScores = getTotalScoreMap(game)
         val scoresAgainst = getScoreAgainstMap(game)
@@ -86,6 +87,7 @@ open class DefaultMatchDataMapper<W : WinConditionMapper>(winConditionMapper: W)
         val teamAverageElo = getTeamAverageEloMap(game, initialEloMap)
 
         return GameData(
+            teams,
             playerTeams,
             winner.first,
             loser.first,
@@ -100,9 +102,12 @@ open class DefaultMatchDataMapper<W : WinConditionMapper>(winConditionMapper: W)
         )
     }
 
-    private fun getPlayerTeamsMap(game: Game): Map<Player, Team> {
+    private fun getTeams(game: Game): Map<Team, List<Player>> {
+        return game.teams.associateWith { team -> team.players.map { it } }
+    }
+
+    private fun getPlayerTeamsMap(game: Game, teamPlayers: Map<Team, List<Player>>): Map<Player, Team> {
         val playerTeams = mutableMapOf<Player, Team>()
-        val teamPlayers = game.teams.associateWith { team -> team.players.map { it } }
 
         teamPlayers.forEach { teamPlayer -> teamPlayer.value.forEach { playerTeams[it] = teamPlayer.key } }
 

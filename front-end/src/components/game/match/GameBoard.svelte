@@ -1,8 +1,8 @@
 <script lang="ts">
     import type { Game } from '$src/models/match/game';
     import type { Player } from '$src/models/player/player';
-    import ScoreInput from '$src/components/game/match/score-input.svelte'
-    import PlayerCard from '$src/components/game/player/player-card.svelte';
+    import ScoreInput from '$src/components/game/match/ScoreInput.svelte'
+    import PlayerCard from '$src/components/game/player/PlayerCard.svelte';
     import { onMount } from 'svelte';
     import _ from 'lodash';
 
@@ -52,6 +52,7 @@
     <ScoreInput minScore={minScore}
                 maxScore={maxScore}
                 focus={focus}
+                reversed={true}
                 bind:value={game.leftScore1}
                 on:input={updateScore('left', 1)}
     />
@@ -74,6 +75,7 @@
 
     <ScoreInput minScore={minScore}
                 maxScore={maxScore}
+                reversed={true}
                 bind:value={game.leftScore2}
                 on:input={updateScore('left', 2)}
     />

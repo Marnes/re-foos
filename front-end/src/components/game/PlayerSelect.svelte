@@ -1,5 +1,5 @@
 <script lang="ts">
-    import PlayerBoard from '$src/components/game/player/player-board.svelte';
+    import PlayerBoard from '$src/components/game/player/PlayerBoard.svelte';
     import { Player } from '$src/models/player/player';
     import { createEventDispatcher } from 'svelte';
     import { MatchSettings } from '$src/models/constants';

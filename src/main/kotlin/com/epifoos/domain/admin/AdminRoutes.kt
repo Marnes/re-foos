@@ -1,7 +1,7 @@
 package com.epifoos.domain.admin
 
-import com.epifoos.domain.calculation.CalculationService
 import com.epifoos.domain.league.League
+import com.epifoos.domain.match.MatchEngine
 import com.epifoos.domain.user.profile.AvatarService
 import io.ktor.http.*
 import io.ktor.server.application.*
@@ -14,7 +14,7 @@ fun Route.adminRoutes() {
     route("/admin") {
         authenticate("basic") {
             post("/recalculate") {
-                CalculationService.recalculate(
+                MatchEngine.recalculate(
                     transaction {
                         League.findById(call.request.queryParameters["leagueId"]!!.toInt())!!
                     }

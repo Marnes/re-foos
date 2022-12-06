@@ -6,9 +6,11 @@
     export let maxScore: number;
     export let value: number;
     export let focus = false;
+    export let reversed = false;
 
     const dispatch = createEventDispatcher();
-    const scores = _.times(maxScore + 1, (score) => score);
+    $: scoreArray =  _.times(maxScore + 1, (score) => score)
+    $: scores = reversed ? scoreArray.reverse() : scoreArray;
 
     function onInput(event) {
         let inputElement = event.target;

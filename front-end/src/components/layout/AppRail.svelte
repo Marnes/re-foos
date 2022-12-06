@@ -1,6 +1,6 @@
 <script lang="ts">
     import Icon from '@iconify/svelte';
-    import { AppRail, AppRailTile } from '@brainandbones/skeleton';
+    import { AppRail, AppRailTile } from '@skeletonlabs/skeleton';
     import { menuDrawerStore } from '$src/stores/menu-store.js';
 
     export let rails: [{ title: string, link: string, icon: string, selected: boolean }] = [];

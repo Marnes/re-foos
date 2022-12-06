@@ -1,5 +1,5 @@
 <script lang='ts'>
-    import { toastStore } from '@brainandbones/skeleton';
+    import { toastStore } from '@skeletonlabs/skeleton';
     import { put } from '$src/lib/utils';
     import { KeyCodes } from '$src/models/key-codes';
     import { invalidateAll } from '$app/navigation';

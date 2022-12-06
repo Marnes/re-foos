@@ -1,9 +1,9 @@
 <script lang="ts">
     import PlayerAvatar from '$src/components/player/PlayerAvatar.svelte';
     import { User } from '$src/models/user.ts';
-    import { humanDate } from '$src/lib/util/date-util.js';
+    import { humanDate } from '$src/lib/util/dateUtil.js';
     import { Player, PlayerMin } from '$src/models/player/player';
-    import { Divider } from '@brainandbones/skeleton';
+    import { Divider } from '@skeletonlabs/skeleton';
 
     export let player: User | Player | PlayerMin;
 </script>

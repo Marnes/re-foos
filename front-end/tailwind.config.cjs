@@ -1,7 +1,7 @@
 const config = {
     content: [
         './src/**/*.{html,js,svelte,ts}',
-        './node_modules/@brainandbones/skeleton/**/*.{html,js,svelte,ts}'
+        './node_modules/@skeletonlabs/skeleton/**/*.{html,js,svelte,ts}'
     ],
 
     theme: {
@@ -41,7 +41,7 @@ const config = {
         }
     },
     plugins: [
-        require('@brainandbones/skeleton/tailwind/theme.cjs'),
+        require('@skeletonlabs/skeleton/tailwind/theme.cjs'),
         require('@tailwindcss/forms'),
     ],
     darkMode: 'class',

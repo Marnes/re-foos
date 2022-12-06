@@ -1,6 +1,6 @@
 <script lang='ts'>
     import { dialogStore } from '$src/stores/dialogStore';
-    import { toastStore } from '@brainandbones/skeleton';
+    import { toastStore } from '@skeletonlabs/skeleton';
     import { post } from '$src/lib/utils';
     import { KeyCodes } from '$src/models/key-codes';
     import { invalidateAll } from '$app/navigation';

@@ -3,7 +3,7 @@
     import { sessionStore } from '$src/stores/sessionStore';
     import { put } from '$src/lib/utils';
     import { invalidateAll } from '$app/navigation';
-    import { toastStore } from '@brainandbones/skeleton';
+    import { toastStore } from '@skeletonlabs/skeleton';
     import { ToastMessage } from '$src/models/toastMessage';
 
     export let data;

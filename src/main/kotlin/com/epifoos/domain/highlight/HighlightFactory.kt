@@ -6,7 +6,7 @@ import com.epifoos.domain.match.Game
 import com.epifoos.domain.match.Match
 import com.epifoos.domain.player.Player
 
-class HighlightFactory(private val messageMap: Map<HighlightMessageType, List<HighlightMessage>>) {
+open class HighlightFactory(private val messageMap: Map<HighlightMessageType, List<HighlightMessage>>) {
 
     companion object {
         const val WHITEWASH_VALUE = 0
@@ -20,23 +20,23 @@ class HighlightFactory(private val messageMap: Map<HighlightMessageType, List<Hi
         createWhitewashHighlight(calculationResult)
     }
 
-    protected fun hasWinner(calculationResult: CalculationResult): Boolean {
+    protected open fun hasWinner(calculationResult: CalculationResult): Boolean {
         return calculationResult.matchData.winners.isNotEmpty()
     }
 
-    protected fun hasLoser(calculationResult: CalculationResult): Boolean {
+    protected open fun hasLoser(calculationResult: CalculationResult): Boolean {
         return calculationResult.matchData.losers.isNotEmpty()
     }
 
-    protected fun hasWinnerAndLoser(calculationResult: CalculationResult): Boolean {
+    protected open fun hasWinnerAndLoser(calculationResult: CalculationResult): Boolean {
         return hasWinner(calculationResult) && hasLoser(calculationResult)
     }
 
-    protected fun isDraw(calculationResult: CalculationResult): Boolean {
+    protected open fun isDraw(calculationResult: CalculationResult): Boolean {
         return calculationResult.matchData.winners.isEmpty() && calculationResult.matchData.losers.isEmpty()
     }
 
-    protected fun isWhitewash(gameCalculationResult: GameCalculationResult): Boolean {
+    protected open fun isWhitewash(gameCalculationResult: GameCalculationResult): Boolean {
         return gameCalculationResult.gameData.scoreForMap.containsValue(WHITEWASH_VALUE)
     }
 

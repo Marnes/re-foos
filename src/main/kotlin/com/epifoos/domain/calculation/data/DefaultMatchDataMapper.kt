@@ -1,22 +1,20 @@
 package com.epifoos.domain.calculation.data.win
 
+import com.epifoos.domain.Elo
+import com.epifoos.domain.average
 import com.epifoos.domain.calculation.MatchResult
 import com.epifoos.domain.calculation.data.MatchDataMapper
 import com.epifoos.domain.calculation.data.dto.GameData
 import com.epifoos.domain.calculation.data.dto.MatchData
 import com.epifoos.domain.match.Game
 import com.epifoos.domain.match.Match
-import com.epifoos.domain.match.MatchUtil
 import com.epifoos.domain.match.Team
 import com.epifoos.domain.player.Player
-import com.epifoos.domain.player.PlayerUtil
 
 open class DefaultMatchDataMapper<W : WinConditionMapper>(winConditionMapper: W) :
     MatchDataMapper<W>(winConditionMapper) {
 
-    override fun getMatchData(match: Match): MatchData {
-        val players = MatchUtil.getPlayers(match)
-        val initialEloMap = PlayerUtil.getEloMap(players)
+    override fun getMatchData(match: Match, players: Set<Player>, initialEloMap: Map<Player, Elo>): MatchData {
         val gameData = match.games.associateWith { getGameData(it, initialEloMap) }
 
         val totalScore = getTotalScore(gameData)
@@ -73,7 +71,7 @@ open class DefaultMatchDataMapper<W : WinConditionMapper>(winConditionMapper: W)
         return players.associateWith { player -> gameData.sumOf { it.getLosses(player) } }
     }
 
-    private fun getGameData(game: Game, initialEloMap: Map<Player, Float>): GameData {
+    private fun getGameData(game: Game, initialEloMap: Map<Player, Elo>): GameData {
         val teams = getTeams(game)
         val playerTeams = getPlayerTeamsMap(game, teams)
         val totalPlayed = getTotalPlayedMap(game)
@@ -140,13 +138,12 @@ open class DefaultMatchDataMapper<W : WinConditionMapper>(winConditionMapper: W)
         return game.teams.associateWith { mapOf(winner, loser)[it] ?: MatchResult.DRAW }
     }
 
-    private fun getTeamAverageEloMap(game: Game, initialEloMap: Map<Player, Float>): Map<Team, Float> {
+    private fun getTeamAverageEloMap(game: Game, initialEloMap: Map<Player, Elo>): Map<Team, Elo> {
         return game.teams.associateWith { calculateAverageElo(it, initialEloMap) }
     }
 
-    private fun calculateAverageElo(team: Team, initialEloMap: Map<Player, Float>): Float {
+    private fun calculateAverageElo(team: Team, initialEloMap: Map<Player, Elo>): Elo {
         return team.players.map { initialEloMap[it]!! }
             .average()
-            .toFloat()
     }
 }

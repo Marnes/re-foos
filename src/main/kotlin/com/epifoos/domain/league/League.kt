@@ -1,9 +1,6 @@
 package com.epifoos.domain.league
 
-import com.epifoos.domain.AuditedEntity
-import com.epifoos.domain.AuditedTable
-import com.epifoos.domain.BaseIntEntity
-import com.epifoos.domain.BaseIntIdTable
+import com.epifoos.domain.*
 import org.jetbrains.exposed.dao.IntEntityClass
 import org.jetbrains.exposed.dao.id.EntityID
 
@@ -18,12 +15,17 @@ class League(id: EntityID<Int>) : AuditedEntity(id, LeagueTable) {
     val config by LeagueConfig backReferencedOn LeagueConfigTable.league
 }
 
-
 object LeagueConfigTable : BaseIntIdTable("league_config") {
     var league = reference("league_id", LeagueTable)
         .uniqueIndex("league_config_unique_idx")
 
-    var startingElo = float("starting_elo")
+    var startingElo = elo("starting_elo")
+    var type = enumerationByName("type", 255, LeagueType::class)
+    var games = integer("games")
+    var teams = integer("teams")
+    var players = integer("players")
+    var scoresPerTeam = integer("scores_per_team")
+    var playersPerTeam = integer("players_per_team")
 }
 
 class LeagueConfig(id: EntityID<Int>) : BaseIntEntity(id, LeagueConfigTable) {
@@ -31,6 +33,15 @@ class LeagueConfig(id: EntityID<Int>) : BaseIntEntity(id, LeagueConfigTable) {
 
     var league by League referencedOn LeagueConfigTable.league
     var startingElo by LeagueConfigTable.startingElo
+    var type by LeagueConfigTable.type
+    var games by LeagueConfigTable.games
+    var teams by LeagueConfigTable.teams
+    var players by LeagueConfigTable.players
+    var scoresPerTeam by LeagueConfigTable.scoresPerTeam
+    var playersPerTeam by LeagueConfigTable.playersPerTeam
 }
 
-
+enum class LeagueType {
+    ROUND_ROBIN,
+    HEAD_TO_HEAD
+}

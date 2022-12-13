@@ -1,8 +1,7 @@
 package com.epifoos.plugins
 
-import com.epifoos.domain.highlight.HighlightMessageTable
-import com.epifoos.domain.highlight.HighlightPlayerTable
-import com.epifoos.domain.highlight.HighlightTable
+import com.epifoos.domain.rank.MatchPlayerRankSnapshotTable
+import com.epifoos.domain.rank.PlayerRankTable
 import org.jetbrains.exposed.sql.SchemaUtils
 import org.jetbrains.exposed.sql.Table
 import org.jetbrains.exposed.sql.transactions.transaction
@@ -12,7 +11,7 @@ object DatabaseUtil {
 
     fun writeSchema() {
         transaction {
-            val schema = getCreateSchemas(HighlightPlayerTable, HighlightMessageTable, HighlightTable).joinToString("\n\n") { "$it;" }
+            val schema = getCreateSchemas(PlayerRankTable, MatchPlayerRankSnapshotTable).joinToString("\n\n") { "$it;" }
             File("schema.sql").writeText(schema)
         }
     }

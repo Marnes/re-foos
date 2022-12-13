@@ -1,29 +1,26 @@
 package com.epifoos.domain.calculation.calculator
 
+import com.epifoos.domain.Elo
 import com.epifoos.domain.calculation.CalculationResult
 import com.epifoos.domain.calculation.GameCalculationResult
 import com.epifoos.domain.calculation.coefficient.CoefficientCalculator
 import com.epifoos.domain.calculation.data.MatchDataMapper
 import com.epifoos.domain.match.Match
 import com.epifoos.domain.player.Player
+import com.epifoos.domain.sum
 
-abstract class EloCalculator<C : CoefficientCalculator, D : MatchDataMapper<*>> {
-    lateinit var dataMapper: D
-    lateinit var coefficientCalculator: C
+abstract class EloCalculator<C : CoefficientCalculator, D : MatchDataMapper<*>>(
+    val dataMapper: D,
+    val coefficientCalculator: C
+) {
 
-    abstract fun calculate(match: Match): CalculationResult
+    abstract fun calculate(
+        match: Match,
+        players: Set<Player>,
+        initialEloMap: Map<Player, Elo>
+    ): CalculationResult
 
-    fun setDataMapper(dataMapper: D): EloCalculator<C, D> {
-        this.dataMapper = dataMapper
-        return this
-    }
-
-    fun setCoefficientCalculator(coefficientCalculator: C): EloCalculator<C, D> {
-        this.coefficientCalculator = coefficientCalculator
-        return this
-    }
-
-    protected fun calculateTotalScores(gameResults: List<GameCalculationResult>): Map<Player, Float> {
+    protected fun calculateTotalScores(gameResults: List<GameCalculationResult>): Map<Player, Elo> {
         return gameResults.flatMap { it.eloChanges.asSequence() }
             .groupBy { it.key }
             .mapValues { (_, eloChanges) -> eloChanges.map { it.value }.sum() }

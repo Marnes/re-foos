@@ -1,15 +1,15 @@
 package com.epifoos.domain.stats.dto
 
+import com.epifoos.domain.Elo
+
 data class MatchPlayerStatsDto(
-    val eloChange: Float,
+    val eloChange: Elo,
     val scoreFor: Int,
     val scoreAgainst: Int,
-    val winner: Boolean,
-    val loser: Boolean
 )
 
 data class MatchGameStatsDto(
-    val eloChange: Float,
+    val eloChange: Elo,
     val scoreFor: Int,
     val scoreAgainst: Int,
 )

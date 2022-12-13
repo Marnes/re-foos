@@ -1,4 +1,4 @@
 package com.epifoos.exceptions
 
-open class EntityNotFoundException: RuntimeException() {
+open class EntityNotFoundException: BaseException() {
 }

@@ -12,19 +12,19 @@ data class MatchCoefficients(
 }
 
 data class GameCoefficients(
-    val expectedScoreCoefficientMap: Map<Player, Float>,
-    val actualScoreCoefficientMap: Map<Player, Float>,
-    val resultScoreCoefficientMap: Map<Player, Float>,
+    val expectedScoreCoefficientMap: Map<Player, Double>,
+    val actualScoreCoefficientMap: Map<Player, Double>,
+    val resultScoreCoefficientMap: Map<Player, Double>,
 ) {
-    fun getExpectedScoreCoefficient(player: Player): Float {
+    fun getExpectedScoreCoefficient(player: Player): Double {
         return expectedScoreCoefficientMap[player]!!
     }
 
-    fun getActualScoreCoefficient(player: Player): Float {
+    fun getActualScoreCoefficient(player: Player): Double {
         return actualScoreCoefficientMap[player]!!
     }
 
-    fun getResultScoreCoefficient(player: Player): Float {
+    fun getResultScoreCoefficient(player: Player): Double {
         return resultScoreCoefficientMap[player]!!
     }
 }

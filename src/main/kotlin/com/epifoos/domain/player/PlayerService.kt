@@ -5,11 +5,11 @@ import com.epifoos.domain.match.MatchService
 import com.epifoos.domain.match.MatchTable
 import com.epifoos.domain.player.dto.PlayerDto
 import com.epifoos.domain.player.dto.PlayerDtoMapper
-import com.epifoos.domain.player.dto.PlayerMinifiedDto
 import com.epifoos.domain.player.dto.PlayerSpotlightDto
 import com.epifoos.domain.stats.MatchPlayerStatsTable
 import com.epifoos.domain.stats.StatsService
 import com.epifoos.domain.user.User
+import org.jetbrains.exposed.dao.load
 import org.jetbrains.exposed.dao.with
 import org.jetbrains.exposed.sql.SortOrder
 import org.jetbrains.exposed.sql.and
@@ -33,27 +33,26 @@ object PlayerService {
     fun getPlayer(userId: Int, leagueId: Int): PlayerDto? {
         return transaction {
             val player = Player.find { PlayerTable.user eq userId and (PlayerTable.league eq leagueId) }
-                .with(Player::user)
-                .with(Player::stats)
                 .limit(1)
                 .firstOrNull()
+                ?.load(Player::user, Player::rank, Player::stats)
 
-            player?.let { PlayerDtoMapper.map(it, it.stats) }
+            player?.let { PlayerDtoMapper.map(it, it.rank, it.stats) }
         }
     }
 
     fun getPlayers(leagueId: Int): List<PlayerDto> {
         return transaction {
             Player.find { PlayerTable.league eq leagueId }
-                .with(Player::user)
-                .with(Player::stats)
-                .map { PlayerDtoMapper.map(it, it.stats) }
+                .with(Player::stats, Player::rank, Player::user)
+                .map { PlayerDtoMapper.map(it, it.rank, it.stats) }
         }
     }
 
     fun getPlayerSpotlight(leagueId: Int, playerId: Int): PlayerSpotlightDto {
         return transaction {
             val player = Player.find { PlayerTable.league eq leagueId and (PlayerTable.id eq playerId) }.first()
+                .load(Player::stats, Player::user, Player::rank)
 
             val matchId = (MatchTable innerJoin MatchPlayerStatsTable)
                 .slice(MatchTable.id)
@@ -62,18 +61,17 @@ object PlayerService {
                 .limit(1)
                 .firstOrNull()
 
-
             PlayerSpotlightDto(
-                PlayerDtoMapper.map(player, player.stats),
+                PlayerDtoMapper.map(player, player.rank, player.stats),
                 if (matchId == null) null else MatchService.getMatch(matchId[MatchTable.id].value)
             )
         }
     }
 
-    fun getOrUpdateSpotlight(leagueId: Int): PlayerMinifiedDto {
+    fun getOrUpdateSpotlight(leagueId: Int): PlayerDto {
         return transaction {
             val player = PlayerSpotlightService.getSpotlight(leagueId)
-            PlayerDtoMapper.mapMinified(player, player.stats.elo)
+            PlayerDtoMapper.map(player, player.rank, player.stats)
         }
     }
 }

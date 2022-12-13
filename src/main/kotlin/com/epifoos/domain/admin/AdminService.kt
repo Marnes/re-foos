@@ -1,59 +1,35 @@
 package com.epifoos.domain.admin
 
+import com.epifoos.domain.highlight.HighlightService
 import com.epifoos.domain.league.League
-import com.epifoos.domain.league.LeagueConfig
-import com.epifoos.domain.match.Game
-import com.epifoos.domain.match.Match
-import com.epifoos.domain.match.Team
-import com.epifoos.domain.match.TeamScore
-import com.epifoos.game.GameOld
-import org.jetbrains.exposed.sql.SizedCollection
+import com.epifoos.domain.match.*
+import com.epifoos.domain.player.Player
+import com.epifoos.domain.player.PlayerTable
+import com.epifoos.domain.rank.PlayerRankService
+import com.epifoos.domain.stats.StatsService
+import org.jetbrains.exposed.dao.with
+import org.jetbrains.exposed.sql.SortOrder
 import org.jetbrains.exposed.sql.transactions.transaction
 
 object AdminService {
 
-    fun migrate() {
+    fun recalculate(league: League) {
         transaction {
-            Match.all().sortedBy { it.createdDate }.forEach { migrate(it) }
-            League.all().forEach {
-                LeagueConfig.new {
-                    league = it
-                    startingElo = 1000F
-                }
-            }
-        }
-    }
+            val players = Player.find { PlayerTable.league eq league.id }
+                .with(Player::stats, Player::rank, Player::user)
+                .toList()
 
-    private fun migrate(match: Match) {
-        match.gamesOld.forEach {
-            val game = Game.new { this.match = match }
-            createTeams(game, it)
-        }
-    }
+            val matches = Match.find { MatchTable.league eq league.id }
+                .orderBy(MatchTable.createdDate to SortOrder.ASC)
+                .toList()
 
-    private fun createTeams(game: Game, gameOld: GameOld) {
-        val team1 = Team.new {
-            this.game = game
-            players = SizedCollection(listOf(gameOld.leftPlayer1, gameOld.leftPlayer2))
-        }
-        val team2 = Team.new {
-            this.game = game
-            players = SizedCollection(listOf(gameOld.rightPlayer1, gameOld.rightPlayer2))
-        }
+            val games = Game.find { GameTable.match inList matches.map { it.id.value } }.toList()
 
-        createScores(team1, gameOld.leftScore1, gameOld.leftScore2)
-        createScores(team2, gameOld.rightScore1, gameOld.rightScore2)
-    }
+            StatsService.resetStats(league, players, matches, games)
+            HighlightService.resetHighlights(players, matches)
+            PlayerRankService.resetRanks(players, matches)
 
-    private fun createScores(team: Team, score1: Int, score2: Int) {
-        TeamScore.new {
-            this.team = team
-            score = score1
-        }
-
-        TeamScore.new {
-            this.team = team
-            score = score2
+            matches.forEach { MatchEngine.calculate(league, it) }
         }
     }
 }

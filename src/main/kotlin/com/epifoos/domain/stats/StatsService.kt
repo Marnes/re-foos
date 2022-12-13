@@ -2,8 +2,11 @@ package com.epifoos.domain.stats
 
 import com.epifoos.domain.calculation.CalculationResult
 import com.epifoos.domain.league.League
+import com.epifoos.domain.match.Game
+import com.epifoos.domain.match.Match
 import com.epifoos.domain.player.Player
-import org.jetbrains.exposed.sql.deleteAll
+import org.jetbrains.exposed.sql.SqlExpressionBuilder.inList
+import org.jetbrains.exposed.sql.deleteWhere
 import org.jetbrains.exposed.sql.transactions.transaction
 
 object StatsService {
@@ -22,16 +25,19 @@ object StatsService {
         MatchStatsService.createStats(calculationResult)
     }
 
-    fun resetStats(league: League) {
+    fun resetStats(league: League, players: List<Player>, matches: List<Match>, games: List<Game>) {
+        val playerIds = players.map { it.id }
+        val matchIds = matches.map { it.id }
+        val gameIds = games.map { it.id }
+
         transaction {
-            //TODO: Only delete for league
-            MatchPlayerStatsTable.deleteAll()
-            GamePlayerStatsTable.deleteAll()
-            MatchStatsTable.deleteAll()
-            GameStatsTable.deleteAll()
-            PlayerStatsTable.deleteAll()
-            MatchPlayerStatsSnapshotTable.deleteAll()
-            Player.all().forEach { createDefault(league, it) }
+            MatchPlayerStatsTable.deleteWhere { match inList matchIds }
+            GamePlayerStatsTable.deleteWhere { player inList playerIds }
+            MatchStatsTable.deleteWhere { match inList matchIds }
+            GameStatsTable.deleteWhere { game inList gameIds }
+            PlayerStatsTable.deleteWhere { player inList playerIds }
+            MatchPlayerStatsSnapshotTable.deleteWhere { player inList playerIds }
+            players.forEach { createDefault(league, it) }
         }
     }
 }

@@ -18,9 +18,6 @@ object HighlightDtoMapper {
     }
 
     private fun mapPlayer(highlightPlayer: HighlightPlayer): HighlightPlayerDto {
-        return HighlightPlayerDto(
-            PlayerDtoMapper.mapMinified(highlightPlayer.player, highlightPlayer.player.stats.elo),
-            highlightPlayer.result
-        )
+        return HighlightPlayerDto(PlayerDtoMapper.mapMinified(highlightPlayer.player), highlightPlayer.result)
     }
 }

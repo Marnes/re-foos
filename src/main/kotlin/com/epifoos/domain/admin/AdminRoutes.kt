@@ -1,7 +1,6 @@
 package com.epifoos.domain.admin
 
 import com.epifoos.domain.league.League
-import com.epifoos.domain.match.MatchEngine
 import com.epifoos.domain.user.profile.AvatarService
 import io.ktor.http.*
 import io.ktor.server.application.*
@@ -14,16 +13,11 @@ fun Route.adminRoutes() {
     route("/admin") {
         authenticate("basic") {
             post("/recalculate") {
-                MatchEngine.recalculate(
+                AdminService.recalculate(
                     transaction {
                         League.findById(call.request.queryParameters["leagueId"]!!.toInt())!!
                     }
                 )
-                call.respond(HttpStatusCode.OK)
-            }
-
-            post("/migrate") {
-                AdminService.migrate()
                 call.respond(HttpStatusCode.OK)
             }
 

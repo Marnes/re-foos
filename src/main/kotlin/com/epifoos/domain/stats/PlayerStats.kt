@@ -2,6 +2,7 @@ package com.epifoos.domain.stats
 
 import com.epifoos.domain.BaseIntEntity
 import com.epifoos.domain.BaseIntIdTable
+import com.epifoos.domain.elo
 import com.epifoos.domain.player.Player
 import com.epifoos.domain.player.PlayerTable
 import org.jetbrains.exposed.dao.IntEntityClass
@@ -9,7 +10,7 @@ import org.jetbrains.exposed.dao.id.EntityID
 
 abstract class BasePlayerStatsTable(name: String) : BaseIntIdTable(name) {
     var player = reference("player_id", PlayerTable)
-    var eloChange = float("elo_change")
+    var eloChange = elo("elo_change")
     var scoreFor = integer("score_for")
     var scoreAgainst = integer("score_against")
 }
@@ -22,12 +23,12 @@ abstract class BasePlayerStats(id: EntityID<Int>, table: BasePlayerStatsTable) :
 }
 
 abstract class AbstractPlayerStatsTable(name: String) : BasePlayerStatsTable(name) {
-    var elo = float("elo")
+    var elo = elo("elo")
     var played = integer("played")
     var wins = integer("wins")
     var losses = integer("losses")
-    var highestElo = float("highest_elo")
-    var lowestElo = float("lowest_elo")
+    var highestElo = elo("highest_elo")
+    var lowestElo = elo("lowest_elo")
     var winningStreak = integer("winning_streak")
     var losingStreak = integer("losing_streak")
     var longestWinningStreak = integer("longest_winning_streak")

@@ -18,7 +18,7 @@
 </script>
 
 {#if hasHighlights}
-  <div class="mb-5">
+  <div class="mb-2">
     <Highlights highlights={$highlightStore}/>
   </div>
 {/if}

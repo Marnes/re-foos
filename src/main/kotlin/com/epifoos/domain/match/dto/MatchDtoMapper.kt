@@ -4,11 +4,10 @@ import com.epifoos.domain.league.dto.LeagueDtoMapper
 import com.epifoos.domain.match.Game
 import com.epifoos.domain.match.Match
 import com.epifoos.domain.match.Team
+import com.epifoos.domain.player.Player
 import com.epifoos.domain.player.dto.PlayerDtoMapper
-import com.epifoos.domain.stats.GamePlayerStats
-import com.epifoos.domain.stats.GameStats
-import com.epifoos.domain.stats.MatchPlayerStats
-import com.epifoos.domain.stats.MatchStats
+import com.epifoos.domain.rank.MatchPlayerRankSnapshot
+import com.epifoos.domain.stats.*
 import com.epifoos.domain.stats.dto.MatchPlayerStatsDtoMapper
 import com.epifoos.domain.user.UserDtoMapper
 
@@ -17,23 +16,24 @@ object MatchDtoMapper {
     fun map(
         match: Match,
         games: List<Game>,
+        players: Set<Player>,
         matchStats: MatchStats,
-        matchPlayerStats: List<MatchPlayerStats>,
+        matchPlayerStats: Map<Player, MatchPlayerStats>,
+        matchPlayerStatsSnapshots: Map<Player, MatchPlayerStatsSnapshot>,
+        matchPlayerRankSnapshots: Map<Player, MatchPlayerRankSnapshot>,
         gameStatsMap: Map<Game, GameStats>,
         gamePlayerStatsMap: Map<Game, List<GamePlayerStats>>
     ): MatchDto {
-        val initialEloMap = matchPlayerStats.associateBy({ it.player }, { it.initialElo })
-
         return MatchDto(
             match.id.value,
             match.createdDate,
             UserDtoMapper.map(match.createdBy),
             LeagueDtoMapper.map(match.league),
-            games.map { mapGame(it, gameStatsMap[it]!!, gamePlayerStatsMap[it]!!) },
-            matchPlayerStats.associateBy(
-                { it.player.id.value },
-                { PlayerDtoMapper.mapMinified(it.player, initialEloMap[it.player]!!) }),
-            MatchPlayerStatsDtoMapper.mapMatchStats(matchPlayerStats, matchStats),
+            games.map { mapGame(it, players, gameStatsMap[it]!!, gamePlayerStatsMap[it]!!) },
+            players.associateBy(
+                { it.id.value },
+                { PlayerDtoMapper.map(it, matchPlayerRankSnapshots[it]!!, matchPlayerStatsSnapshots[it]!!) }),
+            players.associateBy({ it.id.value }, { MatchPlayerStatsDtoMapper.mapMatchStats(matchPlayerStats[it]!!) }),
             matchStats.winner?.id?.value,
             matchStats.loser?.id?.value,
         )
@@ -41,24 +41,25 @@ object MatchDtoMapper {
 
     private fun mapGame(
         game: Game,
+        players: Set<Player>,
         gameStats: GameStats,
         gamePlayerStats: List<GamePlayerStats>,
     ): GameDto {
+        val playerGameStats = gamePlayerStats.associateBy { it.player }
+
         return GameDto(
-            MatchPlayerStatsDtoMapper.mapGameStats(gamePlayerStats),
-            game.teams.map { mapTeam(it, gameStats) },
+            players.associateBy({ it.id.value }, { MatchPlayerStatsDtoMapper.mapGameStats(playerGameStats[it]!!) }),
+            game.teams.map { mapTeam(it) },
             gameStats.winner?.id?.value,
             gameStats.loser?.id?.value,
         )
     }
 
-    private fun mapTeam(team: Team, gameStats: GameStats): TeamDto {
+    private fun mapTeam(team: Team): TeamDto {
         return TeamDto(
             team.id.value,
             team.scores.map { it.score },
-            team.players.map { it.id.value },
-            gameStats.winner == team,
-            gameStats.loser == team
+            team.players.map { it.id.value }
         )
     }
 }

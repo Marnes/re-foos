@@ -1,5 +1,7 @@
 package com.epifoos.domain.calculation.data.dto
 
+import com.epifoos.domain.Elo
+import com.epifoos.domain.average
 import com.epifoos.domain.calculation.MatchResult
 import com.epifoos.domain.match.Game
 import com.epifoos.domain.match.Team
@@ -7,7 +9,7 @@ import com.epifoos.domain.player.Player
 
 data class MatchData(
     val players: Set<Player>,
-    val initialEloMap: Map<Player, Float>,
+    val initialEloMap: Map<Player, Elo>,
     val winners: Set<Player>,
     val losers: Set<Player>,
     val totalScored: Int,
@@ -40,7 +42,7 @@ data class GameData(
     val winsMap: Map<Team, Int>,
     val lossesMap: Map<Team, Int>,
     val resultMap: Map<Team, MatchResult>,
-    val teamAverageElo: Map<Team, Float>
+    val teamAverageElo: Map<Team, Elo>
 ) {
     fun getTeam(player: Player): Team {
         return playerTeamMap[player]!!
@@ -54,16 +56,15 @@ data class GameData(
         return loser == getTeam(player)
     }
 
-    fun getTeamAverageElo(player: Player): Float {
+    fun getTeamAverageElo(player: Player): Elo {
         return teamAverageElo[getTeam(player)]!!
     }
 
-    fun getOpponentTeamAverageElo(player: Player): Float {
+    fun getOpponentTeamAverageElo(player: Player): Elo {
         return teamAverageElo
             .filter { it.key != getTeam(player) }
             .map { it.value }
             .average()
-            .toFloat()
     }
 
     fun getOpponents(team: Team): List<Player> {
@@ -79,12 +80,11 @@ data class GameData(
         return scoreAgainstMap[getTeam(player)]!!
     }
 
-    fun getOpponentAverageScore(player: Player): Float {
+    fun getOpponentAverageScore(player: Player): Double {
         return scoreForMap
             .filter { it.key != getTeam(player) }
             .map { it.value }
             .average()
-            .toFloat()
     }
 
     fun getResult(player: Player): MatchResult {

@@ -1,5 +1,6 @@
 package com.epifoos.domain.player
 
+import org.jetbrains.exposed.dao.load
 import org.jetbrains.exposed.sql.SortOrder
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.inList
 import org.jetbrains.exposed.sql.deleteWhere
@@ -23,6 +24,7 @@ PlayerSpotlightService {
             val playerSpotlight = PlayerSpotlight
                 .find { PlayerSpotlightTable.id eq playerSpotlightId[PlayerSpotlightTable.id] }
                 .first()
+                .load(Player::stats, Player::user, Player::rank)
 
             if (playerSpotlight.createdDate < LocalDate.now().atStartOfDay()) {
                 return updateSpotlight(leagueId)

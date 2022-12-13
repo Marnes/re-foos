@@ -1,17 +1,15 @@
 package com.epifoos.domain.match.dto
 
 data class MatchSubmissionDto(
-    var players: List<Int>,
-    var games: List<GameSubmissionDto>
+    val players: Set<Int>,
+    val games: List<GameSubmissionDto>
 )
 
 data class GameSubmissionDto(
-    var leftPlayer1: Int,
-    var leftPlayer2: Int,
-    var rightPlayer1: Int,
-    var rightPlayer2: Int,
-    var leftScore1: Int,
-    var leftScore2: Int,
-    var rightScore1: Int,
-    var rightScore2: Int
+    val teams: List<TeamSubmissionDto>
+)
+
+data class TeamSubmissionDto(
+    val players: Set<Int>,
+    val scores: List<Int>
 )

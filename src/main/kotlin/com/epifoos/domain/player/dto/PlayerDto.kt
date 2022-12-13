@@ -1,5 +1,6 @@
 package com.epifoos.domain.player.dto
 
+import com.epifoos.domain.Elo
 import com.epifoos.domain.match.dto.MatchDto
 import java.time.LocalDateTime
 
@@ -9,7 +10,6 @@ abstract class BasePlayerDto {
     abstract val userId: Int
     abstract val username: String
     abstract val avatar: String?
-    abstract val elo: Float
 }
 
 data class PlayerDto(
@@ -18,13 +18,14 @@ data class PlayerDto(
     override val userId: Int,
     override val username: String,
     override val avatar: String?,
-    override val elo: Float,
+    val rank: Int?,
+    val elo: Elo,
     val played: Int,
     val wins: Int,
     val losses: Int,
-    val eloChange: Float,
-    val highestElo: Float,
-    val lowestElo: Float,
+    val eloChange: Elo,
+    val highestElo: Elo,
+    val lowestElo: Elo,
     val scoreFor: Int,
     val scoreAgainst: Int,
     val currentWinningStreak: Int,
@@ -39,7 +40,6 @@ data class PlayerMinifiedDto (
     override val userId: Int,
     override val username: String,
     override val avatar: String?,
-    override val elo: Float
 ) : BasePlayerDto()
 
 data class PlayerSpotlightDto(

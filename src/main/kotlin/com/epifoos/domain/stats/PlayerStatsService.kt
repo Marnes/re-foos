@@ -1,5 +1,6 @@
 package com.epifoos.domain.stats
 
+import com.epifoos.domain.Elo
 import com.epifoos.domain.calculation.CalculationResult
 import com.epifoos.domain.league.League
 import com.epifoos.domain.player.Player
@@ -15,7 +16,7 @@ object PlayerStatsService {
             losses = 0
             scoreFor = 0
             scoreAgainst = 0
-            eloChange = 0F
+            eloChange = Elo.ZERO
             highestElo = league.config.startingElo
             lowestElo = league.config.startingElo
             winningStreak = 0

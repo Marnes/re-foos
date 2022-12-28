@@ -1,4 +1,4 @@
 package com.epifoos.exceptions
 
-open class BaseException: RuntimeException() {
+open class BaseException(message: String): RuntimeException() {
 }

@@ -9,6 +9,7 @@ import com.epifoos.domain.player.dto.PlayerSpotlightDto
 import com.epifoos.domain.stats.MatchPlayerStatsTable
 import com.epifoos.domain.stats.StatsService
 import com.epifoos.domain.user.User
+import com.epifoos.exceptions.EntityNotFoundException
 import org.jetbrains.exposed.dao.load
 import org.jetbrains.exposed.dao.with
 import org.jetbrains.exposed.sql.SortOrder
@@ -30,9 +31,9 @@ object PlayerService {
         }
     }
 
-    fun getPlayer(userId: Int, leagueId: Int): PlayerDto? {
+    fun getPlayer(user: User, leagueId: Int): PlayerDto? {
         return transaction {
-            val player = Player.find { PlayerTable.user eq userId and (PlayerTable.league eq leagueId) }
+            val player = Player.find { PlayerTable.user eq user.id and (PlayerTable.league eq leagueId) }
                 .limit(1)
                 .firstOrNull()
                 ?.load(Player::user, Player::rank, Player::stats)
@@ -51,8 +52,9 @@ object PlayerService {
 
     fun getPlayerSpotlight(leagueId: Int, playerId: Int): PlayerSpotlightDto {
         return transaction {
-            val player = Player.find { PlayerTable.league eq leagueId and (PlayerTable.id eq playerId) }.first()
-                .load(Player::stats, Player::user, Player::rank)
+            val player = Player.find { PlayerTable.league eq leagueId and (PlayerTable.id eq playerId) }.firstOrNull()
+                ?.load(Player::stats, Player::user, Player::rank)
+                ?: throw EntityNotFoundException("Could not find a Player for League $leagueId")
 
             val matchId = (MatchTable innerJoin MatchPlayerStatsTable)
                 .slice(MatchTable.id)

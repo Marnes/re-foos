@@ -18,7 +18,7 @@ object MatchService {
         return transaction {
             val match = Match.findById(matchId)
                 ?.load(Match::games, Match::createdBy, Match::league)
-                ?: throw EntityNotFoundException()
+                ?: throw EntityNotFoundException("Could not find Match with ID $matchId")
 
             val games = match.games.with(Game::teams, Team::players).toList()
             val players = games.flatMap { it.teams }.flatMap { it.players }.toSet()

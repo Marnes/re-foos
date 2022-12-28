@@ -1,6 +1,5 @@
 <script lang='ts'>
-    import { dialogStore } from '$src/stores/dialogStore';
-    import { toastStore } from '@skeletonlabs/skeleton';
+    import { modalStore, toastStore } from '@skeletonlabs/skeleton';
     import { post } from '$src/lib/utils';
     import { KeyCodes } from '$src/models/key-codes';
     import { invalidateAll } from '$app/navigation';
@@ -14,20 +13,14 @@
 
     $: canSubmit = !_.isEmpty(username) && !_.isEmpty(password);
 
-    dialogStore.subscribe(value => {
-        if (value) {
-            setTimeout(() => {
-                elm.focus();
-            }, 200)
-        }
-    });
-
     const login = async () => {
         const response = await post('/profile/auth/session', { username, password });
 
         if (response.status === 200) {
             await invalidateAll();
-            $dialogStore = null;
+
+            if ($modalStore[0].response) $modalStore[0].response();
+            modalStore.close();
             toastStore.trigger({ message: 'Successfully logged in', autohide: true, timeout: 3000 });
         } else {
             loginFailure = true;

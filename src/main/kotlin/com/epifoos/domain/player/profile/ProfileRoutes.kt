@@ -15,11 +15,11 @@ fun Route.profileRoutes() {
         route("/profile") {
             route("/avatars") {
                 get {
-                    call.respond(HttpStatusCode.OK, AvatarService.getAvailableAvatars(AuthUtil.getCurrentUser(call)))
+                    call.respond(HttpStatusCode.OK, AvatarService.getAvailableAvatars(AuthUtil.authenticatedUser(call)))
                 }
 
                 put {
-                    AvatarService.updateAvatar(AuthUtil.getCurrentUser(call), call.receive())
+                    AvatarService.updateAvatar(AuthUtil.authenticatedUser(call), call.receive())
                     call.respond(HttpStatusCode.OK)
                 }
             }

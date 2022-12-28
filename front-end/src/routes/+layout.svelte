@@ -3,12 +3,13 @@
     import '@skeletonlabs/skeleton/styles/all.css';
     import '$src/app.postcss';
 
-    import { Toast } from '@skeletonlabs/skeleton';
+    import { Modal, Toast } from '@skeletonlabs/skeleton';
     import Dialog from '$src/components/layout/Dialog.svelte';
 </script>
 
 <Dialog/>
-
-<Toast/>
+<Toast />
+<Modal/>
 
 <slot/>
+

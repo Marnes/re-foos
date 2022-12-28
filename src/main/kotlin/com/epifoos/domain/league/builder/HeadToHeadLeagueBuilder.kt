@@ -5,7 +5,7 @@ import com.epifoos.domain.league.LeagueConfig
 import com.epifoos.domain.league.LeagueType
 import com.epifoos.domain.league.dto.LeagueConfigDto
 
-class HeadToHeadLeagueBuilder: LeagueBuilder() {
+class HeadToHeadLeagueBuilder : LeagueBuilder() {
 
     companion object {
         private const val TEAMS = 2

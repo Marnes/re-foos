@@ -14,6 +14,7 @@ object JwtService {
             .withAudience(jwtConfig.audience)
             .withIssuer(jwtConfig.issuer)
             .withClaim("id", user.id.value)
+            .withClaim("admin", user.admin)
             .withExpiresAt(getExpiration())
             .sign(jwtConfig.algorithm)
     }

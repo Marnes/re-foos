@@ -51,6 +51,10 @@ export const url = (path: string, params: any): string => {
     return `${ path }?${ query.toString() }`;
 }
 
+export const getFrontEndPath = (path: string): string => {
+    return `${ env.PUBLIC_FRONT_END }${ path }`
+}
+
 export const getAssetPath = (path: string): string => {
     return `${ env.PUBLIC_HOST }/assets${ path }`;
 }

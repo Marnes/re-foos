@@ -23,7 +23,6 @@
     }
 
     const getSubmitClass = (winner, loser): string => {
-        console.log(winner);
         if (winner && !loser) {
             return 'bg-tertiary-500'
         }

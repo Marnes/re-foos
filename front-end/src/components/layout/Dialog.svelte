@@ -1,10 +1,12 @@
 <script lang="ts">
-    import { dialogStore } from "$src/stores/dialogStore";
-    import { Dialog } from "$src/models/dialog";
+    import { dialogStore } from '$src/stores/dialogStore';
+    import { Dialog } from '$src/models/dialog';
     import _ from 'lodash';
-    import Icon from "@iconify/svelte";
+    import Icon from '@iconify/svelte';
+    import { onDestroy, onMount } from 'svelte';
 
     let dialog: Dialog;
+    let unsubscribeStore;
 
     function closeModal() {
         dialog = null;
@@ -13,8 +15,14 @@
 
     $: show = !_.isNil(dialog);
 
-    dialogStore.subscribe(value => {
-        dialog = value;
+    onMount(() => {
+        unsubscribeStore = dialogStore.subscribe(value => {
+            dialog = value;
+        });
+    });
+
+    onDestroy(() => {
+        if (unsubscribeStore) unsubscribeStore();
     });
 </script>
 

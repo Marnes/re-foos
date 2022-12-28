@@ -6,6 +6,7 @@
     import { toastStore } from '@skeletonlabs/skeleton';
     import { captureDrawerStore } from '$src/stores/game-store';
     import { invalidateAll } from '$app/navigation';
+    import { onDestroy, onMount } from 'svelte';
 
     export let players;
     export let minScore;
@@ -13,12 +14,19 @@
 
     let captureScore = false;
     let selectedPlayers: Player[] = [];
+    let unsubscribeStore;
 
-    captureDrawerStore.subscribe(value => {
-        if (!value) {
-            reset();
-        }
-    })
+    onMount(() => {
+        unsubscribeStore = captureDrawerStore.subscribe(value => {
+            if (!value) {
+                reset();
+            }
+        })
+    });
+
+    onDestroy(() => {
+        if (unsubscribeStore) unsubscribeStore();
+    });
 
     const reset = () => {
         captureScore = false;

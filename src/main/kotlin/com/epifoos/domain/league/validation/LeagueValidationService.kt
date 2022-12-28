@@ -1,12 +1,12 @@
 package com.epifoos.domain.league.validation
 
-import com.epifoos.domain.league.dto.LeagueDto
+import com.epifoos.domain.league.dto.LeagueCreationDto
 import io.konform.validation.ValidationResult
 
 object LeagueValidationService {
 
-    fun validate(leagueDto: LeagueDto): ValidationResult<LeagueDto> {
-        return getValidator().validate(leagueDto)
+    fun validate(leagueCreationDto: LeagueCreationDto): ValidationResult<LeagueCreationDto> {
+        return getValidator().validate(leagueCreationDto)
     }
 
     private fun getValidator(): LeagueValidator {

@@ -11,7 +11,7 @@ fun Route.userRoutes() {
     authenticate {
         route("/users/current") {
             get {
-                call.respond(HttpStatusCode.OK, UserDtoMapper.map(AuthUtil.getCurrentUser(call)))
+                call.respond(HttpStatusCode.OK, UserDtoMapper.map(AuthUtil.authenticatedUser(call)))
             }
         }
     }

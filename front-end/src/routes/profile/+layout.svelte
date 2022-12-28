@@ -1,8 +1,4 @@
 <script lang="ts">
-    import '@skeletonlabs/skeleton/themes/theme-skeleton.css';
-    import '@skeletonlabs/skeleton/styles/all.css';
-    import '$src/app.postcss';
-
     import TopBar from '$src/components/layout/TopBar.svelte'
     import AppRail from '$src/components/layout/AppRail.svelte';
     import PlayerProfile from '$src/components/profile/PlayerProfile.svelte';

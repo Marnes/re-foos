@@ -10,6 +10,7 @@
     import { spotlightStore } from '$src/stores/spotlightStore';
     import { get } from '$src/lib/utils';
     import { onDestroy, onMount } from 'svelte';
+    import { leagueStore } from '$src/stores/leagueStore';
 
     let player: Player
     let match: Match
@@ -19,7 +20,7 @@
     onMount(() => {
         spotlightUnsubscribe = spotlightStore.subscribe(async p => {
             if (p) {
-                const response = await get(`leagues/1/players/${ p.id }/spotlight`)
+                const response = await get(`/leagues/${ $leagueStore.id }/players/${ p.id }/spotlight`)
                 const playerSpotlight = await response.json();
 
                 player = playerSpotlight.player

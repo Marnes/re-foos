@@ -2,13 +2,13 @@ package com.epifoos.domain.league.builder
 
 import com.epifoos.domain.league.League
 import com.epifoos.domain.league.LeagueType
-import com.epifoos.domain.league.dto.LeagueDto
+import com.epifoos.domain.league.dto.LeagueCreationDto
 import com.epifoos.domain.user.User
 
 object LeagueBuilderService {
 
-    fun create(leagueDto: LeagueDto, currentUser: User): League {
-        return getBuilder(leagueDto.config.type).create(leagueDto, currentUser)
+    fun create(leagueCreationDto: LeagueCreationDto, currentUser: User): League {
+        return getBuilder(leagueCreationDto.config.type).create(leagueCreationDto, currentUser)
     }
 
     private fun getBuilder(leagueType: LeagueType): LeagueBuilder {

@@ -1,8 +1,4 @@
 <script lang="ts">
-    import '@skeletonlabs/skeleton/themes/theme-skeleton.css';
-    import '@skeletonlabs/skeleton/styles/all.css';
-    import '$src/app.postcss';
-
     import TopBar from '$src/components/layout/TopBar.svelte';
     import AppRail from '$src/components/layout/AppRail.svelte';
     import Match from '$src/components/game/match.svelte';
@@ -16,6 +12,8 @@
     import { page } from '$app/stores';
 
     import type { PageData } from '$src/$types';
+    import { sessionStore } from '$src/stores/sessionStore.js';
+    import { leagueStore } from '$src/stores/leagueStore.js';
 
     export let data: PageData;
 
@@ -45,9 +43,15 @@
   <svelte:fragment slot="header">
     <TopBar>
       <svelte:fragment slot="actions">
-        <button class="hidden md:inline-flex btn bg-primary-500" on:click={captureGame}>
-          Capture
-        </button>
+        {#if $sessionStore?.user}
+          <button
+              class="hidden md:inline-flex btn bg-primary-500"
+              disabled={$leagueStore.isClosed}
+              on:click={captureGame}
+          >
+            Capture
+          </button>
+        {/if}
       </svelte:fragment>
     </TopBar>
   </svelte:fragment>
@@ -59,11 +63,17 @@
   <MainPage>
     <slot players={data.players}></slot>
 
-    <div class="flex md:hidden h-14">
-      <button class="btn bg-primary-500 absolute bottom-4 right-6" on:click={captureGame}>
-        Capture
-      </button>
-    </div>
+    {#if $sessionStore?.user}
+      <div class="flex md:hidden h-14">
+        <button
+            class="btn bg-primary-500 absolute bottom-4 right-6"
+            disabled={$leagueStore.isClosed}
+            on:click={captureGame}
+        >
+          Capture
+        </button>
+      </div>
+    {/if}
 
     <svelte:fragment slot="right-content">
       <PlayerSpotlight/>

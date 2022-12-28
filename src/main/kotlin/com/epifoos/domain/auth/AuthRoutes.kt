@@ -24,7 +24,7 @@ fun Route.authRoutes() {
 
         authenticate {
             post("/change-password") {
-                AuthService.changePassword(call.receive(), AuthUtil.getCurrentUser(call))
+                AuthService.changePassword(call.receive(), AuthUtil.authenticatedUser(call))
                 call.respond(HttpStatusCode.OK)
             }
         }

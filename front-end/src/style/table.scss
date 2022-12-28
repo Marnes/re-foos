@@ -1,0 +1,15 @@
+.table tbody a.table-row {
+  text-decoration: none !important;
+  color: rgba(var(--theme-font-color-dark)) !important;
+  display: table-row !important;
+  border-bottom-width: 1px;
+  border-color: rgb(var(--color-surface-500) / 0.3);
+}
+
+.table tbody a.table-row:nth-child(even) {
+  background-color: rgb(var(--color-surface-500) / 0.05);
+}
+
+.table tbody a.table-row:hover {
+  background-color: rgb(var(--color-surface-500) / .2);
+}

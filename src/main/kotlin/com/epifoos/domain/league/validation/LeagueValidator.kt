@@ -1,7 +1,7 @@
 package com.epifoos.domain.league.validation
 
 import com.epifoos.domain.league.dto.LeagueConfigDto
-import com.epifoos.domain.league.dto.LeagueDto
+import com.epifoos.domain.league.dto.LeagueCreationDto
 import io.konform.validation.Validation
 import io.konform.validation.ValidationResult
 import io.konform.validation.jsonschema.maxLength
@@ -19,32 +19,37 @@ class LeagueValidator {
         private const val MAX_SCORES_PER_TEAM = 5
     }
 
-    fun validate(leagueDto: LeagueDto): ValidationResult<LeagueDto> {
-        return build().validate(leagueDto)
+    fun validate(leagueCreationDto: LeagueCreationDto): ValidationResult<LeagueCreationDto> {
+        return build().validate(leagueCreationDto)
     }
 
-    private fun build(): Validation<LeagueDto> {
+    private fun build(): Validation<LeagueCreationDto> {
         return Validation {
-            LeagueDto::name required {
+            LeagueCreationDto::name required {
                 minLength(5)
                 maxLength(100)
             }
 
-            LeagueDto::config required {
+            LeagueCreationDto::startDate required {
+//                run(validateDates(LeagueDto::startDate, LeagueDto::endDate)) TODO:
+            }
+
+            LeagueCreationDto::config required {
                 run(validateConfig())
             }
         }
     }
 
+
     private fun validateConfig(): Validation<LeagueConfigDto> {
         return Validation {
-            LeagueConfigDto::startingElo required  {
+            LeagueConfigDto::startingElo required {
                 minimum(500)
             }
 
             LeagueConfigDto::type required {}
 
-            LeagueConfigDto::games required  {
+            LeagueConfigDto::games required {
                 minimum(1)
                 maximum(MAX_GAMES)
             }

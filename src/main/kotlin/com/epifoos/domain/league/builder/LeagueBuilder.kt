@@ -2,17 +2,21 @@ package com.epifoos.domain.league.builder
 
 import com.epifoos.domain.league.League
 import com.epifoos.domain.league.LeagueConfig
+import com.epifoos.domain.league.LeagueUtil
 import com.epifoos.domain.league.dto.LeagueConfigDto
-import com.epifoos.domain.league.dto.LeagueDto
+import com.epifoos.domain.league.dto.LeagueCreationDto
 import com.epifoos.domain.user.User
 
 abstract class LeagueBuilder {
 
-    open fun create(leagueDto: LeagueDto, currentUser: User): League {
+    open fun create(leagueCreationDto: LeagueCreationDto, currentUser: User): League {
         return League.new {
-            name = leagueDto.name
+            name = leagueCreationDto.name
+            startDate = leagueCreationDto.startDate
+            endDate = leagueCreationDto.endDate
+            uid = LeagueUtil.generateUid()
             createdBy = currentUser
-        }.also { createConfig(it, leagueDto.config) }
+        }.also { createConfig(it, leagueCreationDto.config) }
     }
 
     abstract fun createConfig(league: League, leagueConfigDto: LeagueConfigDto): LeagueConfig

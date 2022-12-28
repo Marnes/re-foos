@@ -4,25 +4,15 @@ import com.epifoos.domain.user.User
 import com.epifoos.exceptions.AuthenticationException
 import io.ktor.server.application.*
 import io.ktor.server.auth.*
-import io.ktor.server.auth.jwt.*
-import org.jetbrains.exposed.sql.transactions.transaction
 
 object AuthUtil {
-    fun getCurrentUser(call: ApplicationCall): User {
-        return transaction {
-            User.findById(getId(call))!!
-        }
+    fun authenticatedUser(call: ApplicationCall): User {
+        return call.principal() ?: throw AuthenticationException("User not authenticated")
     }
 
-    fun getCurrentUserId(call: ApplicationCall): Int {
-        return getId(call)
+    fun optionalUser(call: ApplicationCall): User? {
+        return call.principal()
     }
 
-    private fun getId(call: ApplicationCall): Int {
-        return when (val principal = call.principal<Principal>()) {
-            is UserIdPrincipal -> principal.name.toInt()
-            is JWTPrincipal -> principal.payload.getClaim("id").asInt()
-            else -> throw AuthenticationException()
-        }
-    }
+
 }

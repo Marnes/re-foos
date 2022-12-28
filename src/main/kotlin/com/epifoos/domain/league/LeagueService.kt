@@ -1,25 +1,111 @@
 package com.epifoos.domain.league
 
 import com.epifoos.domain.league.builder.LeagueBuilderService
-import com.epifoos.domain.league.dto.LeagueDto
-import com.epifoos.domain.league.dto.LeagueDtoMapper
+import com.epifoos.domain.league.dto.*
 import com.epifoos.domain.league.validation.LeagueValidationService
+import com.epifoos.domain.player.PlayerService
+import com.epifoos.domain.player.PlayerTable
 import com.epifoos.domain.user.User
+import com.epifoos.exceptions.AuthorizationException
+import com.epifoos.exceptions.BaseException
+import com.epifoos.exceptions.EntityNotFoundException
 import com.epifoos.exceptions.ValidationException
 import io.konform.validation.Invalid
+import org.jetbrains.exposed.dao.load
+import org.jetbrains.exposed.dao.with
+import org.jetbrains.exposed.sql.select
 import org.jetbrains.exposed.sql.transactions.transaction
+import java.time.LocalDate
 
 object LeagueService {
 
-    fun createLeague(leagueDto: LeagueDto, currentUser: User): LeagueDto {
-        val validationResult = LeagueValidationService.validate(leagueDto)
+    fun createLeague(leagueCreationDto: LeagueCreationDto, currentUser: User): LeagueCreationDto {
+        val validationResult = LeagueValidationService.validate(leagueCreationDto)
 
         if (validationResult is Invalid) {
             throw ValidationException(validationResult.errors)
         }
 
-        val league = transaction { LeagueBuilderService.create(leagueDto, currentUser) }
+        transaction { LeagueBuilderService.create(leagueCreationDto, currentUser) }
 
-        return LeagueDtoMapper.map(league)
+        return leagueCreationDto
+    }
+
+    fun getLeague(leagueId: Int, currentUser: User?): LeagueDto {
+        return transaction {
+            League.findById(leagueId)?.load(League::config)
+                ?.let { LeagueDtoMapper.map(it, getUserLeagueIds(currentUser).contains(it.id.value)) }
+                ?: throw throw leagueNotFound(leagueId)
+        }
+    }
+
+    fun getLeagues(currentUser: User?): List<LeagueSummaryDto> {
+        val userLeagueIds = transaction { getUserLeagueIds(currentUser) }
+
+        return transaction {
+            League.all()
+                .with(League::config, League::createdBy)
+                .toList()
+                .sortedWith(compareBy(String.CASE_INSENSITIVE_ORDER) { it.name })
+                .map { LeagueDtoMapper.mapSummary(it, userLeagueIds.contains(it.id.value)) }
+        }
+    }
+
+    fun getLeagueCode(leagueId: Int): LeagueCode {
+        return transaction {
+            League.findById(leagueId)?.uid?.let { LeagueCode(it) } ?: throw leagueNotFound(leagueId)
+        }
+    }
+
+    fun generateNewCode(leagueId: Int): LeagueCode {
+        return transaction {
+            val league = League.findById(leagueId) ?: throw leagueNotFound(leagueId)
+            val uid = LeagueUtil.generateUid()
+
+            league.uid = uid
+            LeagueCode(uid)
+        }
+    }
+
+    fun setLeagueEndDate(leagueId: Int, endDate: LocalDate) {
+        transaction {
+            val league = League.findById(leagueId) ?: throw leagueNotFound(leagueId)
+            league.endDate = endDate
+        }
+    }
+
+    fun joinLeague(leagueId: Int, currentUser: User, code: String) {
+        transaction {
+            val league = League.findById(leagueId) ?: throw leagueNotFound(leagueId)
+
+            if (league.uid != code) {
+                throw AuthorizationException("Invalid code supplied")
+            }
+
+            if (getUserLeagueIds(currentUser).contains(league.id.value)) {
+                throw BaseException("User already joined league")
+            }
+
+            if (league.isClosed()) {
+                throw BaseException("League is closed");
+            }
+
+            PlayerService.createPlayer(league, currentUser)
+        }
+    }
+
+    private fun getUserLeagueIds(currentUser: User?): List<Int> {
+        if (currentUser == null) {
+            return listOf()
+        }
+
+        return PlayerTable
+            .slice(PlayerTable.league)
+            .select { PlayerTable.user eq currentUser.id }
+            .map { it[PlayerTable.league].value }
+    }
+
+    private fun leagueNotFound(leagueId: Int): EntityNotFoundException {
+        return EntityNotFoundException("Could not find league with ID $leagueId")
     }
 }

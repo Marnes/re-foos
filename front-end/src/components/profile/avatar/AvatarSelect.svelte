@@ -23,8 +23,9 @@
 </script>
 
 {#each categories as category }
-  <Section title={category} class="mb-5 mt-2">
+  <div class="card !bg-secondary-500/5 mb-5 p-3">
     <div class="card-body">
+      <h3 class="mb-3">{category}</h3>
       <div class="flex flex-row flex-wrap gap-4 md:gap-5">
         {#each getAvatars(category) as avatar}
           {#if avatar === value}
@@ -47,7 +48,7 @@
         {/each}
       </div>
     </div>
-  </Section>
+  </div>
 {/each}
 
 <style lang="scss">

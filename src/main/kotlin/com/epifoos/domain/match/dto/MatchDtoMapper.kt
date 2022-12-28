@@ -28,7 +28,7 @@ object MatchDtoMapper {
             match.id.value,
             match.createdDate,
             UserDtoMapper.map(match.createdBy),
-            LeagueDtoMapper.map(match.league),
+            LeagueDtoMapper.map(match.league, false),
             games.map { mapGame(it, players, gameStatsMap[it]!!, gamePlayerStatsMap[it]!!) },
             players.associateBy(
                 { it.id.value },

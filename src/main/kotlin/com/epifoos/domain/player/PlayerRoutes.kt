@@ -23,7 +23,7 @@ fun Route.playersRoutes() {
                 call.respond(
                     HttpStatusCode.OK,
                     PlayerService.getPlayer(
-                        AuthUtil.getCurrentUserId(call),
+                        AuthUtil.authenticatedUser(call),
                         call.parameters["leagueId"]!!.toInt()
                     )!!
                 )

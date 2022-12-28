@@ -19,7 +19,7 @@
 
 </script>
 
-<AppRail width="w-24 lg:w-20">
+<AppRail width="w-24 lg:w-20" background="dark:bg-black/20">
   {#each rails as rail, index}
     <AppRailTile
         tag="a"

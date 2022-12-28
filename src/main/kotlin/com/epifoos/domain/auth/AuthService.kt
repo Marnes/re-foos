@@ -11,10 +11,12 @@ import org.mindrot.jbcrypt.BCrypt
 object AuthService {
 
     fun login(loginRequest: LoginRequest): UserAuthResponse {
-        val user: User = transaction { User.findByUsername(loginRequest.username) ?: throw AuthenticationException() }
+        val user: User = transaction {
+            User.findByUsername(loginRequest.username) ?: throw AuthenticationException("Authentication exception")
+        }
 
         if (!BCrypt.checkpw(loginRequest.password, user.password)) {
-            throw AuthenticationException()
+            throw AuthenticationException("Authentication exception")
         }
 
         return UserAuthResponse(
@@ -41,7 +43,7 @@ object AuthService {
 
     fun changePassword(changePasswordRequest: ChangePasswordRequest, currentUser: User) {
         if (!BCrypt.checkpw(changePasswordRequest.oldPassword, currentUser.password)) {
-            throw AuthenticationException()
+            throw AuthenticationException("Authentication exception")
         }
 
         transaction {
@@ -50,10 +52,11 @@ object AuthService {
     }
 
     fun authenticate(username: String, password: String): User {
-        var user: User = transaction { User.findByUsername(username) ?: throw AuthenticationException() }
+        var user: User =
+            transaction { User.findByUsername(username) ?: throw AuthenticationException("Authentication exception") }
 
         if (!BCrypt.checkpw(password, user.password)) {
-            throw AuthenticationException()
+            throw AuthenticationException("Authentication exception")
         }
 
         return user

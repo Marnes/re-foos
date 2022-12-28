@@ -1,4 +1,4 @@
 package com.epifoos.exceptions
 
-class AuthenticationException : BaseException() {
+class AuthenticationException(message: String) : BaseException(message) {
 }

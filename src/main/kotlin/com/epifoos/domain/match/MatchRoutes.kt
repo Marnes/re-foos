@@ -14,7 +14,7 @@ fun Route.matchRoutes() {
                 val newMatch = MatchSubmissionService.captureMatch(
                     call.parameters["leagueId"]!!.toInt(),
                     call.receive(),
-                    AuthUtil.getCurrentUser(call)
+                    AuthUtil.authenticatedUser(call)
                 )
                 call.respond(newMatch)
             }

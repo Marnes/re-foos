@@ -6,5 +6,6 @@ data class UserDto(
     val id: Int,
     val username: String,
     val avatar: String?,
-    val createdDate: LocalDateTime
+    val createdDate: LocalDateTime,
+    val admin: Boolean
 )

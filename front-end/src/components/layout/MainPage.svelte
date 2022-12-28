@@ -1,14 +1,14 @@
-<div class="flex h-full w-full">
-  <div class="left-content grow h-full place-content-center">
-    <div class="card card-body h-full">
-      <slot></slot>
-    </div>
+<div class="flex h-full w-full p-2 xl:p-6">
+  <div class="left-content grow place-content-center">
+    <slot></slot>
   </div>
-  <div class="h-full right-content hidden xl:flex">
-    <div class="card card-body h-full w-full">
-      <slot name="right-content"/>
+  {#if $$slots['right-content'] }
+    <div class="card !bg-tertiary-500/5 ml-5 p-3 h-fit">
+      <div class="right-content hidden xl:flex">
+        <slot name="right-content"/>
+      </div>
     </div>
-  </div>
+  {/if}
 </div>
 
 <style lang="scss">

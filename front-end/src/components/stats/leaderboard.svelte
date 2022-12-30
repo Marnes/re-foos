@@ -5,10 +5,13 @@
     import type { Player } from '$src/models/player/player';
     import { formatElo } from '$src/lib/util/elo-util';
     import { createEventDispatcher } from 'svelte';
+    import _ from 'lodash';
 
     const dispatch = createEventDispatcher();
 
     export let players: Player[];
+
+    $: sortedPlayers = _.sortBy(players.filter(player => player.rank), player => player.rank)
 
     let selected: Player;
 
@@ -61,7 +64,7 @@
     </tr>
     </thead>
     <tbody>
-    {#each players as player, index}
+    {#each sortedPlayers as player}
       <tr
           class="rank-{player.rank}"
           class:table-row-checked={selected === player}

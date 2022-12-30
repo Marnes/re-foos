@@ -3,30 +3,15 @@
     import ScoreCapture from '$src/components/game/ScoreCapture.svelte'
     import { Player } from '$src/models/player/player';
     import { post } from '$src/lib/utils';
-    import { toastStore } from '@skeletonlabs/skeleton';
-    import { captureDrawerStore } from '$src/stores/game-store';
+    import { drawerStore, toastStore } from '@skeletonlabs/skeleton';
     import { invalidateAll } from '$app/navigation';
-    import { onDestroy, onMount } from 'svelte';
+    import { League } from '$src/models/league/league';
 
-    export let players;
-    export let minScore;
-    export let maxScore;
+    export let league: League;
+    export let players: Player[];
 
     let captureScore = false;
     let selectedPlayers: Player[] = [];
-    let unsubscribeStore;
-
-    onMount(() => {
-        unsubscribeStore = captureDrawerStore.subscribe(value => {
-            if (!value) {
-                reset();
-            }
-        })
-    });
-
-    onDestroy(() => {
-        if (unsubscribeStore) unsubscribeStore();
-    });
 
     const reset = () => {
         captureScore = false;
@@ -34,20 +19,16 @@
     }
 
     const startGame = ({ detail }: CustomEvent) => {
-        if (detail.length !== 4) {
-            return;
-        }
-
         selectedPlayers = detail;
         captureScore = true;
     }
 
     const submitGame = async ({ detail }: CustomEvent) => {
-        const response = await post(`/leagues/1/matches`, detail);
+        const response = await post(`/leagues/${league.id}/matches`, detail);
 
         if (response.ok) {
             await invalidateAll();
-            $captureDrawerStore = false;
+            drawerStore.close();
             toastStore.trigger({ message: 'Match Captured', autohide: true, timeout: 3000 });
         }
     }
@@ -56,9 +37,13 @@
 <div class="w-full h-full">
   <div class="w-full h-full relative">
     {#if captureScore}
-      <ScoreCapture players={selectedPlayers} minScore="{minScore}" maxScore={maxScore} on:submitGame={submitGame}/>
+      <ScoreCapture league={league} players={selectedPlayers} on:submit={submitGame}/>
     {:else }
-      <PlayerSelect players={players} on:startGame={startGame}/>
+      <PlayerSelect
+          players={players}
+          league={league}
+          on:startGame={startGame}
+      />
     {/if}
   </div>
 </div>

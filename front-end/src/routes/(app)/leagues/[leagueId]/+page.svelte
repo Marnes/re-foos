@@ -5,24 +5,22 @@
     import LoginForm from '$src/components/session/LoginForm.svelte';
 
     import { Player } from '$src/models/player/player';
-    import { spotlightStore } from '$src/stores/spotlightStore';
-    import { highlightStore } from '$src/stores/highlightStore';
     import { page } from '$app/stores'
     import { onMount } from 'svelte';
     import { modalStore } from '@skeletonlabs/skeleton';
     import { Modal } from '$src/models/modal';
     import { sessionStore } from '$src/stores/sessionStore';
-    import { leagueStore } from '$src/stores/leagueStore';
+    import { league, players, playerSpotlight, highlights } from '$src/stores/leagueStore';
     import type { PageData } from '$src/$types';
     import _ from 'lodash';
 
     export let data: PageData;
 
     const changeSpotlight = async (event: CustomEvent<Player>) => {
-        $spotlightStore = event.detail;
+        $playerSpotlight = event.detail;
     }
 
-    $: hasHighlights = !_.isEmpty($highlightStore);
+    $: hasHighlights = !_.isEmpty($highlights);
 
     onMount(() => {
         const code = $page.url.searchParams.get('join');
@@ -42,7 +40,7 @@
 
     const showJoinDialog = (code: string) => {
         modalStore.trigger(Modal.component('', JoinDialog, {
-            league: $leagueStore,
+            league: $league,
             code
         }));
     }
@@ -50,12 +48,12 @@
 
 {#if hasHighlights}
   <div class="mb-2">
-    <Highlights highlights={$highlightStore}/>
+    <Highlights highlights={$highlights}/>
   </div>
 {/if}
 
 <Leaderboard
-    players="{data.players}"
+    players="{$players}"
     on:selected={changeSpotlight}
 />
 

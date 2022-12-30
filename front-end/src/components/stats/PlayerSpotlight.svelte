@@ -7,10 +7,10 @@
     import { formatElo } from '$src/lib/util/elo-util.js';
     import { humanDateWithTime } from '$src/lib/util/dateUtil.js';
     import { Match, Team } from '$src/models/match/match';
-    import { spotlightStore } from '$src/stores/spotlightStore';
     import { get } from '$src/lib/utils';
     import { onDestroy, onMount } from 'svelte';
-    import { leagueStore } from '$src/stores/leagueStore';
+    import { league, playerSpotlight } from '$src/stores/leagueStore';
+    import { userNameSentence } from '$src/lib/util/stringUtil.js';
 
     let player: Player
     let match: Match
@@ -18,9 +18,9 @@
     let spotlightUnsubscribe;
 
     onMount(() => {
-        spotlightUnsubscribe = spotlightStore.subscribe(async p => {
+        spotlightUnsubscribe = playerSpotlight.subscribe(async p => {
             if (p) {
-                const response = await get(`/leagues/${ $leagueStore.id }/players/${ p.id }/spotlight`)
+                const response = await get(`/leagues/${ $league.id }/players/${ p.id }/spotlight`)
                 const playerSpotlight = await response.json();
 
                 player = playerSpotlight.player
@@ -37,6 +37,10 @@
         return match?.players[playerId];
     }
 
+    const getPlayers = (playerIds: number[]): PlayerMin[] => {
+        return playerIds.map(id => match?.players[id]);
+    }
+
     const getGameClass = (team: Team): string => {
         if (team?.players.includes(player.id)) {
             if (team.winner === true)
@@ -48,8 +52,6 @@
         return '';
     }
 
-    $: winner = match?.players[match?.winner]
-    $: loser = match?.players[match?.loser]
 
 </script>
 
@@ -95,14 +97,14 @@
           </div>
           <div class="grid grid-cols-3 gap-4 mb-3 text-right">
             <StatItem
-                class={winner?.id === player.id ? 'text-positive' : ''}
+                class={match.winners.includes(player.id) ? 'text-positive' : ''}
                 title="Winner"
-                value={winner?.username}
+                value={userNameSentence(getPlayers(match.winners))}
             />
             <StatItem
-                class={loser?.id === player.id ? 'text-negative' : ''}
+                class={match.losers.includes(player.id) ? 'text-negative' : ''}
                 title="Loser"
-                value={loser?.username}
+                value={userNameSentence(getPlayers(match.losers))}
             />
             <StatItem title="Elo Change" eloChange={match.playerStats[player.id].eloChange}/>
           </div>

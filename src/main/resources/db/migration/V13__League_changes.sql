@@ -23,7 +23,8 @@ ALTER TABLE league_config
     ADD COLUMN teams            INT,
     ADD COLUMN players          INT,
     ADD COLUMN scores_per_team  INT,
-    ADD COLUMN players_per_team INT;
+    ADD COLUMN players_per_team INT,
+    ADD COLUMN max_score INT;
 
 UPDATE league_config
 set "type"           = 'ROUND_ROBIN',
@@ -31,7 +32,8 @@ set "type"           = 'ROUND_ROBIN',
     teams            = 2,
     players          = 4,
     scores_per_team  = 2,
-    players_per_team = 2;
+    players_per_team = 2,
+    max_score        = 5;
 
 ALTER TABLE league_config
     ALTER COLUMN "type" SET NOT NULL,
@@ -39,4 +41,7 @@ ALTER TABLE league_config
     ALTER COLUMN teams SET NOT NULL,
     ALTER COLUMN players SET NOT NULL,
     ALTER COLUMN scores_per_team SET NOT NULL,
+    ALTER COLUMN max_score SET NOT NULL,
     ALTER COLUMN players_per_team SET NOT NULL;
+
+ALTER TABLE match_player_stats DROP COLUMN initial_elo;

@@ -1,19 +1,15 @@
 <script lang="ts">
     import TopBar from '$src/components/layout/TopBar.svelte';
     import AppRail from '$src/components/layout/AppRail.svelte';
-    import Match from '$src/components/game/match.svelte';
+    import Match from '$src/components/game/Match.svelte';
     import PlayerSpotlight from '$src/components/stats/PlayerSpotlight.svelte';
     import MainPage from '$src/components/layout/MainPage.svelte';
 
-    import { AppShell, Drawer } from '@skeletonlabs/skeleton';
-    import { MatchSettings } from '$src/models/constants';
-    import { menuDrawerStore } from '$src/stores/menu-store';
-    import { captureDrawerStore } from '$src/stores/game-store';
+    import { AppShell, Drawer, drawerStore } from '@skeletonlabs/skeleton';
     import { page } from '$app/stores';
-
-    import type { PageData } from '$src/$types';
     import { sessionStore } from '$src/stores/sessionStore.js';
-    import { leagueStore } from '$src/stores/leagueStore.js';
+    import { league, players } from '$src/stores/leagueStore.js';
+    import type { PageData } from '$src/$types';
 
     export let data: PageData;
 
@@ -22,31 +18,33 @@
     ]
 
     const captureGame = () => {
-        $captureDrawerStore = true
+        drawerStore.open({ id: 'match-capture', position: 'right' })
     };
 
+    $: captureDisabled = $league.isClosed
+    $: showCapture = $sessionStore?.user && $league.joined
 </script>
 
-<Drawer open={captureDrawerStore} position="right">
-  <Match
-      players={data.players}
-      minScore={MatchSettings.MIN_SCORE}
-      maxScore={MatchSettings.MAX_SCORE}
-  />
+<Drawer>
+  {#if $drawerStore.id === 'match-capture'}
+    <Match
+        players={$players}
+        league={$league}
+    />
+  {:else if $drawerStore.id === 'app-rail'}
+    <AppRail rails={rails}/>
+  {/if}
 </Drawer>
 
-<Drawer open={menuDrawerStore} position="left" width="w-24" class="lg:hidden">
-  <AppRail rails={rails}/>
-</Drawer>
 
 <AppShell>
   <svelte:fragment slot="header">
     <TopBar>
       <svelte:fragment slot="actions">
-        {#if $sessionStore?.user}
+        {#if showCapture}
           <button
               class="hidden md:inline-flex btn bg-primary-500"
-              disabled={$leagueStore.isClosed}
+              disabled={captureDisabled}
               on:click={captureGame}
           >
             Capture
@@ -63,11 +61,11 @@
   <MainPage>
     <slot players={data.players}></slot>
 
-    {#if $sessionStore?.user}
+    {#if showCapture}
       <div class="flex md:hidden h-14">
         <button
             class="btn bg-primary-500 absolute bottom-4 right-6"
-            disabled={$leagueStore.isClosed}
+            disabled={captureDisabled}
             on:click={captureGame}
         >
           Capture

@@ -2,6 +2,7 @@ package com.epifoos.domain.calculation.data.dto
 
 import com.epifoos.domain.Elo
 import com.epifoos.domain.average
+import com.epifoos.domain.calculation.GameDifference
 import com.epifoos.domain.calculation.MatchResult
 import com.epifoos.domain.match.Game
 import com.epifoos.domain.match.Team
@@ -15,10 +16,6 @@ data class MatchData(
     val totalScored: Int,
     val scoreForMap: Map<Player, Int>,
     val scoreAgainstMap: Map<Player, Int>,
-    val gameWinsMap: Map<Player, Int>,
-    val gameLossesMap: Map<Player, Int>,
-    val roundWinsMap: Map<Player, Int>,
-    val roundLossesMap: Map<Player, Int>,
     val gameDataMap: Map<Game, GameData>
 ) {
     fun isWinner(player: Player): Boolean {
@@ -33,27 +30,15 @@ data class MatchData(
 data class GameData(
     val teams: Map<Team, List<Player>>,
     val playerTeamMap: Map<Player, Team>,
-    val winner: Team?,
-    val loser: Team?,
+    val gameResult: GameResult,
     val totalPlayed: Int,
     val totalScored: Int,
     val scoreForMap: Map<Team, Int>,
     val scoreAgainstMap: Map<Team, Int>,
-    val winsMap: Map<Team, Int>,
-    val lossesMap: Map<Team, Int>,
-    val resultMap: Map<Team, MatchResult>,
     val teamAverageElo: Map<Team, Elo>
 ) {
     fun getTeam(player: Player): Team {
         return playerTeamMap[player]!!
-    }
-
-    fun isWinner(player: Player): Boolean {
-        return winner == getTeam(player)
-    }
-
-    fun isLoser(player: Player): Boolean {
-        return loser == getTeam(player)
     }
 
     fun getTeamAverageElo(player: Player): Elo {
@@ -87,15 +72,39 @@ data class GameData(
             .average()
     }
 
+    //TODO: Refactor
     fun getResult(player: Player): MatchResult {
-        return resultMap[getTeam(player)]!!
+        if (gameResult.isDraw) {
+            return MatchResult.DRAW
+        }
+
+        return if (gameResult.isWinner(player)) {
+            if (gameResult.difference!! == GameDifference.ON_SCORE) {
+                MatchResult.WIN_ON_SCORE
+            } else {
+                MatchResult.WIN
+            }
+        } else {
+            if (gameResult.difference!! == GameDifference.ON_SCORE) {
+                MatchResult.LOSE_ON_SCORE
+            } else {
+                MatchResult.LOSE
+            }
+        }
+    }
+}
+
+data class GameResult(
+    val winners: Team?,
+    val losers: Team?,
+    val isDraw: Boolean,
+    val difference: GameDifference?
+) {
+    fun isWinner(player: Player): Boolean {
+        return winners?.players?.contains(player) ?: false
     }
 
-    fun getWins(player: Player): Int {
-        return winsMap[getTeam(player)]!!
-    }
-
-    fun getLosses(player: Player): Int {
-        return lossesMap[getTeam(player)]!!
+    fun isLoser(player: Player): Boolean {
+        return losers?.players?.contains(player) ?: false
     }
 }

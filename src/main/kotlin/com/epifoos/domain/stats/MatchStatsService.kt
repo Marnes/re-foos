@@ -5,6 +5,7 @@ import com.epifoos.domain.calculation.data.dto.GameData
 import com.epifoos.domain.calculation.data.dto.MatchData
 import com.epifoos.domain.match.Game
 import com.epifoos.domain.match.Match
+import org.jetbrains.exposed.sql.SizedCollection
 
 object MatchStatsService {
 
@@ -31,8 +32,8 @@ object MatchStatsService {
         MatchStats.new {
             this.match = match
             totalScored = matchData.totalScored
-            winner = matchData.winners.firstOrNull()
-            loser = matchData.losers.firstOrNull()
+            winners = SizedCollection(matchData.winners)
+            losers = SizedCollection(matchData.losers)
         }
     }
 
@@ -40,8 +41,8 @@ object MatchStatsService {
         GameStats.new {
             this.game = game
             totalScored = gameData.totalScored
-            winner = gameData.winner
-            loser = gameData.loser
+            winner = gameData.gameResult.winners
+            loser = gameData.gameResult.losers
         }
     }
 

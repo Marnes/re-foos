@@ -1,8 +1,7 @@
 package com.epifoos.plugins
 
-import com.epifoos.domain.league.LeagueConfigTable
-import com.epifoos.domain.league.LeagueTable
-import com.epifoos.domain.user.UserTable
+import com.epifoos.domain.stats.MatchLosersTable
+import com.epifoos.domain.stats.MatchWinnersTable
 import org.jetbrains.exposed.sql.SchemaUtils
 import org.jetbrains.exposed.sql.Table
 import org.jetbrains.exposed.sql.transactions.transaction
@@ -12,7 +11,7 @@ object DatabaseUtil {
 
     fun writeSchema() {
         transaction {
-            val schema = getCreateSchemas(UserTable, LeagueTable, LeagueConfigTable).joinToString("\n\n") { "$it;" }
+            val schema = getCreateSchemas(MatchWinnersTable, MatchLosersTable).joinToString("\n\n") { "$it;" }
             File("schema.sql").writeText(schema)
         }
     }

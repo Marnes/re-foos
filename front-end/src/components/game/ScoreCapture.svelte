@@ -1,47 +1,23 @@
 <script lang="ts">
-    import ScoreBoard from '$src/components/game/match/MatchBoard.svelte';
-    import { MatchCaptureRequest } from '$src/models/match/capture-request';
+    import RoundRobinBoard from '$src/components/game/match/boards/RoundRobinBoard.svelte';
+    import HeadToHeadBoard from '$src/components/game/match/boards/HeadToHeadBoard.svelte';
+    import type { League } from '$src/models/league/league';
+    import { LeagueType } from '$src/models/league/league';
     import { createEventDispatcher } from 'svelte';
-    import { getLoser, getSubmitString, getWinner } from '$src/lib/util/match-util';
     import type { Player } from '$src/models/player/player';
 
-    export let minScore: number;
-    export let maxScore: number;
+    export let league: League;
     export let players: Player[];
-
-    let match = MatchCaptureRequest.create(players);
 
     const dispatch = createEventDispatcher();
 
-    $: winner = getWinner(match, players);
-    $: loser = getLoser(match, players);
-    $: submitString = match.canSubmit() ? getSubmitString(winner, loser) : 'Submit Game';
-    $: submitClass = getSubmitClass(winner, loser);
-
-    function submitGame() {
-        dispatch('submitGame', match);
-    }
-
-    const getSubmitClass = (winner, loser): string => {
-        if (winner && !loser) {
-            return 'bg-tertiary-500'
-        }
-
-        if (loser && !winner) {
-            return 'bg-warning-500'
-        }
-
-        return 'bg-neutral-500';
+    function submit({ detail }) {
+        dispatch('submit', detail);
     }
 </script>
 
-<ScoreBoard bind:match minScore="{minScore}" maxScore={maxScore}/>
-<div class="absolute bottom-0 left-0 right-0">
-  <button
-      class="btn btn-lg text-white w-full {submitClass}"
-      disabled={!match.canSubmit()}
-      on:click={submitGame}>
-
-    { @html submitString }
-  </button>
-</div>
+{#if league.config.type === LeagueType.HEAD_TO_HEAD}
+  <HeadToHeadBoard league={league} players={players} on:submit/>
+{:else if (league.config.type === LeagueType.ROUND_ROBIN)}
+  <RoundRobinBoard league={league} players={players} on:submit/>
+{/if}

@@ -42,6 +42,7 @@ object LeagueDtoMapper {
             leagueConfig.players,
             leagueConfig.scoresPerTeam,
             leagueConfig.playersPerTeam,
+            leagueConfig.maxScore
         )
     }
 

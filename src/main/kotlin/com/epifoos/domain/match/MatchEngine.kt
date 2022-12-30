@@ -14,7 +14,7 @@ object MatchEngine {
             val calculationResult = CalculationService.calculate(league, match)
 
             StatsService.updateStats(calculationResult)
-            HighlightService.createHighlights(calculationResult)
+            HighlightService.createHighlights(league, calculationResult)
             PlayerRankService.updateRanks(league, match)
         }
     }

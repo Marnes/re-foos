@@ -11,7 +11,7 @@ import com.epifoos.domain.match.Match
 import com.epifoos.domain.player.Player
 import kotlin.math.pow
 
-class RoundRobinCoefficientCalculator : CoefficientCalculator() {
+class TeamBasedCoefficientCalculator : CoefficientCalculator() {
     companion object {
         private const val ELO_WEIGHT = 400.0F
         private const val MAX_SCORE = 10

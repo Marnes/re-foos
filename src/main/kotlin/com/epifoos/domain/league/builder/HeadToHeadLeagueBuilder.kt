@@ -22,6 +22,7 @@ class HeadToHeadLeagueBuilder : LeagueBuilder() {
             players = TEAMS * leagueConfigDto.playersPerTeam
             scoresPerTeam = SCORES_PER_TEAM
             playersPerTeam = leagueConfigDto.playersPerTeam
+            maxScore = leagueConfigDto.maxScore
         }
     }
 }

@@ -24,6 +24,7 @@ class RoundRobinLeagueBuilder : LeagueBuilder() {
             players = TEAMS * PLAYERS_PER_TEAM
             scoresPerTeam = SCORES_PER_TEAM
             playersPerTeam = PLAYERS_PER_TEAM
+            maxScore = leagueConfigDto.maxScore
         }
     }
 }

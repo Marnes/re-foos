@@ -10,4 +10,11 @@ enum class MatchResult(val weight: Double) {
     companion object {
         fun max(): MatchResult = WIN
     }
+
+
+}
+
+enum class GameDifference {
+    FULL,
+    ON_SCORE
 }

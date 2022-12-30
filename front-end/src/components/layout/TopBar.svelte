@@ -2,15 +2,14 @@
     import LoginForm from '$src/components/session/LoginForm.svelte'
     import PlayerAvatar from '$src/components/player/PlayerAvatar.svelte'
     import Icon from '@iconify/svelte';
-    import { AppBar, Divider, menu, modalStore, toastStore } from '@skeletonlabs/skeleton';
-    import { menuDrawerStore } from '$src/stores/menu-store';
+    import { AppBar, Divider, drawerStore, menu, modalStore, toastStore } from '@skeletonlabs/skeleton';
     import { sessionStore } from '$src/stores/sessionStore';
     import { del } from '$src/lib/utils';
     import { invalidateAll } from '$app/navigation';
     import { Modal } from '$src/models/modal';
 
     const menuDrawerOpen: any = () => {
-        $menuDrawerStore = true
+        drawerStore.open({ id: 'app-rail' })
     };
 
     function showLogin() {

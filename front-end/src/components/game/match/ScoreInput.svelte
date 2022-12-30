@@ -1,85 +1,76 @@
 <script lang="ts">
     import { createEventDispatcher } from 'svelte';
-    import _ from "lodash";
+    import _ from 'lodash';
 
+    export let teamNumber: number;
     export let minScore: number;
     export let maxScore: number;
     export let value: number;
-    export let focus = false;
     export let reversed = false;
+    export let action: any = () => {};
+    export let input: any;
+    export let disabled = false;
 
     const dispatch = createEventDispatcher();
-    $: scoreArray =  _.times(maxScore + 1, (score) => score)
+    $: scoreArray = _.times(maxScore + 1, (score) => score)
     $: scores = reversed ? scoreArray.reverse() : scoreArray;
-
-    function onInput(event) {
-        let inputElement = event.target;
-        let score = inputElement.valueAsNumber;
-
-        if (_.isNaN(score))
-            score = minScore;
-        else if (score < minScore)
-            score = minScore
-        else if (score > maxScore)
-            score = maxScore;
-
-        dispatch('input', {score: score, inputElement: inputElement});
-    }
+    $: showNumberInput = maxScore > 11;
 
     function onSelect(score: number) {
         return () => {
+            if (disabled) {
+                return;
+            }
+
             value = score;
-            dispatch('input', {score: score});
+            dispatch('input', value);
         };
+    }
+
+    function onInput(event: InputEvent) {
+        if (disabled) {
+            return;
+        }
+
+        value = event.target.value
+        dispatch('input', value);
     }
 </script>
 
-<input class="score-input lg:hidden h-18 w-12 no-spinner text-center text-2xl stat-{value}"
-       class:focus={focus}
-       type="number"
-       pattern="[0-9]*"
-       min="{minScore}"
-       max="{maxScore}"
-       bind:value
-       on:input={onInput}
-       on:focus={(e) => e.target.select()}
+<input
+    class="h-18 w-12 text-2xl lg:h-24 lg:w-24 lg:text-4xl lg:hidden
+    score-input no-spinner text-center
+    !bg-transparent focus:border-primary-500"
+    type="number"
+    pattern="[0-9]*"
+    min="{minScore}"
+    max="{maxScore}"
+    data-team={teamNumber}
+    disabled={disabled}
+    class:!block={showNumberInput}
+    class:!border-error-500="{value && value !== maxScore}"
+    class:!border-tertiary-500="{value && value === maxScore}"
+    use:action
+    bind:value
+    bind:this={input}
+    on:change={onInput}
+/>
+
+<div
+    class="flex flex-row hidden lg:flex"
+    class:!hidden={showNumberInput}
 >
-
-{#each scores as i}
-    <div class="hidden lg:flex
-                basis-1/6 justify-center items-center
-                text-2xl cursor-pointer bg-surface-700 stat-{i}"
-         class:shadow-2xl="{i === value}"
-         class:shadow-black="{i === value}"
-         class:selected="{i === value}"
-         on:click={onSelect(i)}>
-
-        {i}
+  {#each scores as i}
+    <div
+        class="text-md py-1 px-2 xl:py-3 xl:px-4 xl:text-md 2xl:py-3 2xl:px-4 2xl:text-2xl
+        justify-center items-center gap-2  cursor-pointer  border-2 border-white"
+        class:!text-error-500="{value === i && value !== maxScore}"
+        class:!text-tertiary-500="{value === i && value === maxScore}"
+        class:!border-error-500="{value === i && value !== maxScore}"
+        class:!border-tertiary-500="{value === i && value === maxScore}"
+        class:opacity-40={disabled}
+        on:click={onSelect(i)}>
+      {i}
     </div>
-{/each}
-
-<style lang="scss">
-  input.stat-0, .stat-0.selected {
-    background-color: #ff3e00;
-  }
-
-  input.stat-1, .stat-1.selected {
-      background-color: #e64749;
-  }
-
-  input.stat-2, .stat-2.selected {
-      background-color: #f2a950;
-  }
-
-  input.stat-3, .stat-3.selected {
-      background-color: #e5c269;
-  }
-
-  input.stat-4, .stat-4.selected {
-      background-color: #7bb173;
-  }
-
-  input.stat-5, .stat-5.selected {
-      background-color: #054d00;
-  }
-</style>
+  {/each}
+</div>

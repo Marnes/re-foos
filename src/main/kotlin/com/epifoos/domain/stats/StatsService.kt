@@ -33,6 +33,8 @@ object StatsService {
         transaction {
             MatchPlayerStatsTable.deleteWhere { match inList matchIds }
             GamePlayerStatsTable.deleteWhere { player inList playerIds }
+            MatchLosersTable.deleteWhere { player inList playerIds }
+            MatchWinnersTable.deleteWhere { player inList playerIds }
             MatchStatsTable.deleteWhere { match inList matchIds }
             GameStatsTable.deleteWhere { game inList gameIds }
             PlayerStatsTable.deleteWhere { player inList playerIds }

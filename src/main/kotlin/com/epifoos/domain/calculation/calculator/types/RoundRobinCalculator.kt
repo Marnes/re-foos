@@ -6,14 +6,15 @@ import com.epifoos.domain.calculation.GameCalculationResult
 import com.epifoos.domain.calculation.calculator.EloCalculator
 import com.epifoos.domain.calculation.coefficient.GameCoefficients
 import com.epifoos.domain.calculation.coefficient.MatchCoefficients
-import com.epifoos.domain.calculation.coefficient.types.RoundRobinCoefficientCalculator
+import com.epifoos.domain.calculation.coefficient.types.TeamBasedCoefficientCalculator
 import com.epifoos.domain.calculation.data.dto.MatchData
-import com.epifoos.domain.calculation.data.win.DefaultMatchDataMapper
+import com.epifoos.domain.calculation.data.win.TeamBasedMatchDataMapper
+import com.epifoos.domain.league.League
 import com.epifoos.domain.match.Match
 import com.epifoos.domain.player.Player
 
-class RoundRobinCalculator(dataMapper: DefaultMatchDataMapper<*>, coefficientCalculator: RoundRobinCoefficientCalculator) :
-    EloCalculator<RoundRobinCoefficientCalculator, DefaultMatchDataMapper<*>>(dataMapper, coefficientCalculator) {
+class RoundRobinCalculator(dataMapper: TeamBasedMatchDataMapper<*>, coefficientCalculator: TeamBasedCoefficientCalculator) :
+    EloCalculator<TeamBasedCoefficientCalculator, TeamBasedMatchDataMapper<*>>(dataMapper, coefficientCalculator) {
 
     companion object {
         private const val RESULT_WEIGHT = 0.5F
@@ -22,11 +23,12 @@ class RoundRobinCalculator(dataMapper: DefaultMatchDataMapper<*>, coefficientCal
     }
 
     override fun calculate(
+        league: League,
         match: Match,
         players: Set<Player>,
         initialEloMap: Map<Player, Elo>
     ): CalculationResult {
-        val matchData = dataMapper.getMatchData(match, players, initialEloMap)
+        val matchData = dataMapper.getMatchData(league, match, players, initialEloMap)
         val matchCoefficients = coefficientCalculator.calculateCoefficient(match, matchData)
         val gameResults = calculateGameResults(match, matchData, matchCoefficients)
         val eloChanges = calculateTotalScores(gameResults)

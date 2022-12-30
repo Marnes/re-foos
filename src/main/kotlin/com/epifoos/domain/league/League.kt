@@ -4,6 +4,7 @@ import com.epifoos.domain.*
 import org.jetbrains.exposed.dao.IntEntityClass
 import org.jetbrains.exposed.dao.id.EntityID
 import org.jetbrains.exposed.sql.javatime.date
+import kotlin.math.ceil
 
 object LeagueTable : AuditedTable("league") {
     var name = varchar("name", 255)
@@ -39,6 +40,7 @@ object LeagueConfigTable : BaseIntIdTable("league_config") {
     var players = integer("players")
     var scoresPerTeam = integer("scores_per_team")
     var playersPerTeam = integer("players_per_team")
+    var maxScore = integer("max_score")
 }
 
 class LeagueConfig(id: EntityID<Int>) : BaseIntEntity(id, LeagueConfigTable) {
@@ -52,6 +54,39 @@ class LeagueConfig(id: EntityID<Int>) : BaseIntEntity(id, LeagueConfigTable) {
     var players by LeagueConfigTable.players
     var scoresPerTeam by LeagueConfigTable.scoresPerTeam
     var playersPerTeam by LeagueConfigTable.playersPerTeam
+    var maxScore by LeagueConfigTable.maxScore
+
+    fun getMinimumGames(): Int {
+        if (type === LeagueType.ROUND_ROBIN) {
+            return games;
+        }
+
+        if (games % 2 == 0) {
+            return games;
+        }
+
+        return ceil(games.toDouble() / 2).toInt()
+    }
+
+    fun getMinimumScores(): Int {
+        if (type != LeagueType.ROUND_ROBIN) {
+            return 1;
+        }
+
+        if (scoresPerTeam % 2 == 0) {
+            return games;
+        }
+
+        return ceil(scoresPerTeam.toDouble() / 2).toInt()
+    }
+
+    fun getMaximumScores(): Int {
+        if (type != LeagueType.ROUND_ROBIN) {
+            return 1
+        }
+
+        return scoresPerTeam;
+    }
 }
 
 enum class LeagueType {

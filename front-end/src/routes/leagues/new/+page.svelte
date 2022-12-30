@@ -6,7 +6,6 @@
     import { onMount } from 'svelte';
     import { post } from '$src/lib/utils';
     import { invalidateAll } from '$app/navigation';
-    import { captureDrawerStore } from '$src/stores/game-store';
     import { ToastMessage } from '$src/models/toastMessage';
 
     const storeLeagueType: Writable<LeagueType> = writable(LeagueType.HEAD_TO_HEAD);
@@ -58,7 +57,6 @@
 
         if (response.ok) {
             await invalidateAll();
-            $captureDrawerStore = false;
             toastStore.trigger(ToastMessage.success('League successfully created'));
         } else {
             toastStore.trigger(ToastMessage.failure('Could not create league'));
@@ -202,7 +200,7 @@
             name="score"
             type="number"
             min="1"
-            bind:value={league.config.scoresPerTeam}
+            bind:value={league.config.maxScore}
         />
       </label>
     </div>

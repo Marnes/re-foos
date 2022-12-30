@@ -62,7 +62,7 @@
 
 {#each highlights as highlight}
   <Alert
-      class="mt-1 relative"
+      class="relative"
       border="border-l-4 {alertBorder(highlight)}"
       background="{alertClass(highlight)}"
   >

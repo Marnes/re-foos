@@ -15,8 +15,8 @@ data class MatchDto(
     val games: List<GameDto>,
     val players: Map<Int, PlayerDto>,
     val playerStats: Map<Int, MatchPlayerStatsDto>,
-    val winner: Int?,
-    val loser: Int?
+    val winners: List<Int>,
+    val losers: List<Int>
 )
 
 data class GameDto(

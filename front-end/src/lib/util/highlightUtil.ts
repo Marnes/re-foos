@@ -1,5 +1,6 @@
-import type { HighlightPlayer } from '$src/models/highlight/highlight';
+import { toSentence } from '$src/lib/util/stringUtil';
 import { HighlightPlayerResult } from '$src/models/highlight/highlight';
+import type { HighlightPlayer } from '$src/models/highlight/highlight';
 import _ from 'lodash';
 
 export const buildHighlightMessage = (message: string, players: HighlightPlayer[]): string => {
@@ -23,8 +24,4 @@ const getPlayers = (players: HighlightPlayer[], result: HighlightPlayerResult): 
 
 const extractUsernames = (players: HighlightPlayer[]): string[] => {
     return players.map(player => `<b>${ player.player.username }</b>`);
-}
-
-const toSentence = (array: any[]): string => {
-    return new Intl.ListFormat().format(array);
 }

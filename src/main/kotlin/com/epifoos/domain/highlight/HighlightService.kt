@@ -3,6 +3,11 @@ package com.epifoos.domain.highlight
 import com.epifoos.domain.calculation.CalculationResult
 import com.epifoos.domain.highlight.dto.HighlightDto
 import com.epifoos.domain.highlight.dto.HighlightDtoMapper
+import com.epifoos.domain.highlight.factory.HeadToHeadHighlightFactory
+import com.epifoos.domain.highlight.factory.HighlightFactory
+import com.epifoos.domain.highlight.factory.RoundRobinHighlightFactory
+import com.epifoos.domain.league.League
+import com.epifoos.domain.league.LeagueType
 import com.epifoos.domain.match.Match
 import com.epifoos.domain.player.Player
 import org.jetbrains.exposed.dao.with
@@ -12,9 +17,9 @@ import org.jetbrains.exposed.sql.transactions.transaction
 
 object HighlightService {
 
-    fun createHighlights(calculationResult: CalculationResult) {
+    fun createHighlights(league: League, calculationResult: CalculationResult) {
         transaction {
-            HighlightFactory(getMessagesMap()).createHighlights(calculationResult)
+            getHighlightFactory(league).createHighlights(calculationResult)
         }
     }
 
@@ -40,5 +45,15 @@ object HighlightService {
 
     private fun getMessagesMap(): Map<HighlightMessageType, List<HighlightMessage>> {
         return HighlightMessage.all().groupBy { it.type }
+    }
+
+    private fun getHighlightFactory(league: League): HighlightFactory {
+        val messagesMap = getMessagesMap()
+
+        if (league.config.type == LeagueType.ROUND_ROBIN) {
+            return RoundRobinHighlightFactory(messagesMap)
+        }
+
+        return HeadToHeadHighlightFactory(messagesMap)
     }
 }

@@ -1,12 +1,13 @@
-package com.epifoos.domain.highlight
+package com.epifoos.domain.highlight.factory
 
 import com.epifoos.domain.calculation.CalculationResult
 import com.epifoos.domain.calculation.GameCalculationResult
+import com.epifoos.domain.highlight.*
 import com.epifoos.domain.match.Game
 import com.epifoos.domain.match.Match
 import com.epifoos.domain.player.Player
 
-open class HighlightFactory(private val messageMap: Map<HighlightMessageType, List<HighlightMessage>>) {
+abstract class HighlightFactory(private val messageMap: Map<HighlightMessageType, List<HighlightMessage>>) {
 
     companion object {
         const val WHITEWASH_VALUE = 0
@@ -40,15 +41,15 @@ open class HighlightFactory(private val messageMap: Map<HighlightMessageType, Li
         return gameCalculationResult.gameData.scoreForMap.containsValue(WHITEWASH_VALUE)
     }
 
-    private fun getWinners(calculationResult: CalculationResult): Set<Player> {
+    protected open fun getWinners(calculationResult: CalculationResult): Set<Player> {
         return calculationResult.matchData.winners
     }
 
-    private fun getLosers(calculationResult: CalculationResult): Set<Player> {
+    protected open fun getLosers(calculationResult: CalculationResult): Set<Player> {
         return calculationResult.matchData.losers
     }
 
-    private fun getOther(calculationResult: CalculationResult): Set<Player> {
+    protected open fun getOther(calculationResult: CalculationResult): Set<Player> {
         return calculationResult.matchData.players - (getWinners(calculationResult) + getLosers(calculationResult))
     }
 
@@ -129,8 +130,8 @@ open class HighlightFactory(private val messageMap: Map<HighlightMessageType, Li
             calculationResult.match,
             gameCalculationResult.game,
             HighlightMessageType.WHITEWASH,
-            gameCalculationResult.gameData.winner!!.players.toSet(),
-            gameCalculationResult.gameData.loser!!.players.toSet(),
+            gameCalculationResult.gameData.gameResult.winners!!.players.toSet(),
+            gameCalculationResult.gameData.gameResult.losers!!.players.toSet(),
             listOf()
         )
     }

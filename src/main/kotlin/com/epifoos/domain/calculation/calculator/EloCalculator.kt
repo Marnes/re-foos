@@ -5,6 +5,7 @@ import com.epifoos.domain.calculation.CalculationResult
 import com.epifoos.domain.calculation.GameCalculationResult
 import com.epifoos.domain.calculation.coefficient.CoefficientCalculator
 import com.epifoos.domain.calculation.data.MatchDataMapper
+import com.epifoos.domain.league.League
 import com.epifoos.domain.match.Match
 import com.epifoos.domain.player.Player
 import com.epifoos.domain.sum
@@ -15,6 +16,7 @@ abstract class EloCalculator<C : CoefficientCalculator, D : MatchDataMapper<*>>(
 ) {
 
     abstract fun calculate(
+        league: League,
         match: Match,
         players: Set<Player>,
         initialEloMap: Map<Player, Elo>

@@ -42,5 +42,6 @@ data class LeagueConfigDto(
     val teams: Int,
     val players: Int,
     val scoresPerTeam: Int,
-    val playersPerTeam: Int
+    val playersPerTeam: Int,
+    val maxScore: Int
 )

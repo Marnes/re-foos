@@ -9,8 +9,8 @@ export class Match {
     players!: Map<number, PlayerMin[]>;
     playerStats!: Map<number, PlayerStats[]>;
     games!: Game[];
-    winner!: number;
-    loser!: number;
+    winners!: number[];
+    losers!: number[];
 }
 
 export class Game {

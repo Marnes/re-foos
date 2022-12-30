@@ -23,6 +23,7 @@ export class LeagueConfig {
     players!: number;
     scoresPerTeam!: number;
     playersPerTeam!: number;
+    maxScore!: number;
 }
 
 export class LeagueSummary {

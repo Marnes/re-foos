@@ -15,8 +15,8 @@ class LeagueValidator {
     companion object {
         private const val MAX_GAMES = 7
         private const val TEAMS = 2
-        private const val MAX_PLAYERS_PER_TEAM = 2
-        private const val MAX_SCORES_PER_TEAM = 5
+        private const val MAX_PLAYERS_PER_TEAM = 5
+        private const val MAX_SCORES_PER_TEAM = 7
     }
 
     fun validate(leagueCreationDto: LeagueCreationDto): ValidationResult<LeagueCreationDto> {

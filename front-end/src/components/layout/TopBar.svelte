@@ -8,8 +8,10 @@
     import { invalidateAll } from '$app/navigation';
     import { Modal } from '$src/models/modal';
 
+    export let hasDrawer = true
+
     const menuDrawerOpen: any = () => {
-        drawerStore.open({ id: 'app-rail' })
+        drawerStore.open({ id: 'app-rail', width: 'w-24' })
     };
 
     function showLogin() {
@@ -26,9 +28,11 @@
 
 <AppBar class='navbar bg-transparent' padding='p-3'>
   <svelte:fragment slot='lead'>
-    <button class="lg:!hidden btn btn-sm" on:click={menuDrawerOpen}>
-      <Icon icon="material-symbols:menu" class="text-2xl"/>
-    </button>
+    {#if hasDrawer}
+      <button class="lg:!hidden btn btn-sm" on:click={menuDrawerOpen}>
+        <Icon icon="material-symbols:menu" class="text-2xl"/>
+      </button>
+    {/if}
     <a href="/" class="text-xl font-bold uppercase mr-4" title="Return to Homepage">ELO-Musk</a>
     <Divider borderWidth="border-l" vertical={true} class="mr-4 ml-2 hidden lg:block"/>
     <a href="/" class="hidden lg:block mr-3">Home</a>

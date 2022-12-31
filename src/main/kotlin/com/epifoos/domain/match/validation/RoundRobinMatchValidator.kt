@@ -15,7 +15,6 @@ class RoundRobinMatchValidator(league: League): MatchValidator(league) {
     override fun build(): Validation<MatchSubmissionDto> {
         return Validation {
             MatchSubmissionDto::games required {
-                size(leagueConfig.getMinimumGames())
                 run(validateTeam())
 
                 onEach {

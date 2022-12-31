@@ -3,7 +3,7 @@
     <slot></slot>
   </div>
   {#if $$slots['right-content'] }
-    <div class="card !bg-tertiary-500/5 ml-5 p-3 h-fit hidden xl:flex">
+    <div class="card card-glass-surface ml-5 p-3 h-fit hidden xl:flex">
       <div class="right-content">
         <slot name="right-content"/>
       </div>

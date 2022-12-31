@@ -68,7 +68,7 @@
     $: playersPerTeam = league.config.players / league.config.teams
 </script>
 
-<div class="card !bg-secondary-500/5 p-6">
+<div class="card card-glass-surface p-6">
   <div class="card-body flex flex-col ">
     <div class="grid grid-cols-2 gap-4">
       <label for="name">

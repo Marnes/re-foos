@@ -3,14 +3,19 @@ package com.epifoos.domain.highlight.factory
 import com.epifoos.domain.calculation.CalculationResult
 import com.epifoos.domain.calculation.GameCalculationResult
 import com.epifoos.domain.highlight.*
+import com.epifoos.domain.league.League
 import com.epifoos.domain.match.Game
 import com.epifoos.domain.match.Match
 import com.epifoos.domain.player.Player
 
-abstract class HighlightFactory(private val messageMap: Map<HighlightMessageType, List<HighlightMessage>>) {
+abstract class HighlightFactory(
+    protected val league: League,
+    private val messageMap: Map<HighlightMessageType, List<HighlightMessage>>
+) {
 
     companion object {
-        const val WHITEWASH_VALUE = 0
+        private const val WHITEWASH_VALUE = 0
+        private const val MINIMUM_WHITE_WASH = 9
     }
 
     fun createHighlights(calculationResult: CalculationResult) {
@@ -38,7 +43,15 @@ abstract class HighlightFactory(private val messageMap: Map<HighlightMessageType
     }
 
     protected open fun isWhitewash(gameCalculationResult: GameCalculationResult): Boolean {
+        if (!supportsWhiteWash()) {
+            return false
+        }
+
         return gameCalculationResult.gameData.scoreForMap.containsValue(WHITEWASH_VALUE)
+    }
+
+    protected open fun supportsWhiteWash(): Boolean {
+        return league.config.getMinimumTotalScore() >= MINIMUM_WHITE_WASH
     }
 
     protected open fun getWinners(calculationResult: CalculationResult): Set<Player> {

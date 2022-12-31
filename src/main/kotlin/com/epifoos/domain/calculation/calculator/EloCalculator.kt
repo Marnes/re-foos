@@ -11,6 +11,7 @@ import com.epifoos.domain.player.Player
 import com.epifoos.domain.sum
 
 abstract class EloCalculator<C : CoefficientCalculator, D : MatchDataMapper<*>>(
+    val league: League,
     val dataMapper: D,
     val coefficientCalculator: C
 ) {
@@ -26,5 +27,17 @@ abstract class EloCalculator<C : CoefficientCalculator, D : MatchDataMapper<*>>(
         return gameResults.flatMap { it.eloChanges.asSequence() }
             .groupBy { it.key }
             .mapValues { (_, eloChanges) -> eloChanges.map { it.value }.sum() }
+    }
+
+    protected fun getKValue(): Double {
+        return league.coefficients.kValue
+    }
+
+    protected fun getResultWeight(): Double {
+        return league.coefficients.resultCoefficient.toDouble() / 100
+    }
+
+    protected fun getScoreWeight(): Double {
+        return 1 - getResultWeight()
     }
 }

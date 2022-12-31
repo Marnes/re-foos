@@ -13,14 +13,8 @@ import com.epifoos.domain.league.League
 import com.epifoos.domain.match.Match
 import com.epifoos.domain.player.Player
 
-class HeadToHeadCalculator(dataMapper: TeamBasedMatchDataMapper<*>, coefficientCalculator: TeamBasedCoefficientCalculator) :
-    EloCalculator<TeamBasedCoefficientCalculator, TeamBasedMatchDataMapper<*>>(dataMapper, coefficientCalculator) {
-
-    companion object {
-        private const val RESULT_WEIGHT = 0.5F
-        private const val SCORE_WEIGHT = 1.0F - RESULT_WEIGHT
-        private const val K_VALUE = 36.0F
-    }
+class TeamBasedCalculator(league: League, dataMapper: TeamBasedMatchDataMapper<*>, coefficientCalculator: TeamBasedCoefficientCalculator) :
+    EloCalculator<TeamBasedCoefficientCalculator, TeamBasedMatchDataMapper<*>>(league, dataMapper, coefficientCalculator) {
 
     override fun calculate(
         league: League,
@@ -89,10 +83,10 @@ class HeadToHeadCalculator(dataMapper: TeamBasedMatchDataMapper<*>, coefficientC
     }
 
     private fun calculateEloChange(actualScore: Double, expectedScore: Double): Elo {
-        return Elo(K_VALUE * (actualScore - expectedScore))
+        return Elo(getKValue() * (actualScore - expectedScore))
     }
 
     private fun calculateOverallEloChanges(resultBasedEloChange: Elo, scoreBasedEloChange: Elo): Elo {
-        return Elo(resultBasedEloChange * RESULT_WEIGHT + scoreBasedEloChange * SCORE_WEIGHT)
+        return Elo(resultBasedEloChange * getResultWeight() + scoreBasedEloChange * getScoreWeight())
     }
 }

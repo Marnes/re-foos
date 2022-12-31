@@ -23,6 +23,7 @@ class League(id: EntityID<Int>) : AuditedEntity(id, LeagueTable) {
     var uid by LeagueTable.uid
 
     val config by LeagueConfig backReferencedOn LeagueConfigTable.league
+    val coefficients by LeagueCoefficients backReferencedOn LeagueCoefficientsTable.league
 
     fun isClosed(): Boolean {
         return endDate != null
@@ -56,37 +57,44 @@ class LeagueConfig(id: EntityID<Int>) : BaseIntEntity(id, LeagueConfigTable) {
     var playersPerTeam by LeagueConfigTable.playersPerTeam
     var maxScore by LeagueConfigTable.maxScore
 
-    fun getMinimumGames(): Int {
+    fun getNumberOfGames(): Int {
         if (type === LeagueType.ROUND_ROBIN) {
-            return games;
+            return scoresPerTeam
         }
 
-        if (games % 2 == 0) {
-            return games;
-        }
-
-        return ceil(games.toDouble() / 2).toInt()
+        return games
     }
 
-    fun getMinimumScores(): Int {
-        if (type != LeagueType.ROUND_ROBIN) {
-            return 1;
+    fun getBestOf(): Int {
+        val gamesCount = getNumberOfGames()
+
+        if (gamesCount % 2 == 0) {
+            return gamesCount
         }
 
-        if (scoresPerTeam % 2 == 0) {
-            return games;
-        }
-
-        return ceil(scoresPerTeam.toDouble() / 2).toInt()
+        return ceil(gamesCount.toDouble() / 2).toInt()
     }
 
-    fun getMaximumScores(): Int {
-        if (type != LeagueType.ROUND_ROBIN) {
-            return 1
-        }
-
-        return scoresPerTeam;
+    fun getMinimumTotalScore(): Int {
+        return getNumberOfGames() * maxScore
     }
+
+}
+
+object LeagueCoefficientsTable : BaseIntIdTable("league_coefficients") {
+    var league = reference("league_id", LeagueTable)
+        .uniqueIndex("league_coefficients_unique_idx")
+
+    var kValue = double("k_value")
+    var resultCoefficient = integer("result_coefficient")
+}
+
+class LeagueCoefficients(id: EntityID<Int>) : BaseIntEntity(id, LeagueCoefficientsTable) {
+    companion object : IntEntityClass<LeagueCoefficients>(LeagueCoefficientsTable)
+
+    var league by League referencedOn LeagueCoefficientsTable.league
+    var kValue by LeagueCoefficientsTable.kValue
+    var resultCoefficient by LeagueCoefficientsTable.resultCoefficient
 }
 
 enum class LeagueType {

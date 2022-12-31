@@ -60,20 +60,21 @@
 />
 
 <div
-    class="flex flex-row hidden lg:flex"
+    class="flex flex-row hidden lg:flex h-full"
     class:!hidden={showNumberInput}
 >
   {#each scores as i}
     <div
-        class="text-md py-1 px-2 xl:py-3 xl:px-4 xl:text-md 2xl:py-3 2xl:px-4 2xl:text-2xl
-        justify-center items-center gap-2  cursor-pointer  border-2 border-white"
+        class="flex flex-row items-center
+        w-20 items-center gap-2  cursor-pointer  border-2 border-white"
         class:!text-error-500="{value === i && value !== maxScore}"
         class:!text-tertiary-500="{value === i && value === maxScore}"
         class:!border-error-500="{value === i && value !== maxScore}"
         class:!border-tertiary-500="{value === i && value === maxScore}"
         class:opacity-40={disabled}
         on:click={onSelect(i)}>
-      {i}
+      <span class="block text-center w-full 2xl:text-2xl">{i}</span>
+
     </div>
   {/each}
 </div>

@@ -1,6 +1,4 @@
 <script lang="ts">
-    import Section from '$src/components/layout/Section.svelte';
-
     import { Avatar } from '@skeletonlabs/skeleton';
     import { getAssetPath } from '$src/lib/utils';
     import { createEventDispatcher } from 'svelte';
@@ -23,7 +21,7 @@
 </script>
 
 {#each categories as category }
-  <div class="card !bg-secondary-500/5 mb-5 p-3">
+  <div class="card card-glass-surface mb-5 p-3">
     <div class="card-body">
       <h3 class="mb-3">{category}</h3>
       <div class="flex flex-row flex-wrap gap-4 md:gap-5">

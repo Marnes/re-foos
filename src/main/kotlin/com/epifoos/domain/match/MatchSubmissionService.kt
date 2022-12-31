@@ -22,7 +22,7 @@ object MatchSubmissionService {
 
     fun captureMatch(leagueId: Int, matchSubmissionDto: MatchSubmissionDto, currentUser: User) {
         transaction {
-            val league = League.findById(leagueId)?.load(League::config)
+            val league = League.findById(leagueId)?.load(League::config, League::coefficients)
                 ?: throw EntityNotFoundException("Could not find League with ID $leagueId")
 
             if (Player.find { PlayerTable.user eq currentUser.id and(PlayerTable.league eq leagueId) }.empty()) {

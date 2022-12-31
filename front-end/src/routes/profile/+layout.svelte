@@ -7,25 +7,15 @@
     import { AppShell, Drawer } from '@skeletonlabs/skeleton';
     import { sessionStore } from '$src/stores/sessionStore';
     import { page } from '$app/stores';
-    import { menuDrawerStore } from '$src/stores/menu-store.js';
+    import { createRail } from '$src/lib/util/railUtil';
 
     $: rails = [
-        {
-            title: 'Avatar',
-            link: '/profile/avatar',
-            icon: 'carbon:user-avatar',
-            selected: $page.route.id === '/profile/avatar'
-        },
-        {
-            title: 'Password',
-            link: '/profile/password',
-            icon: 'mdi:form-textbox-password',
-            selected: $page.route.id === '/profile/password'
-        },
+        createRail('Avatar', `/profile/avatar`, 'carbon:user-avatar', $page),
+        createRail('Password', `/profile/password`, 'mdi:form-textbox-password', $page)
     ]
 </script>
 
-<Drawer open={menuDrawerStore} position="left" width="w-24" class="lg:hidden">
+<Drawer position="left" width="w-24" class="lg:hidden">
   <AppRail rails={rails}/>
 </Drawer>
 

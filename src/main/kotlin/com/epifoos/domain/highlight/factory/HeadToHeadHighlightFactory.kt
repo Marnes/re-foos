@@ -3,10 +3,10 @@ package com.epifoos.domain.highlight.factory
 import com.epifoos.domain.calculation.CalculationResult
 import com.epifoos.domain.highlight.HighlightMessage
 import com.epifoos.domain.highlight.HighlightMessageType
-import com.epifoos.domain.player.Player
+import com.epifoos.domain.league.League
 
-class HeadToHeadHighlightFactory(messageMap: Map<HighlightMessageType, List<HighlightMessage>>) :
-    HighlightFactory(messageMap) {
+class HeadToHeadHighlightFactory(league: League, messageMap: Map<HighlightMessageType, List<HighlightMessage>>) :
+    HighlightFactory(league, messageMap) {
 
     override fun hasWinner(calculationResult: CalculationResult): Boolean {
         return calculationResult.matchData.winners.isNotEmpty()
@@ -24,7 +24,4 @@ class HeadToHeadHighlightFactory(messageMap: Map<HighlightMessageType, List<High
         return calculationResult.matchData.winners.isEmpty()
     }
 
-    override fun getLosers(calculationResult: CalculationResult): Set<Player> {
-        return setOf()
-    }
 }

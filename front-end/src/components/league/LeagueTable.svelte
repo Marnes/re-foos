@@ -53,7 +53,7 @@
     </thead>
     <tbody>
     {#each leagues as league}
-      <a href="/leagues/{league.id}" class="table-row">
+      <a href="/leagues/{league.id}/leaderboard" class="table-row">
         <td>{league.name}</td>
         <td>{LeagueType.humanName(league.type)}</td>
         <td class="text-center">{isoDate(league.startDate)}</td>

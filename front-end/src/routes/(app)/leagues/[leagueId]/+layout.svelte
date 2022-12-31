@@ -10,11 +10,12 @@
     import { sessionStore } from '$src/stores/sessionStore.js';
     import { league, players } from '$src/stores/leagueStore.js';
     import type { PageData } from '$src/$types';
+    import { createRail } from '$src/lib/util/railUtil';
 
     export let data: PageData;
 
     $: rails = [
-        { title: 'Leaderboard', link: '/', icon: 'iconoir:leaderboard-star', selected: $page.route.id === '/(app)' },
+        createRail('Leaderboard', `/leagues/${$league.id}/leaderboard`, 'iconoir:leaderboard-star', $page)
     ]
 
     const captureGame = () => {
@@ -64,7 +65,7 @@
     {#if showCapture}
       <div class="flex md:hidden h-14">
         <button
-            class="btn bg-primary-500 absolute bottom-4 right-6"
+            class="btn bg-primary-500 absolute bottom-4 right-4"
             disabled={captureDisabled}
             on:click={captureGame}
         >

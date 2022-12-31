@@ -15,7 +15,7 @@
 
 <AppShell>
   <svelte:fragment slot="header">
-    <TopBar>
+    <TopBar hasDrawer={false}>
       <svelte:fragment slot="actions">
         {#if canCreate}
           <a href="/leagues/new" class="hidden md:inline-flex btn bg-primary-500" on:click={createLeague}>

@@ -7,6 +7,11 @@ export const updateScore = (score: number, index: number, maxScore: number, team
     teamScore[index] = score;
 
     if (score === maxScore) {
+        if (maxScore === 1) {
+            otherScore[index] = 0;
+            return;
+        }
+
         if (otherScore[index] === maxScore) {
             otherScore[index] = null;
         }

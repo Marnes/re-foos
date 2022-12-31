@@ -25,7 +25,7 @@
         toastStore.trigger({ message: 'Link copied to clipboard', preset: 'tertiary' })
     }
 
-    $: joinLink = getFrontEndPath(`/leagues/${ league.id }?join=${ code }`);
+    $: joinLink = getFrontEndPath(`/leagues/${ league.id }/leaderboard?join=${ code }`);
 </script>
 
 <div class="card-body grid grid-cols-1 gap-4">

@@ -51,9 +51,9 @@ object HighlightService {
         val messagesMap = getMessagesMap()
 
         if (league.config.type == LeagueType.ROUND_ROBIN) {
-            return RoundRobinHighlightFactory(messagesMap)
+            return RoundRobinHighlightFactory(league, messagesMap)
         }
 
-        return HeadToHeadHighlightFactory(messagesMap)
+        return HeadToHeadHighlightFactory(league, messagesMap)
     }
 }

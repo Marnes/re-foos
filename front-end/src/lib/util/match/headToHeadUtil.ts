@@ -1,4 +1,5 @@
 import { GameCaptureRequest, MatchCaptureRequest, TeamCaptureRequest } from '$src/models/match/captureRequest';
+import { hasValue } from '$src/lib/util/match/matchUtil';
 import type { Player } from '$src/models/player/player';
 
 export const buildMatch = (team1: Player[], team2: Player[], team1Scores: number[], team2Scores: number[]): MatchCaptureRequest => {
@@ -8,7 +9,7 @@ export const buildMatch = (team1: Player[], team2: Player[], team1Scores: number
 const buildGameRequests = (team1: Player[], team2: Player[], team1Scores: number[], team2Scores: number[]): GameCaptureRequest[] => {
     const gameRequests: GameCaptureRequest[] = [];
 
-    for (let i = 0; i < team1Scores.filter(Number).length; i++) {
+    for (let i = 0; i < team1Scores.filter(hasValue).length; i++) {
         const team1Request = buildTeamsRequest(team1, team1Scores[i]);
         const team2Request = buildTeamsRequest(team2, team2Scores[i]);
         gameRequests.push(new GameCaptureRequest([team1Request, team2Request]));

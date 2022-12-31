@@ -1,5 +1,6 @@
 <script lang="ts">
     import { createEventDispatcher } from 'svelte';
+    import { hasValue } from '$src/lib/util/match/matchUtil';
     import _ from 'lodash';
 
     export let teamNumber: number;
@@ -15,6 +16,7 @@
     $: scoreArray = _.times(maxScore + 1, (score) => score)
     $: scores = reversed ? scoreArray.reverse() : scoreArray;
     $: showNumberInput = maxScore > 11;
+    $: valueSet = hasValue(value)
 
     function onSelect(score: number) {
         return () => {
@@ -35,6 +37,7 @@
         value = event.target.value
         dispatch('input', value);
     }
+
 </script>
 
 <input
@@ -48,8 +51,8 @@
     data-team={teamNumber}
     disabled={disabled}
     class:!block={showNumberInput}
-    class:!border-error-500="{value && value !== maxScore}"
-    class:!border-tertiary-500="{value && value === maxScore}"
+    class:!border-error-500="{valueSet && value !== maxScore}"
+    class:!border-tertiary-500="{valueSet && value === maxScore}"
     use:action
     bind:value
     bind:this={input}

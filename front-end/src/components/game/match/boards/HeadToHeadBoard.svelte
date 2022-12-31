@@ -8,7 +8,7 @@
     import { Result } from '$src/models/match/matchResult';
     import { getSubmitString } from '$src/lib/util/match/matchUtil.js';
     import { buildMatch } from '$src/lib/util/match/headToHeadUtil';
-    import { createEventDispatcher } from 'svelte';
+    import { createEventDispatcher, onMount } from 'svelte';
     import _ from 'lodash';
 
     export let league: League;
@@ -56,6 +56,10 @@
     const submit = () => {
         dispatch('submit', buildMatch(team1, team2, team1Scores, team2Scores));
     }
+
+    onMount(() => {
+        inputElements[0].focus();
+    })
 </script>
 
 <div class="flex flex-col bg-black w-full overflow-x-hidden h-full">

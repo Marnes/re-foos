@@ -9,7 +9,7 @@
     import { canCaptureGame, getGameResult, sanitizeExtraScores, updateScore } from '$src/lib/util/match/matchUtil';
     import { buildMatch, getLoser, getWinner } from '$src/lib/util/match/roundRobinUtil';
     import { getSubmitString } from '$src/lib/util/match/matchUtil.js';
-    import { createEventDispatcher } from 'svelte';
+    import { createEventDispatcher, onMount } from 'svelte';
     import { onScoreInput } from '$src/lib/actions/scoreInput.js';
     import _ from 'lodash';
 
@@ -93,13 +93,17 @@
     const submit = () => {
         dispatch('submit', buildMatch(roundRobinGames));
     }
+
+    onMount(() => {
+        inputElements[0].focus();
+    })
 </script>
 
 <div class="flex flex-col bg-black w-full overflow-x-hidden h-full">
   <div class="flex flex-row h-full match-screen">
     <div class="flex flex-col h-full w-full justify-between bg-black/40">
-      <div class="flex flex-row bg-blue-500/10 w-[90%] lg:w-[70%] team1-container items-center">
-        <div class="flex flex-row team1 w-full h-full pl-5 p-4">
+      <div class="flex flex-row bg-blue-500/10 w-[70%] team1-container items-center">
+        <div class="hidden md:flex flex-row team1 w-full h-full pl-5 p-4">
           {#each players as player, i}
                <span class="text-sm lg:text-2xl px-3 lg:px-5 py-1
                 font-mono block font-bold">
@@ -114,11 +118,11 @@
       <div class="flex flex-col items-center gap-4 w-full">
         {#each roundRobinGames as game, gameIndex}
           <div class="flex flex-row !bg-tertiary-500/5 p-7 justify-between">
-            <div class="flex flex-col">
+            <div class="flex flex-col gap-2 justify-center">
               <PlayerCard tiny player={game.leftPlayer1} class="w-full"/>
               <PlayerCard tiny player={game.leftPlayer2} class="w-full"/>
             </div>
-            <div class="flex flex-col gap-2">
+            <div class="flex flex-col gap-2 justify-center">
               {#each game.leftScores as score, scoreIndex}
                 <ScoreInput
                     teamNumber="1"
@@ -132,7 +136,7 @@
                 />
               {/each}
             </div>
-            <div class="flex flex-col gap-2">
+            <div class="flex flex-col gap-2 justify-center">
               {#each game.rightScores as score, scoreIndex}
                 <ScoreInput
                     teamNumber="2"
@@ -147,7 +151,7 @@
                 />
               {/each}
             </div>
-            <div class="flex flex-col">
+            <div class="flex flex-col gap-2 justify-center">
               <PlayerCard tiny player={game.rightPlayer1} class="w-full" reversed={true}/>
               <PlayerCard tiny player={game.rightPlayer2} class="w-full" reversed={true}/>
             </div>

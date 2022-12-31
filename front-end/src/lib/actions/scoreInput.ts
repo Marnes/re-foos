@@ -10,21 +10,22 @@ export const onScoreInput = (inputElements: any[], minScore: number, maxScore: n
                 return;
             }
 
+            const value = Number(node.value)
             const elementIndex = _.indexOf(inputElements, node);
             const teamNumber = node.getAttribute(TEAM_ATTRIBUTE);
 
-            if (node.value > maxScore) {
+            if (value > maxScore) {
                 node.value = maxScore;
             }
 
-            if (node.value < minScore) {
+            if (value < minScore) {
                 node.value = minScore;
             }
 
-            if (node.value * 10 >= maxScore) {
+            if (value * 10 >= maxScore || value === 0) {
                 setTimeout(() => { //If input is still disabled
-                    jumpToNext(elementIndex, teamNumber);
-                }, 100);
+                    jumpToNext(value, elementIndex, teamNumber);
+                }, 50);
             }
         }
 
@@ -33,12 +34,12 @@ export const onScoreInput = (inputElements: any[], minScore: number, maxScore: n
             const teamNumber = node.getAttribute(TEAM_ATTRIBUTE);
 
             if (event.key === AlphaKeyCodes.ENTER) {
-                jumpToNext(elementIndex, teamNumber);
+                jumpToNext(Number(node.value), elementIndex, teamNumber);
             }
 
             if (event.key === AlphaKeyCodes.TAB) {
                 event.preventDefault();
-                jumpToNext(elementIndex, teamNumber);
+                jumpToNext(Number(node.value), elementIndex, teamNumber);
             }
         }
 
@@ -46,17 +47,24 @@ export const onScoreInput = (inputElements: any[], minScore: number, maxScore: n
             node.select();
         }
 
-        const jumpToNext = (elementIndex: number, teamNumber: String) => {
+        const jumpToNext = (value: number, elementIndex: number, teamNumber: String) => {
             node.blur();
 
-            if (node.value == maxScore && teamNumber == '2') {
+            if (value == maxScore && teamNumber == '2') {
+                //Jump to left score if new right score is max and left score is max or null
                 const previousElement = inputElements[elementIndex - 1];
 
-                if (previousElement) {
-                    if (previousElement.value === maxScore || _.isNil(previousElement.value)) {
-                        previousElement.focus();
-                        return;
-                    }
+                if (previousElement && (previousElement.value == maxScore || _.isEmpty(previousElement.value))) {
+                    previousElement.focus();
+                    return;
+                }
+            } else if (value == maxScore && teamNumber == '1') {
+                //Force jump to next element if new left score is max and right is was max or null
+                const nextElement = inputElements[elementIndex + 1];
+
+                if (nextElement && (nextElement.value == maxScore || _.isEmpty(nextElement.value))) {
+                    nextElement.focus();
+                    return;
                 }
             }
 
@@ -64,10 +72,18 @@ export const onScoreInput = (inputElements: any[], minScore: number, maxScore: n
                 return;
             }
 
-            for (let i = elementIndex + 1; i < inputElements.length; i++) {
+            let jump = 1;
+
+            if (value != maxScore && teamNumber == '1') {
+                // Jump 2 if entering left score and not max amount, as right score will be autoed to max
+                jump = 2;
+            }
+
+
+            for (let i = elementIndex + jump; i < inputElements.length; i++) {
                 const nextElement = inputElements[i];
 
-                if (_.isNil(nextElement.value) && !nextElement.hasAttribute('disabled')) {
+                if (_.isEmpty(nextElement.value) && !nextElement.hasAttribute('disabled')) {
                     nextElement.focus();
                     return;
                 }
@@ -81,6 +97,7 @@ export const onScoreInput = (inputElements: any[], minScore: number, maxScore: n
         return {
             destroy() {
                 node.removeEventListener('input', handleInput);
+                node.removeEventListener('focus', handleFocus);
                 node.removeEventListener('keydown', handleKeyPress);
             }
         };

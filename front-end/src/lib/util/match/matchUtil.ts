@@ -19,7 +19,7 @@ export const getGameResult = (bestOf: number, maxScore: number, isEvenGames: boo
     const team1Wins = getNumberOfWins(team1Scores, maxScore);
     const team2Wins = getNumberOfWins(team2Scores, maxScore);
 
-    if (team1Scores.filter(Number).length !== team2Scores.filter(Number).length) {
+    if (team1Scores.filter(hasValue).length !== team2Scores.filter(hasValue).length) {
         return null;
     }
 
@@ -100,9 +100,11 @@ export const getSubmitString = (winners: Player[] | null, losers: Player[] | nul
     return `Submit a draw`;
 }
 
+export const hasValue = (value: number): Boolean => value === 0 || !_.isNil(value);
+
 
 const getGamesPlayed = (team1Scores: number[], team2Scores: number[]): number => {
-    return Math.min(team1Scores.filter(Number).length, team2Scores.filter(Number).length);
+    return Math.max(team1Scores.filter(hasValue).length, team2Scores.filter(hasValue).length);
 }
 
 const getNumberOfWins = (scores: number[], maxScore: number): number => {

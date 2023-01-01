@@ -30,10 +30,6 @@ object MatchSubmissionService {
                 throw AuthorizationException("Cannot capture match for league you are not part of")
             }
 
-            if (leagueContext.league.isClosed()) {
-                throw AuthorizationException("League is closed");
-            }
-
             val validationResult = MatchValidationService.validate(leagueContext.league, matchSubmissionDto)
 
             if (validationResult is Invalid) {

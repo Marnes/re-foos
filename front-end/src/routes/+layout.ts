@@ -1,12 +1,12 @@
-import { sessionStore } from '$src/stores/sessionStore';
+import { session } from '$src/stores/sessionStore';
 import { Session } from '$src/models/session/session';
 import type { LayoutLoad } from './$types';
 
 const setSession = async (data: any) => {
     if (data.session) {
-        sessionStore.set(new Session(data.session.user, data.session.jwt))
+        session.set(new Session(data.session.user, data.session.jwt))
     } else {
-        sessionStore.set(null);
+        session.set(null);
     }
 }
 

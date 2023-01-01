@@ -5,6 +5,7 @@ import org.jetbrains.exposed.dao.IntEntityClass
 import org.jetbrains.exposed.dao.id.EntityID
 import org.jetbrains.exposed.sql.and
 import org.jetbrains.exposed.sql.javatime.date
+import java.time.LocalDate
 import kotlin.math.ceil
 
 object LeagueTable : AuditedTable("league") {
@@ -23,8 +24,11 @@ class League(id: EntityID<Int>) : AuditedEntity(id, LeagueTable) {
     val config by LeagueConfig backReferencedOn LeagueConfigTable.league
     val coefficients by LeagueCoefficients backReferencedOn LeagueCoefficientsTable.league
 
-    fun isClosed(): Boolean {
-        return false
+
+    fun getActiveOrLastSeason(): LeagueSeason {
+        val active = seasons.find { it.endDate == null }
+
+        return active ?: seasons.maxByOrNull { it.season }!!
     }
 }
 
@@ -56,6 +60,19 @@ class LeagueSeason(id: EntityID<Int>) : AuditedEntity(id, LeagueSeasonTable) {
     var league by League referencedOn LeagueSeasonTable.league
     var startDate by LeagueSeasonTable.startDate
     var endDate by LeagueSeasonTable.endDate
+
+
+    fun isOpen(): Boolean {
+        if (endDate == null) {
+            return true
+        }
+
+        val today = LocalDate.now()
+
+        return startDate == today ||
+                endDate!! == today ||
+                (startDate.isBefore(today) && endDate!!.isAfter(today))
+    }
 }
 
 object LeagueConfigTable : BaseIntIdTable("league_config") {

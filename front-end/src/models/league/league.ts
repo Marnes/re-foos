@@ -1,10 +1,19 @@
+import type { User } from '$src/models/user';
+import type { PlayerMin } from '$src/models/player/player';
+
 export class League {
     id!: number;
     name!: string;
+    joined!: boolean;
+    isOpen!: boolean;
+    createdDate!: Date;
+    createdBy!: User;
+    season!: number;
     startDate!: Date;
     endDate!: Date;
-    isClosed!: boolean;
-    joined!: boolean;
+    players!: number;
+    matches!: number;
+    leader!: PlayerMin;
     config!: LeagueConfig;
 }
 
@@ -24,18 +33,6 @@ export class LeagueConfig {
     scoresPerTeam!: number;
     playersPerTeam!: number;
     maxScore!: number;
-}
-
-export class LeagueSummary {
-    id!: number;
-    name!: string;
-    startDate!: Date;
-    endDate!: Date;
-    joined!: boolean;
-    teamComposition!: string;
-    players!: number;
-    type!: LeagueType;
-    isClosed!: boolean;
 }
 
 export enum LeagueType {

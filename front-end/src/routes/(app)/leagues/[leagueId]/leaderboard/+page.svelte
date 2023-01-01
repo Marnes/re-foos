@@ -9,7 +9,7 @@
     import { onMount } from 'svelte';
     import { modalStore } from '@skeletonlabs/skeleton';
     import { Modal } from '$src/models/modal';
-    import { sessionStore } from '$src/stores/sessionStore';
+    import { session } from '$src/stores/sessionStore';
     import { league, players, playerSpotlight, highlights } from '$src/stores/leagueStore';
     import type { PageData } from '$src/$types';
     import _ from 'lodash';
@@ -29,7 +29,7 @@
             return;
         }
 
-        if (!$sessionStore?.user) {
+        if (!$session?.user) {
             modalStore.trigger(Modal.component('Login to <strong>ELO-Musk</strong>', LoginForm, {}, () => {
                 showJoinDialog(code);
             }));

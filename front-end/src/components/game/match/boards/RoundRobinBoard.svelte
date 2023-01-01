@@ -11,6 +11,7 @@
     import { getSubmitString } from '$src/lib/util/match/matchUtil.js';
     import { createEventDispatcher, onMount } from 'svelte';
     import { onScoreInput } from '$src/lib/actions/scoreInput.js';
+    import { getBestOf } from '$src/lib/util/match/leagueUtil';
     import _ from 'lodash';
     import BoardContainer from '$src/components/game/match/boards/BoardContainer.svelte';
 
@@ -25,7 +26,7 @@
     const maxScore = league.config.maxScore;
     const gameCount = league.config.scoresPerTeam;
     const isEvenGames = gameCount % 2 === 0;
-    const bestOf = isEvenGames ? gameCount : Math.ceil(gameCount / 2);
+    const bestOf = getBestOf(league);
 
     let roundRobinGames = buildRoundRobinGames(league, players)
 

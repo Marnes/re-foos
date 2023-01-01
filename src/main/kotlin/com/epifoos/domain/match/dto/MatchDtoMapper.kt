@@ -1,6 +1,5 @@
 package com.epifoos.domain.match.dto
 
-import com.epifoos.domain.league.dto.LeagueDtoMapper
 import com.epifoos.domain.match.Game
 import com.epifoos.domain.match.Match
 import com.epifoos.domain.match.Team
@@ -28,7 +27,6 @@ object MatchDtoMapper {
             match.id.value,
             match.createdDate,
             UserDtoMapper.map(match.createdBy),
-            LeagueDtoMapper.map(match.league, false),
             games.map { mapGame(it, players, gameStatsMap[it]!!, gamePlayerStatsMap[it]!!) },
             players.associateBy(
                 { it.id.value },

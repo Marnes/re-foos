@@ -1,6 +1,6 @@
 <script lang="ts">
     import AvatarSelect from '$src/components/profile/avatar/AvatarSelect.svelte';
-    import { sessionStore } from '$src/stores/sessionStore';
+    import { session } from '$src/stores/sessionStore';
     import { put } from '$src/lib/utils';
     import { invalidateAll } from '$app/navigation';
     import { toastStore } from '@skeletonlabs/skeleton';
@@ -20,6 +20,6 @@
 
 <AvatarSelect
     avatars={data.avatars}
-    bind:value={$sessionStore.user.avatar}
+    bind:value={$session.user.avatar}
     on:change={setAvatar}
 />

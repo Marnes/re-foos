@@ -1,8 +1,12 @@
 package com.epifoos.domain.league
 
 import com.epifoos.domain.league.builder.LeagueBuilderService
-import com.epifoos.domain.league.dto.*
+import com.epifoos.domain.league.dto.LeagueCode
+import com.epifoos.domain.league.dto.LeagueCreationDto
+import com.epifoos.domain.league.dto.LeagueDto
+import com.epifoos.domain.league.dto.LeagueDtoMapper
 import com.epifoos.domain.league.validation.LeagueValidationService
+import com.epifoos.domain.match.MatchTable
 import com.epifoos.domain.player.PlayerService
 import com.epifoos.domain.player.PlayerTable
 import com.epifoos.domain.user.User
@@ -11,6 +15,7 @@ import com.epifoos.exceptions.BaseException
 import com.epifoos.exceptions.EntityNotFoundException
 import com.epifoos.exceptions.ValidationException
 import io.konform.validation.Invalid
+import org.jetbrains.exposed.dao.load
 import org.jetbrains.exposed.dao.with
 import org.jetbrains.exposed.sql.select
 import org.jetbrains.exposed.sql.transactions.transaction
@@ -30,24 +35,50 @@ object LeagueService {
         return leagueCreationDto
     }
 
+    //TODO: Less expensive call for just capturing with config
     fun getLeague(leagueContext: LeagueContext, currentUser: User?): LeagueDto {
         return transaction {
+            val joined = LeagueHelper.getUserLeagueIds(currentUser).contains(leagueContext.league.id.value)
+            leagueContext.league.load(League::config, League::createdBy, League::seasons)
+
             LeagueDtoMapper.map(
                 leagueContext.league,
-                getUserLeagueIds(currentUser).contains(leagueContext.league.id.value)
+                leagueContext.season,
+                LeagueHelper.getLeagueLeader(leagueContext.season),
+                PlayerTable.select { PlayerTable.league eq leagueContext.league.id }.count(),
+                MatchTable.select { MatchTable.season eq leagueContext.season.id }.count(),
+                joined,
+                leagueContext.league.getActiveOrLastSeason().isOpen()
             )
         }
     }
 
-    fun getLeagues(currentUser: User?): List<LeagueSummaryDto> {
-        val userLeagueIds = transaction { getUserLeagueIds(currentUser) }
-
+    fun getLeagues(currentUser: User?): List<LeagueDto> {
         return transaction {
-            League.all()
-                .with(League::config, League::createdBy)
+            val userLeagueIds = LeagueHelper.getUserLeagueIds(currentUser)
+
+            val leagues = League.all()
+                .with(League::config, League::createdBy, League::seasons)
                 .toList()
-                .sortedWith(compareBy(String.CASE_INSENSITIVE_ORDER) { it.name })
-                .map { LeagueDtoMapper.mapSummary(it, userLeagueIds.contains(it.id.value)) }
+
+            val seasonsMap = leagues.associateWith { it.getActiveOrLastSeason() }
+            val leadersMap = LeagueHelper.getLeaguesLeaders(seasonsMap.values)
+
+            leagues.sortedWith(compareBy(String.CASE_INSENSITIVE_ORDER) { it.name })
+                .map {
+                    val joined = userLeagueIds.contains(it.id.value)
+                    val season = seasonsMap[it]!!
+
+                    LeagueDtoMapper.map(
+                        it,
+                        season,
+                        leadersMap[season],
+                        PlayerTable.select { PlayerTable.league eq it.id }.count(), //TODO: More Performant
+                        MatchTable.select { MatchTable.season eq season.id }.count(), //TODO: More Performant
+                        joined,
+                        season.isOpen()
+                    )
+                }
         }
     }
 
@@ -60,7 +91,7 @@ object LeagueService {
     fun generateNewCode(leagueId: Int): LeagueCode {
         return transaction {
             val league = League.findById(leagueId) ?: throw leagueNotFound(leagueId)
-            val uid = LeagueUtil.generateUid()
+            val uid = LeagueHelper.generateUid()
 
             league.uid = uid
             LeagueCode(uid)
@@ -81,27 +112,12 @@ object LeagueService {
                 throw AuthorizationException("Invalid code supplied")
             }
 
-            if (getUserLeagueIds(currentUser).contains(league.id.value)) {
+            if (LeagueHelper.getUserLeagueIds(currentUser).contains(league.id.value)) {
                 throw BaseException("User already joined league")
-            }
-
-            if (league.isClosed()) {
-                throw BaseException("League is closed");
             }
 
             PlayerService.createPlayer(league, currentUser)
         }
-    }
-
-    private fun getUserLeagueIds(currentUser: User?): List<Int> {
-        if (currentUser == null) {
-            return listOf()
-        }
-
-        return PlayerTable
-            .slice(PlayerTable.league)
-            .select { PlayerTable.user eq currentUser.id }
-            .map { it[PlayerTable.league].value }
     }
 
     private fun leagueNotFound(leagueId: Int): EntityNotFoundException {

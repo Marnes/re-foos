@@ -4,7 +4,7 @@
     import { menu, modalStore, toastStore } from '@skeletonlabs/skeleton';
     import { League, LeagueSummary } from '$src/models/league/league';
     import { isoDate } from '$src/lib/util/dateUtil.js';
-    import { sessionStore } from '$src/stores/sessionStore.js';
+    import { session } from '$src/stores/sessionStore.js';
     import { Modal } from '$src/models/modal';
     import { ToastMessage } from '$src/models/toastMessage';
     import { post } from '$src/lib/utils';
@@ -46,7 +46,7 @@
       <th style="width: 250px" class="text-center">End Date</th>
       <th style="width: 300px" class="text-center">Team Composition</th>
       <th style="width: 150px" class="text-center">Closed</th>
-      {#if $sessionStore?.user?.admin }
+      {#if $session?.user?.admin }
         <th style="width: 50px" class="text-center"></th>
       {/if}
     </tr>
@@ -60,7 +60,7 @@
         <td class="text-center">{league.endDate ? isoDate(league.endDate) : '-'}</td>
         <td class="text-center">{league.teamComposition}</td>
         <td class="text-center">{league.isClosed ? 'Yes' : 'No' }</td>
-        {#if $sessionStore?.user?.admin }
+        {#if $session?.user?.admin }
           <td style="width: 30px" class="text-center">
             <button use:menu={{ menu: `leagueOptions${league.id}` }} on:click|preventDefault|stopPropagation>
               <Icon icon="ic:round-more-vert" class="text-2xl"/>

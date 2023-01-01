@@ -4,12 +4,12 @@
     import { League } from '$src/models/league/league';
     import { onScoreInput } from '$src/lib/actions/scoreInput';
     import { canCaptureGame, getGameResult, sanitizeExtraScores, updateScore } from '$src/lib/util/match/matchUtil';
-    import { Divider } from '@skeletonlabs/skeleton';
     import { Player } from '$src/models/player/player';
     import { Result } from '$src/models/match/matchResult';
     import { getSubmitString } from '$src/lib/util/match/matchUtil.js';
     import { buildMatch } from '$src/lib/util/match/headToHeadUtil';
     import { createEventDispatcher, onMount } from 'svelte';
+    import { getBestOf } from '$src/lib/util/match/leagueUtil';
     import _ from 'lodash';
 
     export let league: League;
@@ -22,7 +22,7 @@
     const maxScore = league.config.maxScore;
     const gameCount = league.config.games;
     const isEvenGames = gameCount % 2 === 0;
-    const bestOf = isEvenGames ? gameCount : Math.ceil(gameCount / 2);
+    const bestOf = getBestOf(league);
 
     let team1 = players.slice(0, league.config.playersPerTeam);
     let team2 = players.slice(league.config.playersPerTeam, players.length);

@@ -2,33 +2,25 @@ package com.epifoos.domain.league.dto
 
 import com.epifoos.domain.Elo
 import com.epifoos.domain.league.LeagueType
+import com.epifoos.domain.player.dto.PlayerMinifiedDto
 import com.epifoos.domain.user.UserDto
 import java.time.LocalDate
+import java.time.LocalDateTime
 
 data class LeagueDto(
     val id: Int,
     val name: String,
-    val isClosed: Boolean,
     val joined: Boolean,
-    val config: LeagueConfigDto,
-)
-
-data class LeagueCreationDto(
-    val name: String,
+    val isOpen: Boolean,
+    val createdDate: LocalDateTime,
+    val createdBy: UserDto,
+    val season: Int,
     val startDate: LocalDate,
     val endDate: LocalDate?,
-    val config: LeagueConfigDto
-)
-
-data class LeagueSummaryDto(
-    val id: Int,
-    val name: String,
-    val joined: Boolean,
-    val teamComposition: String,
-    val players: Int,
-    val createdBy: UserDto,
-    val type: LeagueType,
-    val isClosed: Boolean
+    val players: Long,
+    val matches: Long,
+    val leader: PlayerMinifiedDto?,
+    val config: LeagueConfigDto,
 )
 
 data class LeagueConfigDto(
@@ -40,4 +32,11 @@ data class LeagueConfigDto(
     val scoresPerTeam: Int,
     val playersPerTeam: Int,
     val maxScore: Int
+)
+
+data class LeagueCreationDto(
+    val name: String,
+    val startDate: LocalDate,
+    val endDate: LocalDate?,
+    val config: LeagueConfigDto
 )

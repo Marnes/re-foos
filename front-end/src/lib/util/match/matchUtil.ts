@@ -3,7 +3,7 @@ import { userNameSentence } from '$src/lib/util/stringUtil';
 import { GameResult } from '$src/models/match/matchResult';
 import type { Player } from '$src/models/player/player';
 
-export const updateScore = (score: number, index: number, maxScore: number, teamScore: number[], otherScore: number[]) => {
+export const updateScore = (score: number, index: number, maxScore: number, teamScore: number[], otherScore: (number | null)[]) => {
     teamScore[index] = score;
 
     if (score === maxScore) {
@@ -69,7 +69,7 @@ export const canCaptureGame = (bestOf: number, isEvenGames: boolean, isComplete:
     return gamesPlayed + 1 === gameNumber || hasScore(index, team1Scores, team2Scores);
 }
 
-export const sanitizeExtraScores = (bestOf: number, maxScore: number, gameCount: number, team1Scores: number[], team2Scores: number[]) => {
+export const sanitizeExtraScores = (bestOf: number, maxScore: number, gameCount: number, team1Scores: (number | undefined)[], team2Scores: (number | undefined)[]) => {
     let wins1 = 0;
     let wins2 = 0;
 
@@ -91,15 +91,15 @@ export const sanitizeExtraScores = (bestOf: number, maxScore: number, gameCount:
 
 export const getSubmitString = (winners: Player[] | null, losers: Player[] | null): string => {
     if (winners && losers) {
-        return `Submit a win for&nbsp;<strong>${userNameSentence(winners)}</strong>&nbsp;and a loss for <strong>${userNameSentence(losers)}</strong>`;
+        return `Submit a win for&nbsp;<strong>${ userNameSentence(winners) }</strong>&nbsp;and a loss for <strong>${ userNameSentence(losers) }</strong>`;
     }
 
     if (winners) {
-        return `Submit a win for&nbsp;<strong>${userNameSentence(winners)}</strong>`;
+        return `Submit a win for&nbsp;<strong>${ userNameSentence(winners) }</strong>`;
     }
 
     if (losers) {
-        return `Submit a loss for&nbsp;<strong>${userNameSentence(losers)}</strong>`;
+        return `Submit a loss for&nbsp;<strong>${ userNameSentence(losers) }</strong>`;
     }
 
     return `Submit a draw`;

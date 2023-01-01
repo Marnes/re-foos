@@ -3,7 +3,7 @@
     import PlayerAvatar from '$src/components/player/PlayerAvatar.svelte'
     import Icon from '@iconify/svelte';
     import { AppBar, Divider, drawerStore, menu, modalStore, toastStore } from '@skeletonlabs/skeleton';
-    import { sessionStore } from '$src/stores/sessionStore';
+    import { session } from '$src/stores/sessionStore';
     import { del } from '$src/lib/utils';
     import { invalidateAll } from '$app/navigation';
     import { Modal } from '$src/models/modal';
@@ -21,7 +21,7 @@
     async function logout() {
         await del('/profile/auth/session')
         await invalidateAll();
-        $sessionStore = null;
+        $session = null;
         toastStore.trigger({ message: 'Successfully logged out', autohide: true, timeout: 3000 });
     }
 </script>
@@ -40,10 +40,10 @@
   </svelte:fragment>
   <svelte:fragment slot='trail'>
     <slot name="actions"/>
-    {#if $sessionStore}
+    {#if $session}
       <span class="relative">
         <span use:menu={{ menu: 'session' }} class="cursor-pointer">
-          <PlayerAvatar player={$sessionStore.user} width="w-12"/>
+          <PlayerAvatar player={$session.user} width="w-12"/>
         </span>
         <nav class="list-nav card p-4 w-64 shadow-xl" data-menu="session">
           <ul>

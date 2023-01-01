@@ -1,12 +1,11 @@
 <script lang="ts">
     import Icon from '@iconify/svelte';
-    import { AppRail, AppRailTile } from '@skeletonlabs/skeleton';
-    import { menuDrawerStore } from '$src/stores/menu-store.js';
+    import { AppRail, AppRailTile, drawerStore } from '@skeletonlabs/skeleton';
 
     export let rails: [{ title: string, link: string, icon: string, selected: boolean }] = [];
 
     const closeDrawer = () => {
-        $menuDrawerStore = false;
+        drawerStore.close();
     }
 
     const isSelectedClass = (rail) => {

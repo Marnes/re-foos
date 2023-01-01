@@ -2,30 +2,36 @@ package com.epifoos.domain.league.dto
 
 import com.epifoos.domain.league.League
 import com.epifoos.domain.league.LeagueConfig
+import com.epifoos.domain.league.LeagueSeason
+import com.epifoos.domain.player.Player
+import com.epifoos.domain.player.dto.PlayerDtoMapper
 import com.epifoos.domain.user.UserDtoMapper
 
 object LeagueDtoMapper {
 
-    fun map(league: League, joined: Boolean): LeagueDto {
+    fun map(
+        league: League,
+        leagueSeason: LeagueSeason,
+        leader: Player?,
+        players: Long,
+        matches: Long,
+        joined: Boolean,
+        isOpen: Boolean
+    ): LeagueDto {
         return LeagueDto(
             league.id.value,
             league.name,
-            league.isClosed(),
             joined,
-            mapConfig(league.config),
-        )
-    }
-
-    fun mapSummary(league: League, joined: Boolean): LeagueSummaryDto {
-        return LeagueSummaryDto(
-            league.id.value,
-            league.name,
-            joined,
-            getTeamComposition(league.config),
-            0,
+            isOpen,
+            league.createdDate,
             UserDtoMapper.map(league.createdBy),
-            league.config.type,
-            league.isClosed(),
+            leagueSeason.season,
+            leagueSeason.startDate,
+            leagueSeason.endDate,
+            players,
+            matches,
+            leader?.let { PlayerDtoMapper.mapMinified(it) },
+            mapConfig(league.config)
         )
     }
 

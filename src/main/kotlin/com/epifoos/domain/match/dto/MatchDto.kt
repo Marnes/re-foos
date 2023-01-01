@@ -1,6 +1,5 @@
 package com.epifoos.domain.match.dto
 
-import com.epifoos.domain.league.dto.LeagueDto
 import com.epifoos.domain.player.dto.PlayerDto
 import com.epifoos.domain.stats.dto.MatchGameStatsDto
 import com.epifoos.domain.stats.dto.MatchPlayerStatsDto
@@ -11,7 +10,6 @@ data class MatchDto(
     val id: Int,
     val createdDate: LocalDateTime,
     val createdBy: UserDto,
-    val league: LeagueDto,
     val games: List<GameDto>,
     val players: Map<Int, PlayerDto>,
     val playerStats: Map<Int, MatchPlayerStatsDto>,

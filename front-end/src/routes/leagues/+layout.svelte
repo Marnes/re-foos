@@ -3,13 +3,13 @@
     import MainPage from '$src/components/layout/MainPage.svelte';
 
     import { AppShell } from '@skeletonlabs/skeleton';
-    import { sessionStore } from '$src/stores/sessionStore';
+    import { session } from '$src/stores/sessionStore';
 
     const createLeague = () => {
 
     };
 
-    $: canCreate = $sessionStore?.user?.admin
+    $: canCreate = $session?.user?.admin
 
 </script>
 

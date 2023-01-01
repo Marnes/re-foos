@@ -1,7 +1,7 @@
 <script lang='ts'>
     import PlayerCard from '$src/components/game/player/PlayerCard.svelte';
     import { League, LeagueType } from '$src/models/league/league';
-    import { sessionStore } from '$src/stores/sessionStore';
+    import { session } from '$src/stores/sessionStore';
     import type { Player } from '$src/models/player/player';
     import _ from 'lodash';
 
@@ -9,7 +9,7 @@
     export let players: Player[];
     export let selectedPlayers: Player[] = [];
 
-    let currentPlayer = players.find((player) => player.userId === $sessionStore.user.id);
+    let currentPlayer = players.find((player) => player.userId === $session.user.id);
     let remainingPlayers = _.sortBy(players, 'username').filter((player) => player.username !== currentPlayer?.username);
 
     function togglePlayer(player: Player) {

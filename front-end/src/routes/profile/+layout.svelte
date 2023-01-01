@@ -5,7 +5,7 @@
     import MainPage from '$src/components/layout/MainPage.svelte';
 
     import { AppShell, Drawer } from '@skeletonlabs/skeleton';
-    import { sessionStore } from '$src/stores/sessionStore';
+    import { session } from '$src/stores/sessionStore';
     import { page } from '$app/stores';
     import { createRail } from '$src/lib/util/railUtil';
 
@@ -31,6 +31,6 @@
   <MainPage>
     <slot/>
 
-    <PlayerProfile slot="right-content" player={$sessionStore.user}/>
+    <PlayerProfile slot="right-content" player={$session.user}/>
   </MainPage>
 </AppShell>

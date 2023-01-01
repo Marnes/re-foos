@@ -1,7 +1,7 @@
 <script lang="ts">
     import LeagueTable from '$src/components/league/LeagueTable.svelte';
 
-    import { sessionStore } from '$src/stores/sessionStore';
+    import { session } from '$src/stores/sessionStore';
     import type { PageData } from '$src/$types';
 
     export let data: PageData;
@@ -11,7 +11,7 @@
 </script>
 
 <div class="flex flex-col p-5">
-  {#if $sessionStore?.user}
+  {#if $session?.user}
     <div class="card card-glass-surface p-3">
       <h3 class="mb-3">My Leagues</h3>
       <LeagueTable leagues={joined}/>

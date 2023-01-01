@@ -2,28 +2,29 @@
     import TopBar from '$src/components/layout/TopBar.svelte';
     import AppRail from '$src/components/layout/AppRail.svelte';
     import Match from '$src/components/game/Match.svelte';
-    import PlayerSpotlight from '$src/components/stats/PlayerSpotlight.svelte';
+    import PlayerSpotlight from '$src/components/spotlight/PlayerSpotlight.svelte';
+    import LeagueSpotlight from '$src/components/spotlight/LeagueSpotlight.svelte';
     import MainPage from '$src/components/layout/MainPage.svelte';
 
     import { AppShell, Drawer, drawerStore } from '@skeletonlabs/skeleton';
     import { page } from '$app/stores';
-    import { sessionStore } from '$src/stores/sessionStore.js';
-    import { league, players } from '$src/stores/leagueStore.js';
+    import { session } from '$src/stores/sessionStore.js';
+    import { league, players, playerSpotlight } from '$src/stores/leagueStore.js';
     import type { PageData } from '$src/$types';
     import { createRail } from '$src/lib/util/railUtil';
 
     export let data: PageData;
 
     $: rails = [
-        createRail('Leaderboard', `/leagues/${$league.id}/leaderboard`, 'iconoir:leaderboard-star', $page)
+        createRail('Leaderboard', `/leagues/${ $league.id }/leaderboard`, 'iconoir:leaderboard-star', $page)
     ]
 
     const captureGame = () => {
         drawerStore.open({ id: 'match-capture', position: 'right' })
     };
 
-    $: captureDisabled = $league.isClosed
-    $: showCapture = $sessionStore?.user && $league.joined
+    $: captureDisabled = !$league.isOpen
+    $: showCapture = $session?.user && $league.joined
 </script>
 
 <Drawer>
@@ -75,7 +76,11 @@
     {/if}
 
     <svelte:fragment slot="right-content">
-      <PlayerSpotlight/>
+      {#if $playerSpotlight}
+        <PlayerSpotlight/>
+      {:else }
+        <LeagueSpotlight/>
+      {/if}
     </svelte:fragment>
   </MainPage>
 </AppShell>

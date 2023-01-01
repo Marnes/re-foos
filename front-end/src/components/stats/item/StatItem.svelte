@@ -9,7 +9,7 @@
 </script>
 
 <div>
-  <span class="text-sm text-accent-500">{title}</span>
+  <span class="text-sm text-surface-500/70">{title}</span>
   <br/>
 
   {#if eloChange}

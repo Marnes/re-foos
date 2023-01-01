@@ -3,13 +3,12 @@ package com.epifoos.domain.league
 import com.epifoos.domain.*
 import org.jetbrains.exposed.dao.IntEntityClass
 import org.jetbrains.exposed.dao.id.EntityID
+import org.jetbrains.exposed.sql.and
 import org.jetbrains.exposed.sql.javatime.date
 import kotlin.math.ceil
 
 object LeagueTable : AuditedTable("league") {
     var name = varchar("name", 255)
-    var startDate = date("start_date")
-    var endDate = date("end_date").nullable()
     var uid = varchar("uid", 10)
         .uniqueIndex("league_unique_uid")
 }
@@ -18,16 +17,45 @@ class League(id: EntityID<Int>) : AuditedEntity(id, LeagueTable) {
     companion object : IntEntityClass<League>(LeagueTable)
 
     var name by LeagueTable.name
-    var startDate by LeagueTable.startDate
-    var endDate by LeagueTable.endDate
     var uid by LeagueTable.uid
 
+    val seasons by LeagueSeason referrersOn LeagueSeasonTable.league
     val config by LeagueConfig backReferencedOn LeagueConfigTable.league
     val coefficients by LeagueCoefficients backReferencedOn LeagueCoefficientsTable.league
 
     fun isClosed(): Boolean {
-        return endDate != null
+        return false
     }
+}
+
+object LeagueSeasonTable : AuditedTable("league_season") {
+    var league = reference("league_id", LeagueTable)
+    var season = integer("season")
+    var startDate = date("start_date")
+    var endDate = date("end_date").nullable()
+
+    init {
+        uniqueIndex("league_season_unique_idx", league, season)
+    }
+}
+
+class LeagueSeason(id: EntityID<Int>) : AuditedEntity(id, LeagueSeasonTable) {
+    companion object : IntEntityClass<LeagueSeason>(LeagueSeasonTable) {
+        fun find(leagueId: Int, season: Int?): LeagueSeason {
+            val seasons = LeagueSeason.find { LeagueSeasonTable.league eq leagueId }.toList()
+            return seasons.firstOrNull { it.season == season } ?: seasons.first { it.endDate == null }
+        }
+
+        fun findActive(leagueId: Int): LeagueSeason? {
+            return LeagueSeason.find { LeagueSeasonTable.league eq leagueId and (LeagueSeasonTable.endDate.isNull()) }
+                .firstOrNull()
+        }
+    }
+
+    var season by LeagueSeasonTable.season
+    var league by League referencedOn LeagueSeasonTable.league
+    var startDate by LeagueSeasonTable.startDate
+    var endDate by LeagueSeasonTable.endDate
 }
 
 object LeagueConfigTable : BaseIntIdTable("league_config") {

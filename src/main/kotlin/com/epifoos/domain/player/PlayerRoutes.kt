@@ -1,6 +1,7 @@
 package com.epifoos.domain.player
 
 import com.epifoos.domain.auth.AuthUtil
+import com.epifoos.domain.league.LeagueContextHelper
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.auth.*
@@ -11,11 +12,7 @@ import io.ktor.server.routing.*
 fun Route.playersRoutes() {
     route("/players") {
         get {
-            call.respond(HttpStatusCode.OK, PlayerService.getPlayers(call.parameters["leagueId"]!!.toInt()))
-        }
-
-        put("spotlight") {
-            call.respond(HttpStatusCode.OK, PlayerService.getOrUpdateSpotlight(call.parameters["leagueId"]!!.toInt()))
+            call.respond(HttpStatusCode.OK, PlayerService.getPlayers(LeagueContextHelper.getContext(call)))
         }
 
         authenticate {
@@ -23,8 +20,8 @@ fun Route.playersRoutes() {
                 call.respond(
                     HttpStatusCode.OK,
                     PlayerService.getPlayer(
+                        LeagueContextHelper.getContext(call),
                         AuthUtil.authenticatedUser(call),
-                        call.parameters["leagueId"]!!.toInt()
                     )!!
                 )
             }
@@ -36,7 +33,7 @@ fun Route.playersRoutes() {
             call.respond(
                 HttpStatusCode.OK,
                 PlayerService.getPlayerSpotlight(
-                    call.parameters["leagueId"]!!.toInt(),
+                    LeagueContextHelper.getContext(call),
                     call.parameters["playerId"]!!.toInt()
                 )
             )

@@ -12,8 +12,6 @@ abstract class LeagueBuilder {
     open fun create(leagueCreationDto: LeagueCreationDto, currentUser: User): League {
         return League.new {
             name = leagueCreationDto.name
-            startDate = leagueCreationDto.startDate
-            endDate = leagueCreationDto.endDate
             uid = LeagueUtil.generateUid()
             createdBy = currentUser
         }.also { createConfig(it, leagueCreationDto.config) }

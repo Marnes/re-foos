@@ -6,7 +6,7 @@ import com.epifoos.domain.stats.AbstractPlayerStats
 
 object PlayerDtoMapper {
 
-    fun map(player: Player, rank: BasePlayerRank?, stats: AbstractPlayerStats): PlayerDto {
+    fun map(player: Player, rank: BasePlayerRank?, stats: AbstractPlayerStats?): PlayerDto {
         return PlayerDto(
             player.id.value,
             player.createdDate,
@@ -14,19 +14,19 @@ object PlayerDtoMapper {
             player.user.username,
             player.user.avatar,
             rank?.rank,
-            stats.elo,
-            stats.played,
-            stats.wins,
-            stats.losses,
-            stats.eloChange,
-            stats.highestElo,
-            stats.lowestElo,
-            stats.scoreFor,
-            stats.scoreAgainst,
-            stats.winningStreak,
-            stats.losingStreak,
-            stats.longestWinningStreak,
-            stats.longestLosingStreak,
+            stats?.elo,
+            stats?.played,
+            stats?.wins,
+            stats?.losses,
+            stats?.eloChange,
+            stats?.highestElo,
+            stats?.lowestElo,
+            stats?.scoreFor,
+            stats?.scoreAgainst,
+            stats?.winningStreak,
+            stats?.losingStreak,
+            stats?.longestWinningStreak,
+            stats?.longestLosingStreak,
         )
     }
 

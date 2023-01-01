@@ -2,14 +2,25 @@ package com.epifoos.domain.stats
 
 import com.epifoos.domain.Elo
 import com.epifoos.domain.calculation.CalculationResult
-import com.epifoos.domain.league.League
+import com.epifoos.domain.league.LeagueContext
 import com.epifoos.domain.player.Player
 
 object PlayerStatsService {
 
-    fun createDefault(league: League, player: Player) {
-        PlayerStats.new {
+    fun updateStats(
+        leagueContext: LeagueContext,
+        players: Set<Player>,
+        playerStatsMap: Map<Player, PlayerStats>,
+        calculationResult: CalculationResult
+    ) {
+        players.forEach { updatePlayerStats(it, playerStatsMap[it] ?: createDefault(leagueContext, it), calculationResult) }
+    }
+
+    private fun createDefault(leagueContext: LeagueContext, player: Player): PlayerStats {
+        return PlayerStats.new {
             this.player = player
+            league = leagueContext.league
+            season = leagueContext.season
             elo = league.config.startingElo
             played = 0
             wins = 0
@@ -26,47 +37,43 @@ object PlayerStatsService {
         }
     }
 
-    fun updateStats(calculationResult: CalculationResult) {
-        calculationResult.matchData.players.forEach { updatePlayerStats(it, calculationResult) }
-    }
-
-    private fun updatePlayerStats(player: Player, calculationResult: CalculationResult) {
+    private fun updatePlayerStats(player: Player, stats: PlayerStats, calculationResult: CalculationResult) {
         val eloChange = calculationResult.eloChanges[player]!!
 
-        player.stats.elo = player.stats.elo + eloChange
-        player.stats.eloChange = eloChange
-        player.stats.played += 1
-        player.stats.scoreFor += calculationResult.matchData.scoreForMap[player]!!
-        player.stats.scoreAgainst += calculationResult.matchData.scoreAgainstMap[player]!!
+        stats.elo = stats.elo + eloChange
+        stats.eloChange = eloChange
+        stats.played += 1
+        stats.scoreFor += calculationResult.matchData.scoreForMap[player]!!
+        stats.scoreAgainst += calculationResult.matchData.scoreAgainstMap[player]!!
 
         if (calculationResult.matchData.isWinner(player)) {
-            player.stats.wins += 1
-            player.stats.winningStreak += 1
+            stats.wins += 1
+            stats.winningStreak += 1
         } else {
-            player.stats.winningStreak = 0
+            stats.winningStreak = 0
         }
 
         if (calculationResult.matchData.isLoser(player)) {
-            player.stats.losses += 1
-            player.stats.losingStreak += 1
+            stats.losses += 1
+            stats.losingStreak += 1
         } else {
-            player.stats.losingStreak = 0
+            stats.losingStreak = 0
         }
 
-        if (player.stats.elo > player.stats.highestElo) {
-            player.stats.highestElo = player.stats.elo
+        if (stats.elo > stats.highestElo) {
+            stats.highestElo = stats.elo
         }
 
-        if (player.stats.elo < player.stats.lowestElo) {
-            player.stats.lowestElo = player.stats.elo
+        if (stats.elo < stats.lowestElo) {
+            stats.lowestElo = stats.elo
         }
 
-        if (player.stats.winningStreak > player.stats.longestWinningStreak) {
-            player.stats.longestWinningStreak = player.stats.winningStreak
+        if (stats.winningStreak > stats.longestWinningStreak) {
+            stats.longestWinningStreak = stats.winningStreak
         }
 
-        if (player.stats.losingStreak > player.stats.longestLosingStreak) {
-            player.stats.longestLosingStreak = player.stats.losingStreak
+        if (stats.losingStreak > stats.longestLosingStreak) {
+            stats.longestLosingStreak = stats.losingStreak
         }
     }
 }

@@ -5,7 +5,7 @@ import org.jetbrains.exposed.dao.with
 
 object PlayerStatsSnapshotService {
 
-    fun createSnapshots(match: Match, playerStats: List<PlayerStats>) {
+    fun createSnapshots(match: Match, playerStats: Set<PlayerStats>) {
         playerStats.forEach { createSnapshot(match, it) }
     }
 

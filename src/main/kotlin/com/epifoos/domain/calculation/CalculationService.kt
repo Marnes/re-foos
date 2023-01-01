@@ -9,25 +9,25 @@ import com.epifoos.domain.calculation.data.win.TeamBasedMatchDataMapper
 import com.epifoos.domain.calculation.data.win.WinConditionMapper
 import com.epifoos.domain.league.League
 import com.epifoos.domain.league.LeagueType
-import com.epifoos.domain.match.Match
-import com.epifoos.domain.match.MatchUtil
-import com.epifoos.domain.player.PlayerUtil
+import com.epifoos.domain.match.MatchCalculationSubmission
 
 object CalculationService {
 
-    fun calculate(league: League, match: Match): CalculationResult {
-        val players = MatchUtil.getPlayers(match)
-        val initialEloMap = PlayerUtil.getEloMap(players)
+    fun calculate(matchCalculationSubmission: MatchCalculationSubmission): CalculationResult {
+        val league = matchCalculationSubmission.leagueContext.league
 
-        return getCalculator(league).calculate(league, match, players, initialEloMap)
+        return getCalculator(league).calculate(
+            league,
+            matchCalculationSubmission.match,
+            matchCalculationSubmission.getPlayers(),
+            matchCalculationSubmission.initialEloMap
+        )
     }
 
     private fun getCalculator(league: League): EloCalculator<*, *> {
 
         return TeamBasedCalculator(
-            league,
-            TeamBasedMatchDataMapper(getWinConditionMapper(league)),
-            TeamBasedCoefficientCalculator()
+            league, TeamBasedMatchDataMapper(getWinConditionMapper(league)), TeamBasedCoefficientCalculator()
         )
     }
 

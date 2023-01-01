@@ -12,6 +12,7 @@ import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import java.time.LocalDate
 
+
 fun Route.leagueRoutes() {
     route("/leagues") {
         authenticate {
@@ -36,7 +37,7 @@ fun Route.leagueRoutes() {
             get {
                 call.respond(
                     LeagueService.getLeague(
-                        call.parameters["leagueId"]!!.toInt(),
+                        LeagueContextHelper.getContext(call),
                         AuthUtil.optionalUser(call)
                     )
                 )
@@ -44,7 +45,7 @@ fun Route.leagueRoutes() {
         }
 
         get("/highlights") {
-            call.respond(HighlightService.getLatestHighlights(call.parameters["leagueId"]!!.toInt()))
+            call.respond(HighlightService.getLatestHighlights(LeagueContextHelper.getContext(call)))
         }
 
         authenticate {

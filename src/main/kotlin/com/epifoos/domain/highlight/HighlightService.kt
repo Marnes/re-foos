@@ -7,6 +7,7 @@ import com.epifoos.domain.highlight.factory.HeadToHeadHighlightFactory
 import com.epifoos.domain.highlight.factory.HighlightFactory
 import com.epifoos.domain.highlight.factory.RoundRobinHighlightFactory
 import com.epifoos.domain.league.League
+import com.epifoos.domain.league.LeagueContext
 import com.epifoos.domain.league.LeagueType
 import com.epifoos.domain.match.Match
 import com.epifoos.domain.player.Player
@@ -18,28 +19,25 @@ import org.jetbrains.exposed.sql.transactions.transaction
 object HighlightService {
 
     fun createHighlights(league: League, calculationResult: CalculationResult) {
-        transaction {
-            getHighlightFactory(league).createHighlights(calculationResult)
-        }
+        getHighlightFactory(league).createHighlights(calculationResult)
     }
 
-    fun getLatestHighlights(leagueId: Int): List<HighlightDto> {
-        return transaction { Match.getLatestMatch(leagueId)?.let { getLatestHighlights(it) } } ?: listOf()
+    fun getLatestHighlights(leagueContext: LeagueContext): List<HighlightDto> {
+        return transaction {
+            Match.getLatestMatch(leagueContext.leagueId(), leagueContext.seasonId())?.let { getLatestHighlights(it) }
+        } ?: listOf()
     }
 
-    fun resetHighlights(players: List<Player>, matches: List<Match>) {
-        val playerIds = players.map { it.id }
-        val matchIds = matches.map { it.id }
+    fun resetHighlights(matchIds: List<Int>) {
+        val highlightIds = Highlight.find { HighlightTable.match inList matchIds }.map { it.id.value }
 
-        transaction {
-            HighlightPlayerTable.deleteWhere { player inList playerIds }
-            HighlightTable.deleteWhere { match inList matchIds }
-        }
+        HighlightPlayerTable.deleteWhere { highlight inList highlightIds }
+        HighlightTable.deleteWhere { id inList highlightIds }
     }
 
     private fun getLatestHighlights(match: Match): List<HighlightDto> {
         return Highlight.find { HighlightTable.match eq match.id }
-            .with(Highlight::match, Highlight::players, HighlightPlayer::player, Player::user, Player::stats, Player::rank)
+            .with(Highlight::match, Highlight::players, HighlightPlayer::player, Player::user)
             .map { HighlightDtoMapper.map(it) }
     }
 

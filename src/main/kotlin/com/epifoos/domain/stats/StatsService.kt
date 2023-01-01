@@ -1,45 +1,42 @@
 package com.epifoos.domain.stats
 
 import com.epifoos.domain.calculation.CalculationResult
-import com.epifoos.domain.league.League
-import com.epifoos.domain.match.Game
-import com.epifoos.domain.match.Match
-import com.epifoos.domain.player.Player
+import com.epifoos.domain.league.LeagueSeason
+import com.epifoos.domain.match.MatchCalculationSubmission
+import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.inList
+import org.jetbrains.exposed.sql.and
 import org.jetbrains.exposed.sql.deleteWhere
-import org.jetbrains.exposed.sql.transactions.transaction
 
 object StatsService {
 
-    fun createDefault(league: League, player: Player) {
-        PlayerStatsService.createDefault(league, player)
-    }
-
-    fun updateStats(calculationResult: CalculationResult) {
+    fun updateStats(matchCalculationSubmission: MatchCalculationSubmission, calculationResult: CalculationResult) {
         PlayerStatsSnapshotService.createSnapshots(
             calculationResult.match,
-            calculationResult.matchData.players.map { it.stats })
+            matchCalculationSubmission.getStats()
+        )
 
-        PlayerStatsService.updateStats(calculationResult)
+        PlayerStatsService.updateStats(
+            matchCalculationSubmission.leagueContext,
+            matchCalculationSubmission.getPlayers(),
+            matchCalculationSubmission.getStatsMap(),
+            calculationResult
+        )
+
         MatchPlayerStatsService.createStats(calculationResult)
         MatchStatsService.createStats(calculationResult)
     }
 
-    fun resetStats(league: League, players: List<Player>, matches: List<Match>, games: List<Game>) {
-        val playerIds = players.map { it.id }
-        val matchIds = matches.map { it.id }
-        val gameIds = games.map { it.id }
+    fun resetStats(playerIds: List<Int>, matchIds: List<Int>, gameIds: List<Int>, leagueSeason: LeagueSeason) {
+        val matchStatsIds = MatchStats.find { MatchStatsTable.match inList matchIds}.map { it.id }
 
-        transaction {
-            MatchPlayerStatsTable.deleteWhere { match inList matchIds }
-            GamePlayerStatsTable.deleteWhere { player inList playerIds }
-            MatchLosersTable.deleteWhere { player inList playerIds }
-            MatchWinnersTable.deleteWhere { player inList playerIds }
-            MatchStatsTable.deleteWhere { match inList matchIds }
-            GameStatsTable.deleteWhere { game inList gameIds }
-            PlayerStatsTable.deleteWhere { player inList playerIds }
-            MatchPlayerStatsSnapshotTable.deleteWhere { player inList playerIds }
-            players.forEach { createDefault(league, it) }
-        }
+        MatchPlayerStatsTable.deleteWhere { match inList matchIds }
+        GamePlayerStatsTable.deleteWhere { game inList gameIds }
+        MatchLosersTable.deleteWhere { matchStats inList matchStatsIds }
+        MatchWinnersTable.deleteWhere { matchStats inList matchStatsIds }
+        MatchStatsTable.deleteWhere { match inList matchIds }
+        GameStatsTable.deleteWhere { game inList gameIds }
+        PlayerStatsTable.deleteWhere { player inList playerIds and (season eq leagueSeason.id) }
+        MatchPlayerStatsSnapshotTable.deleteWhere { match inList matchIds }
     }
 }

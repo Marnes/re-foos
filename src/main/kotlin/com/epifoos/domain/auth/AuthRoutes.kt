@@ -1,5 +1,6 @@
 package com.epifoos.domain.auth
 
+import com.epifoos.plugins.authorization.isAdmin
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.auth.*
@@ -16,9 +17,11 @@ fun Route.authRoutes() {
         }
 
         authenticate("basic") {
-            post("/register") {
-                var jwt = AuthService.register(call.receive())
-                call.respond(HttpStatusCode.OK, jwt)
+            isAdmin {
+                post("/register") {
+                    var jwt = AuthService.register(call.receive())
+                    call.respond(HttpStatusCode.OK, jwt)
+                }
             }
         }
 

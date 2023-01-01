@@ -1,80 +1,69 @@
 package com.epifoos.domain.rank
 
 import com.epifoos.domain.Elo
-import com.epifoos.domain.league.League
+import com.epifoos.domain.league.LeagueContext
+import com.epifoos.domain.league.LeagueSeason
 import com.epifoos.domain.match.Match
+import com.epifoos.domain.match.MatchCalculationSubmission
 import com.epifoos.domain.player.Player
-import com.epifoos.domain.player.PlayerTable
+import com.epifoos.domain.player.PlayerLeagueRepository
+import com.epifoos.domain.player.PlayerWrapper
 import org.jetbrains.exposed.dao.with
+import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.inList
+import org.jetbrains.exposed.sql.and
 import org.jetbrains.exposed.sql.deleteWhere
-import org.jetbrains.exposed.sql.transactions.transaction
 
 object PlayerRankService {
 
-    fun updateRanks(league: League, match: Match) {
-        saveSnapshot(league, match)
-        rankPlayers(league)
+    fun updateRanks(matchCalculationSubmission: MatchCalculationSubmission) {
+        val playerWrappers =
+            PlayerLeagueRepository.findAll(matchCalculationSubmission.leagueContext).filter { it.stats != null }
+                .sortedByDescending { it.stats!!.elo }
+
+        saveSnapshot(playerWrappers, matchCalculationSubmission.match)
+        rankPlayers(playerWrappers, matchCalculationSubmission.leagueContext)
     }
 
-    fun resetRanks(players: List<Player>, matches: List<Match>) {
-        val playerIds = players.map { it.id }
-        val matchIds = matches.map { it.id }
-
-        transaction {
-            PlayerRankTable.deleteWhere { player inList playerIds }
-            MatchPlayerRankSnapshotTable.deleteWhere { match inList matchIds }
-        }
+    fun resetRanks(playerIds: List<Int>, matchIds: List<Int>, leagueSeason: LeagueSeason) {
+        PlayerRankTable.deleteWhere { player inList playerIds and (season eq leagueSeason.id) }
+        MatchPlayerRankSnapshotTable.deleteWhere { match inList matchIds }
     }
 
     fun getRankSnapshots(match: Match): List<MatchPlayerRankSnapshot> {
         return MatchPlayerRankSnapshot.find { MatchPlayerRankSnapshotTable.match eq match.id }
-            .with(MatchPlayerRankSnapshot::player)
-            .toList()
+            .with(MatchPlayerRankSnapshot::player).toList()
     }
 
-    private fun rankPlayers(league: League) {
-        transaction {
-            val players = getPlayers(league)
-                .filter { it.stats.played > 0 }
-                .sortedByDescending { it.stats.elo }
-
-            rankPlayers(players)
-        }
+    private fun saveSnapshot(leaguePlayers: List<PlayerWrapper>, match: Match) {
+        leaguePlayers.filter { it.rank != null }.map { it.rank!! }.forEach { createSnapshot(it, match) }
     }
 
-    private fun saveSnapshot(league: League, match: Match) {
-        transaction {
-            getPlayers(league)
-                .filter { it.rank != null }
-                .map { it.rank!! }
-                .forEach { createSnapshot(it, match) }
-        }
-    }
-
-    private fun rankPlayers(players: List<Player>) {
+    private fun rankPlayers(leaguePlayers: List<PlayerWrapper>, leagueContext: LeagueContext) {
         var currentRank = 0
         var currentElo: Elo? = null
 
-        val playerRankMap = players.associateWith { it.rank }
+        val playerRankMap = leaguePlayers.associateBy({ it.player }, { it.rank })
 
-        players.forEach {
-            if (currentElo == null || currentElo != it.stats.elo) {
+        leaguePlayers.filter { it.stats != null }.forEach {
+            if (currentElo == null || currentElo != it.stats!!.elo) {
                 currentRank++
             }
 
-            updatePlayerRank(it, currentRank, playerRankMap)
-            currentElo = it.stats.elo
+            updatePlayerRank(currentRank, it.player, leagueContext, playerRankMap)
+            currentElo = it.stats!!.elo
         }
     }
 
-    private fun updatePlayerRank(player: Player, rank: Int, playerRankMap: Map<Player, PlayerRank?>) {
-        val playerRank = playerRankMap[player] ?: PlayerRank.new { this.player = player }
+    private fun updatePlayerRank(
+        rank: Int, player: Player, leagueContext: LeagueContext, playerRankMap: Map<Player, PlayerRank?>
+    ) {
+        val playerRank = playerRankMap[player] ?: PlayerRank.new {
+            this.player = player
+            this.league = leagueContext.league
+            this.season = leagueContext.season
+        }
         playerRank.rank = rank
-    }
-
-    private fun getPlayers(league: League): List<Player> {
-        return Player.find { PlayerTable.league eq league.id }.with(Player::stats, Player::rank, Player::user).with(Player::rank, Player::stats).toList()
     }
 
     private fun createSnapshot(playerRank: PlayerRank, match: Match) {

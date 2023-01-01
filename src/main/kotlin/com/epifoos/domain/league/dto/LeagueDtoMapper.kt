@@ -10,8 +10,6 @@ object LeagueDtoMapper {
         return LeagueDto(
             league.id.value,
             league.name,
-            league.startDate,
-            league.endDate,
             league.isClosed(),
             joined,
             mapConfig(league.config),
@@ -22,8 +20,6 @@ object LeagueDtoMapper {
         return LeagueSummaryDto(
             league.id.value,
             league.name,
-            league.startDate,
-            league.endDate,
             joined,
             getTeamComposition(league.config),
             0,

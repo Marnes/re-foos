@@ -8,8 +8,6 @@ import java.time.LocalDate
 data class LeagueDto(
     val id: Int,
     val name: String,
-    val startDate: LocalDate,
-    val endDate: LocalDate?,
     val isClosed: Boolean,
     val joined: Boolean,
     val config: LeagueConfigDto,
@@ -25,8 +23,6 @@ data class LeagueCreationDto(
 data class LeagueSummaryDto(
     val id: Int,
     val name: String,
-    val startDate: LocalDate,
-    val endDate: LocalDate?,
     val joined: Boolean,
     val teamComposition: String,
     val players: Int,

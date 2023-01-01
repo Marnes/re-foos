@@ -4,10 +4,6 @@ import com.epifoos.domain.BaseIntEntity
 import com.epifoos.domain.BaseIntIdTable
 import com.epifoos.domain.league.League
 import com.epifoos.domain.league.LeagueTable
-import com.epifoos.domain.rank.PlayerRank
-import com.epifoos.domain.rank.PlayerRankTable
-import com.epifoos.domain.stats.PlayerStats
-import com.epifoos.domain.stats.PlayerStatsTable
 import com.epifoos.domain.user.User
 import com.epifoos.domain.user.UserTable
 import org.jetbrains.exposed.dao.IntEntityClass
@@ -27,8 +23,6 @@ class Player(id: EntityID<Int>) : BaseIntEntity(id, PlayerTable) {
 
     var user by User referencedOn PlayerTable.user
     var league by League referencedOn PlayerTable.league
-    val rank by PlayerRank optionalBackReferencedOn PlayerRankTable.player
-    val stats by PlayerStats backReferencedOn PlayerStatsTable.player
 }
 
 

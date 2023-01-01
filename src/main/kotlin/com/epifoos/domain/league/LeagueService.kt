@@ -11,7 +11,6 @@ import com.epifoos.exceptions.BaseException
 import com.epifoos.exceptions.EntityNotFoundException
 import com.epifoos.exceptions.ValidationException
 import io.konform.validation.Invalid
-import org.jetbrains.exposed.dao.load
 import org.jetbrains.exposed.dao.with
 import org.jetbrains.exposed.sql.select
 import org.jetbrains.exposed.sql.transactions.transaction
@@ -31,11 +30,12 @@ object LeagueService {
         return leagueCreationDto
     }
 
-    fun getLeague(leagueId: Int, currentUser: User?): LeagueDto {
+    fun getLeague(leagueContext: LeagueContext, currentUser: User?): LeagueDto {
         return transaction {
-            League.findById(leagueId)?.load(League::config)
-                ?.let { LeagueDtoMapper.map(it, getUserLeagueIds(currentUser).contains(it.id.value)) }
-                ?: throw throw leagueNotFound(leagueId)
+            LeagueDtoMapper.map(
+                leagueContext.league,
+                getUserLeagueIds(currentUser).contains(leagueContext.league.id.value)
+            )
         }
     }
 
@@ -70,7 +70,6 @@ object LeagueService {
     fun setLeagueEndDate(leagueId: Int, endDate: LocalDate) {
         transaction {
             val league = League.findById(leagueId) ?: throw leagueNotFound(leagueId)
-            league.endDate = endDate
         }
     }
 

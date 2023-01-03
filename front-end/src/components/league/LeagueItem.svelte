@@ -50,7 +50,7 @@
     <div class="flex flex-row justify-between">
       <h3>{league.name}</h3>
       {#if $session?.user?.admin}
-      <span>
+      <span class="relative">
         <button use:menu={{ menu: `leagueOptions${menuNum}`, fixed: true }} on:click|preventDefault|stopPropagation>
           <Icon icon="ic:round-more-vert" class="text-2xl"/>
         </button>

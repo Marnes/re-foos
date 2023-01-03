@@ -3,6 +3,7 @@ package com.epifoos.domain.league
 import com.epifoos.domain.auth.AuthUtil
 import com.epifoos.domain.highlight.HighlightService
 import com.epifoos.domain.match.matchRoutes
+import com.epifoos.domain.player.PlayerService
 import com.epifoos.domain.player.playersRoutes
 import com.epifoos.plugins.authorization.isAdmin
 import io.ktor.server.application.*
@@ -42,6 +43,10 @@ fun Route.leagueRoutes() {
                     )
                 )
             }
+        }
+
+        get("/leaderboard") {//TODO: Might need to split these to separate service
+            call.respond(PlayerService.getPlayers(LeagueContextHelper.getContext(call)))
         }
 
         get("/highlights") {

@@ -1,18 +1,22 @@
 import type { ModalComponent, ModalSettings } from '@skeletonlabs/skeleton';
+import _ from 'lodash';
 
+/**
+ * @deprecated The method should not be used. Use skeletonUtil#enum with normal method
+ */
 export class Modal {
+
     static component(title: string, customComponent: any, props?: any, response?: any): ModalSettings {
         const modalComponent: ModalComponent = {
             ref: customComponent,
             props,
-
         };
 
         return {
             type: 'component',
             component: modalComponent,
             title,
-            response
+            response: !_.isNil(response) ? response : () => ({})
         };
     }
 

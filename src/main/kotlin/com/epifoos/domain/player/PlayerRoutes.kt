@@ -12,7 +12,10 @@ import io.ktor.server.routing.*
 fun Route.playersRoutes() {
     route("/players") {
         get {
-            call.respond(HttpStatusCode.OK, PlayerService.getPlayers(LeagueContextHelper.getContext(call)))
+            call.respond(
+                HttpStatusCode.OK,
+                PlayerService.getPlayers(LeagueContextHelper.getActive(call.parameters["leagueId"]!!.toInt()))
+            )
         }
 
         authenticate {

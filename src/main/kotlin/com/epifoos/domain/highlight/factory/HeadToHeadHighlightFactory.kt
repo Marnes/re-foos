@@ -4,6 +4,7 @@ import com.epifoos.domain.calculation.CalculationResult
 import com.epifoos.domain.highlight.HighlightMessage
 import com.epifoos.domain.highlight.HighlightMessageType
 import com.epifoos.domain.league.League
+import com.epifoos.domain.player.Player
 
 class HeadToHeadHighlightFactory(league: League, messageMap: Map<HighlightMessageType, List<HighlightMessage>>) :
     HighlightFactory(league, messageMap) {
@@ -18,6 +19,10 @@ class HeadToHeadHighlightFactory(league: League, messageMap: Map<HighlightMessag
 
     override fun hasWinnerAndLoser(calculationResult: CalculationResult): Boolean {
         return false
+    }
+
+    override fun getOther(calculationResult: CalculationResult): Set<Player> {
+        return calculationResult.matchData.losers
     }
 
     override fun isDraw(calculationResult: CalculationResult): Boolean {

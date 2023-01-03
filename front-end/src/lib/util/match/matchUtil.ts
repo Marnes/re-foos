@@ -107,7 +107,6 @@ export const getSubmitString = (winners: Player[] | null, losers: Player[] | nul
 
 export const hasValue = (value: number): Boolean => value === 0 || !_.isNil(value);
 
-
 const getGamesPlayed = (team1Scores: number[], team2Scores: number[]): number => {
     return Math.max(team1Scores.filter(hasValue).length, team2Scores.filter(hasValue).length);
 }

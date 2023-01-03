@@ -4,8 +4,8 @@
     import Match from '$src/components/game/Match.svelte';
     import PlayerSpotlight from '$src/components/spotlight/PlayerSpotlight.svelte';
     import LeagueSpotlight from '$src/components/spotlight/LeagueSpotlight.svelte';
+    import JoinWatcher from '$src/components/league/JoinWatcher.svelte';
     import MainPage from '$src/components/layout/MainPage.svelte';
-
     import { AppShell, Drawer, drawerStore } from '@skeletonlabs/skeleton';
     import { page } from '$app/stores';
     import { session } from '$src/stores/sessionStore.js';
@@ -26,6 +26,8 @@
     $: captureDisabled = !$league.isOpen
     $: showCapture = $session?.user && $league.joined
 </script>
+
+<JoinWatcher />
 
 <Drawer>
   {#if $drawerStore.id === 'match-capture'}

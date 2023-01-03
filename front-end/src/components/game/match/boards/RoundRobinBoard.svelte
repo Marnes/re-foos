@@ -1,8 +1,8 @@
 <script lang="ts">
-    import PlayerCard from '$src/components/game/player/PlayerCard.svelte';
     import ScoreInput from '$src/components/game/match/ScoreInput.svelte';
+    import BoardContainer from '$src/components/game/match/boards/BoardContainer.svelte';
+    import RoundRobinPlayerCard from '$src/components/game/player/RoundRobinPlayerCard.svelte';
     import { League } from '$src/models/league/league';
-    import { Divider } from '@skeletonlabs/skeleton';
     import { Player } from '$src/models/player/player';
     import { GameResult, MatchResult, Result } from '$src/models/match/matchResult';
     import { buildRoundRobinGames, RoundRobinGame } from '$src/models/match/roundRobinGame';
@@ -10,10 +10,9 @@
     import { buildMatch, getLoser, getWinner } from '$src/lib/util/match/roundRobinUtil';
     import { getSubmitString } from '$src/lib/util/match/matchUtil.js';
     import { createEventDispatcher, onMount } from 'svelte';
-    import { onScoreInput } from '$src/lib/actions/scoreInput.js';
+    import { onScoreInput } from '$src/lib/actions/scoreInput';
     import { getBestOf } from '$src/lib/util/match/leagueUtil';
     import _ from 'lodash';
-    import BoardContainer from '$src/components/game/match/boards/BoardContainer.svelte';
 
     export let league: League;
     export let players: Player[];
@@ -97,17 +96,17 @@
     }
 
     onMount(() => {
-        inputElements[0].focus();
+        inputElements[0]?.focus();
     })
 </script>
 
 <BoardContainer leftTeam={players}>
   <div class="flex flex-col items-center gap-4 w-full">
     {#each roundRobinGames as game, gameIndex}
-      <div class="flex flex-row py-7">
-        <div class="flex flex-col gap-2 justify-center">
-          <PlayerCard player={game.leftPlayer1} class="w-full"/>
-          <PlayerCard player={game.leftPlayer2} class="w-full"/>
+      <div class="flex flex-row py-7 w-full">
+        <div class="flex flex-col gap-2 justify-center grow">
+          <RoundRobinPlayerCard player={game.leftPlayer1} class="w-full"/>
+          <RoundRobinPlayerCard player={game.leftPlayer2} class="w-full"/>
         </div>
         <div class="flex flex-col gap-2 justify-center h-full">
           {#each game.leftScores as score, scoreIndex}
@@ -141,9 +140,9 @@
             />
           {/each}
         </div>
-        <div class="flex flex-col gap-2 justify-center">
-          <PlayerCard player={game.rightPlayer1} class="w-full" reversed={true}/>
-          <PlayerCard player={game.rightPlayer2} class="w-full" reversed={true}/>
+        <div class="flex flex-col gap-2 justify-center grow">
+          <RoundRobinPlayerCard player={game.rightPlayer1} class="w-full" reversed={true}/>
+          <RoundRobinPlayerCard player={game.rightPlayer2} class="w-full" reversed={true}/>
         </div>
       </div>
     {/each}

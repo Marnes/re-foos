@@ -1,5 +1,6 @@
 import type { User } from '$src/models/user';
 import type { PlayerMin } from '$src/models/player/player';
+import type { Match } from '$src/models/match/match';
 
 export class League {
     id!: number;
@@ -14,6 +15,7 @@ export class League {
     players!: number;
     matches!: number;
     leader!: PlayerMin;
+    latestMatch!: Match;
     config!: LeagueConfig;
 }
 

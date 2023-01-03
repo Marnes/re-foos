@@ -60,12 +60,20 @@ object MatchSubmissionService {
             this.league = leagueContext.league
             this.season = leagueContext.season
             createdBy = currentUser
-        }.also { match -> matchSubmissionDto.games.map { createGame(match, players, it) } }
+        }.also { match -> matchSubmissionDto.games.map { createGame(leagueContext, match, players, it) } }
     }
 
-    private fun createGame(match: Match, playerMap: Map<Int, PlayerWrapper>, gameSubmissionDto: GameSubmissionDto) {
-        Game.new { this.match = match }
-            .also { game -> gameSubmissionDto.teams.forEach { createTeam(game, it, playerMap) } }
+    private fun createGame(
+        leagueContext: LeagueContext,
+        match: Match,
+        playerMap: Map<Int, PlayerWrapper>,
+        gameSubmissionDto: GameSubmissionDto
+    ) {
+        Game.new {
+            this.league = leagueContext.league
+            this.season = leagueContext.season
+            this.match = match
+        }.also { game -> gameSubmissionDto.teams.forEach { createTeam(game, it, playerMap) } }
     }
 
     private fun createTeam(

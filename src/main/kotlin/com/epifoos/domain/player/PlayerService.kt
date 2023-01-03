@@ -56,7 +56,7 @@ object PlayerService {
 
             PlayerSpotlightDto(
                 PlayerDtoMapper.map(playerWrapper.player, playerWrapper.rank, playerWrapper.stats),
-                if (matchId == null) null else MatchService.getMatch(matchId[MatchTable.id].value)
+                matchId?.let { MatchService.getMatch(it[MatchTable.id].value) }
             )
         }
     }

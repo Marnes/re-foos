@@ -21,5 +21,5 @@ export const humanDateWithTime = (date: Date): string => {
 }
 
 export const isoDate = (date: Date): string => {
-    return moment(date).format('DD-MM-YYYY');
+    return moment(date).format('Do MMM YYYY');
 }

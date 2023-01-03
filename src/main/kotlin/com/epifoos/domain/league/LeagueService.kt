@@ -6,6 +6,7 @@ import com.epifoos.domain.league.dto.LeagueCreationDto
 import com.epifoos.domain.league.dto.LeagueDto
 import com.epifoos.domain.league.dto.LeagueDtoMapper
 import com.epifoos.domain.league.validation.LeagueValidationService
+import com.epifoos.domain.match.MatchService
 import com.epifoos.domain.match.MatchTable
 import com.epifoos.domain.player.PlayerService
 import com.epifoos.domain.player.PlayerTable
@@ -48,7 +49,8 @@ object LeagueService {
                 PlayerTable.select { PlayerTable.league eq leagueContext.league.id }.count(),
                 MatchTable.select { MatchTable.season eq leagueContext.season.id }.count(),
                 joined,
-                leagueContext.league.getActiveOrLastSeason().isOpen()
+                leagueContext.league.getActiveOrLastSeason().isOpen(),
+                LeagueHelper.getLatestMatchId(leagueContext)?.let { MatchService.getMatch(it) }
             )
         }
     }
@@ -76,7 +78,8 @@ object LeagueService {
                         PlayerTable.select { PlayerTable.league eq it.id }.count(), //TODO: More Performant
                         MatchTable.select { MatchTable.season eq season.id }.count(), //TODO: More Performant
                         joined,
-                        season.isOpen()
+                        season.isOpen(),
+                        null
                     )
                 }
         }

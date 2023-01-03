@@ -69,7 +69,6 @@
     <div class="flex flex-col gap-2 items-center justify-between">
       {#each team1Scores as _, i}
         <ScoreInput
-            teamNumber="1"
             minScore={minScore}
             maxScore={maxScore}
             disabled={!canCapture(i, team1Scores, team2Scores)}
@@ -84,8 +83,7 @@
     <div class="flex flex-col gap-2 items-center justify-between">
       {#each team2Scores as _, i}
         <ScoreInput
-            reversed
-            teamNumber="2"
+            leftTeam={false}
             minScore={minScore}
             maxScore={maxScore}
             disabled={!canCapture(i, team1Scores, team2Scores)}

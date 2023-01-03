@@ -3,6 +3,7 @@ package com.epifoos.domain.league.dto
 import com.epifoos.domain.league.League
 import com.epifoos.domain.league.LeagueConfig
 import com.epifoos.domain.league.LeagueSeason
+import com.epifoos.domain.match.dto.MatchDto
 import com.epifoos.domain.player.Player
 import com.epifoos.domain.player.dto.PlayerDtoMapper
 import com.epifoos.domain.user.UserDtoMapper
@@ -16,7 +17,8 @@ object LeagueDtoMapper {
         players: Long,
         matches: Long,
         joined: Boolean,
-        isOpen: Boolean
+        isOpen: Boolean,
+        latestMatch: MatchDto?
     ): LeagueDto {
         return LeagueDto(
             league.id.value,
@@ -31,6 +33,7 @@ object LeagueDtoMapper {
             players,
             matches,
             leader?.let { PlayerDtoMapper.mapMinified(it) },
+            latestMatch,
             mapConfig(league.config)
         )
     }

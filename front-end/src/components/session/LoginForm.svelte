@@ -19,7 +19,7 @@
         if (response.status === 200) {
             await invalidateAll();
 
-            if ($modalStore[0].response) $modalStore[0].response();
+            if ($modalStore[0].response) $modalStore[0].response(true);
             modalStore.close();
             toastStore.trigger({ message: 'Successfully logged in', autohide: true, timeout: 3000 });
         } else {

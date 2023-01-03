@@ -2,6 +2,7 @@ package com.epifoos.domain.league.dto
 
 import com.epifoos.domain.Elo
 import com.epifoos.domain.league.LeagueType
+import com.epifoos.domain.match.dto.MatchDto
 import com.epifoos.domain.player.dto.PlayerMinifiedDto
 import com.epifoos.domain.user.UserDto
 import java.time.LocalDate
@@ -20,6 +21,7 @@ data class LeagueDto(
     val players: Long,
     val matches: Long,
     val leader: PlayerMinifiedDto?,
+    val latestMatch: MatchDto?,
     val config: LeagueConfigDto,
 )
 

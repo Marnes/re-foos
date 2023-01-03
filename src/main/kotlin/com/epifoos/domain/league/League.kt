@@ -46,8 +46,12 @@ object LeagueSeasonTable : AuditedTable("league_season") {
 class LeagueSeason(id: EntityID<Int>) : AuditedEntity(id, LeagueSeasonTable) {
     companion object : IntEntityClass<LeagueSeason>(LeagueSeasonTable) {
         fun find(leagueId: Int, season: Int?): LeagueSeason {
+            val now = LocalDate.now()
             val seasons = LeagueSeason.find { LeagueSeasonTable.league eq leagueId }.toList()
-            return seasons.firstOrNull { it.season == season } ?: seasons.first { it.endDate == null }
+
+            return seasons.firstOrNull { it.season == season }
+                ?: seasons.firstOrNull { it.endDate != null && (it.endDate!! == now || it.endDate!!.isAfter(now)) }
+                ?: seasons.first { it.endDate == null }
         }
 
         fun findActive(leagueId: Int): LeagueSeason? {

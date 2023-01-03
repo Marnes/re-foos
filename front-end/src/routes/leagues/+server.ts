@@ -3,7 +3,7 @@ import type { RequestHandler } from '@sveltejs/kit';
 import { error, json } from '@sveltejs/kit';
 import type { League } from '$src/models/league/league';
 
-export const GET: RequestHandler = async ({ locals }) => {
+export const GET: RequestHandler = async ({ locals}) => {
     let response = await api.get(`/leagues`, locals.session?.jwt);
 
     return json(await response.json());

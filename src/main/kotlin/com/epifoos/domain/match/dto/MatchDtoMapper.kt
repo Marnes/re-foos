@@ -30,7 +30,7 @@ object MatchDtoMapper {
             games.map { mapGame(it, players, gameStatsMap[it]!!, gamePlayerStatsMap[it]!!) },
             players.associateBy(
                 { it.id.value },
-                { PlayerDtoMapper.map(it, matchPlayerRankSnapshots[it], matchPlayerStatsSnapshots[it]!!) }),
+                { PlayerDtoMapper.map(it, matchPlayerRankSnapshots[it], matchPlayerStatsSnapshots[it]) }),
             players.associateBy({ it.id.value }, { MatchPlayerStatsDtoMapper.mapMatchStats(matchPlayerStats[it]!!) }),
             matchStats.winners.map { it.id.value },
             matchStats.losers.map { it.id.value }

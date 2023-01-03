@@ -19,8 +19,7 @@
 
 <div
     class="player card flex p-{tiny ? 1 : 2} lg:p-2 !bg-surface-600 {$$props.class}"
-    class:flex-row={!reversed}
-    class:flex-row-reverse={reversed}
+    class:!flex-row-reverse={reversed}
     on:click="{onClick(player)}">
 
   <div class="flex items-center">
@@ -38,7 +37,7 @@
       </div>
     </div>
     <div class="flex justify-between">
-      <span class="text-{tiny ? 'xs' : 'sm'} lg:text-sm">{formatElo(player.elo)}</span>
+      <span class="text-{tiny ? 'xs' : 'sm'} lg:text-sm">{player.elo ? formatElo(player.elo) : '-' }</span>
     </div>
   </div>
 </div>

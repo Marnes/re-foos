@@ -11,6 +11,8 @@
     import { onDestroy, onMount } from 'svelte';
     import { league, playerSpotlight } from '$src/stores/leagueStore';
     import { userNameSentence } from '$src/lib/util/stringUtil.js';
+    import { page } from '$app/stores';
+    import { seasonPath } from '$src/lib/util/match/leagueUtil';
 
     let player: Player
     let match: Match
@@ -20,7 +22,8 @@
     onMount(() => {
         spotlightUnsubscribe = playerSpotlight.subscribe(async p => {
             if (p) {
-                const response = await get(`/leagues/${ $league.id }/players/${ p.id }/spotlight`)
+                const season = $page.url.searchParams.get('season');
+                const response = await get(seasonPath(`/leagues/${ $league.id }/players/${ p.id }/spotlight`, season))
                 const playerSpotlight = await response.json();
 
                 player = playerSpotlight.player

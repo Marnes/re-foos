@@ -2,13 +2,14 @@
     import { LeagueConfig, LeagueCreation, LeagueType } from '$src/models/league/league';
     import moment from 'moment';
     import { writable, type Writable } from 'svelte/store';
-    import { RadioGroup, RadioItem, toastStore } from '@skeletonlabs/skeleton';
+    import { modalStore, RadioGroup, RadioItem, toastStore } from '@skeletonlabs/skeleton';
     import { onMount } from 'svelte';
     import { post } from '$src/lib/utils';
     import { invalidateAll } from '$app/navigation';
     import { ToastMessage } from '$src/models/toastMessage';
 
     const storeLeagueType: Writable<LeagueType> = writable(LeagueType.HEAD_TO_HEAD);
+    let elm;
 
     onMount(() => {
         league
@@ -22,12 +23,14 @@
                 league.config.games = 3;
                 league.config.scoresPerTeam = 1;
                 league.config.playersPerTeam = 2;
+                league.config.maxScore = 5
             } else {
                 league.config.players = 2;
                 league.config.teams = 2;
                 league.config.scoresPerTeam = 1;
                 league.config.games = 1;
                 league.config.playersPerTeam = 1;
+                league.config.maxScore = 5
             }
         })
     })
@@ -53,10 +56,13 @@
     }
 
     const save = async () => {
+        console.log(league);
+        return;
         const response = await post(`/leagues`, league);
 
         if (response.ok) {
             await invalidateAll();
+            modalStore.close();
             toastStore.trigger(ToastMessage.success('League successfully created'));
         } else {
             toastStore.trigger(ToastMessage.failure('Could not create league'));
@@ -70,7 +76,7 @@
 
 <div class="card card-glass-surface p-6">
   <div class="card-body flex flex-col ">
-    <div class="grid grid-cols-2 gap-4">
+    <div class="grid lg:grid-cols-2 gap-4">
       <label for="name">
         <span>Name</span>
         <input
@@ -79,10 +85,11 @@
             name="name"
             type="text"
             minlength="5"
+            bind:this={elm}
             bind:value={league.name}
         />
       </label>
-      <div/>
+      <div class="hidden lg:block"/>
 
       <label for="startDate">
         <span>Start Date</span>
@@ -110,7 +117,7 @@
       </label>
     </div>
 
-    <div class="text-center mt-10 mb-5">
+    <div class="text-center mt-5 lg:mt-10 mb-5">
       <label>
         <span>League Type</span>
         <RadioGroup selected={storeLeagueType}>
@@ -120,7 +127,7 @@
       </label>
     </div>
 
-    <div class="grid grid-cols-6 gap-4">
+    <div class="grid grid-cols-2 lg:grid-cols-3 gap-4">
       <label for="startingElo">
         <span>Starting Elo</span>
         <input
@@ -129,6 +136,7 @@
             name="startingElo"
             type="number"
             min="800"
+            max="2000"
             bind:value={league.config.startingElo}
         />
       </label>
@@ -141,6 +149,7 @@
               name="scoresPerTeam"
               type="number"
               min="1"
+              max="5"
               bind:value={league.config.scoresPerTeam}
           />
         </label>
@@ -153,10 +162,22 @@
               name="games"
               type="number"
               min="1"
+              max="9"
               bind:value={league.config.games}
           />
         </label>
       {/if}
+      <label for="score">
+        <span>Max Score</span>
+        <input
+            required
+            id="score"
+            name="score"
+            type="number"
+            min="1"
+            bind:value={league.config.maxScore}
+        />
+      </label>
       <label for="players">
         <span>Players</span>
         <input
@@ -164,8 +185,9 @@
             id="players"
             name="players"
             type="number"
-            min="2"
             disabled={league.config.type === LeagueType.ROUND_ROBIN}
+            min="2"
+            max="10"
             bind:value={league.config.players}
         />
       </label>
@@ -176,7 +198,6 @@
             id="teams"
             name="teams"
             type="number"
-            min="2"
             disabled
             bind:value={league.config.teams}
         />
@@ -190,17 +211,6 @@
             type="number"
             disabled
             value={playersPerTeam}
-        />
-      </label>
-      <label for="score">
-        <span>Max Score</span>
-        <input
-            required
-            id="score"
-            name="score"
-            type="number"
-            min="1"
-            bind:value={league.config.maxScore}
         />
       </label>
     </div>

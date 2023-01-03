@@ -20,16 +20,15 @@ object AdminService {
                 .with(Player::user)
                 .toList()
 
-            val matches = Match.find { MatchTable.season eq leagueContext.season.id }
+            val matches = Match.find { MatchTable.season eq leagueContext.seasonId() }
                 .orderBy(MatchTable.createdDate to SortOrder.ASC)
                 .toList()
 
+            val games = Game.find { GameTable.season eq leagueContext.seasonId() }.toList()
+
             val playerIds = players.map { it.id.value }
             val matchIds = matches.map { it.id.value }
-            val gameIds = Game.find { GameTable.match inList matches.map { it.id.value } }.toList()
-                .map { it.id.value }
-
-
+            val gameIds = games.map { it.id.value }
 
             StatsService.resetStats(playerIds, matchIds, gameIds, leagueContext.season)
             HighlightService.resetHighlights(matchIds)
@@ -37,8 +36,10 @@ object AdminService {
 
             matches.forEach {
                 val matchPlayers = MatchSubmissionHelper.getPlayers(it)
-                val playerWrappers = PlayerLeagueRepository.findByIds(matchPlayers.map { player -> player.id.value }, leagueContext)
+                val playerWrappers =
+                    PlayerLeagueRepository.findByIds(matchPlayers.map { player -> player.id.value }, leagueContext)
                 val initialEloMap = MatchSubmissionHelper.getInitialEloMap(leagueContext.league, playerWrappers)
+
                 MatchEngine.calculate(MatchCalculationSubmission(leagueContext, it, playerWrappers, initialEloMap))
             }
         }

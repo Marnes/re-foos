@@ -4,6 +4,8 @@ export const toSentence = (array: any[]): string => {
     return new Intl.ListFormat().format(array);
 }
 
-export const userNameSentence = (array: Player[] | PlayerMin[]): string => {
+export const userNameSentence = (array: (Player[] | PlayerMin[])): string => {
     return new Intl.ListFormat().format(array.map(player => player.username));
 }
+
+export const sortAlphaNum = (a: string, b: string) => a.localeCompare(b, 'en', { numeric: true })

@@ -6,10 +6,6 @@ const TEAM_ATTRIBUTE = 'data-team';
 export const onScoreInput = (inputElements: any[], minScore: number, maxScore: number): Function => {
     return (node: any) => {
         const handleInput = (event: any) => {
-            if (event.cancelable) { //Hack to prevent other value update triggering another update
-                return;
-            }
-
             const value = Number(node.value)
             const elementIndex = _.indexOf(inputElements, node);
             const teamNumber = node.getAttribute(TEAM_ATTRIBUTE);

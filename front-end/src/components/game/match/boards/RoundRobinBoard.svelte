@@ -101,36 +101,38 @@
 </script>
 
 <BoardContainer>
-  <div class="flex flex-col justify-between h-full">
+  <div class="flex flex-col h-full gap-10">
     {#each roundRobinGames as game, gameIndex}
-      <GameBoard leftTeam={game.leftTeam} rightTeam={game.rightTeam}>
-        <div class="flex flex-col gap-2">
-          {#each game.leftScores as _, scoreIndex}
-            <div class="flex flex-row gap-2 justify-center h-12 lg:h-16 overflow-hidden">
-              <ScoreInput
-                  leftTeam={true}
-                  minScore={minScore}
-                  maxScore={maxScore}
-                  disabled={!canCapture(gameIndex, scoreIndex, game.leftScores, game.rightScores)}
-                  action={onScoreInput(inputElements, minScore, maxScore)}
-                  bind:input={inputElements[elementPosition(0, gameIndex, scoreIndex)]}
-                  bind:value={game.leftScores[scoreIndex]}
-                  on:input={setScore(gameIndex, scoreIndex, 1)}
-              />
-              <ScoreInput
-                  leftTeam={false}
-                  minScore={minScore}
-                  maxScore={maxScore}
-                  disabled={!canCapture(gameIndex, scoreIndex, game.leftScores, game.rightScores)}
-                  action={onScoreInput(inputElements, minScore, maxScore)}
-                  bind:input={inputElements[elementPosition(1, gameIndex, scoreIndex)]}
-                  bind:value={game.rightScores[scoreIndex]}
-                  on:input={setScore(gameIndex, scoreIndex, 2)}
-              />
-            </div>
-          {/each}
-        </div>
-      </GameBoard>
+      <div>
+        <GameBoard leftTeam={game.leftTeam} rightTeam={game.rightTeam}>
+          <div class="flex flex-col gap-2">
+            {#each game.leftScores as _, scoreIndex}
+              <div class="flex flex-row gap-2 justify-center h-12 lg:h-16 overflow-hidden">
+                <ScoreInput
+                    leftTeam={true}
+                    minScore={minScore}
+                    maxScore={maxScore}
+                    disabled={!canCapture(gameIndex, scoreIndex, game.leftScores, game.rightScores)}
+                    action={onScoreInput(inputElements, minScore, maxScore)}
+                    bind:input={inputElements[elementPosition(0, gameIndex, scoreIndex)]}
+                    bind:value={game.leftScores[scoreIndex]}
+                    on:input={setScore(gameIndex, scoreIndex, 1)}
+                />
+                <ScoreInput
+                    leftTeam={false}
+                    minScore={minScore}
+                    maxScore={maxScore}
+                    disabled={!canCapture(gameIndex, scoreIndex, game.leftScores, game.rightScores)}
+                    action={onScoreInput(inputElements, minScore, maxScore)}
+                    bind:input={inputElements[elementPosition(1, gameIndex, scoreIndex)]}
+                    bind:value={game.rightScores[scoreIndex]}
+                    on:input={setScore(gameIndex, scoreIndex, 2)}
+                />
+              </div>
+            {/each}
+          </div>
+        </GameBoard>
+      </div>
     {/each}
   </div>
 

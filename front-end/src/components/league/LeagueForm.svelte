@@ -80,7 +80,7 @@
 
 <div class="card card-glass-surface p-6">
   <div class="card-body flex flex-col ">
-    <div class="grid lg:grid-cols-2 gap-4">
+    <div class="grid grid-cols gap-4">
       <label for="name">
         <span>Name</span>
         <input
@@ -93,32 +93,7 @@
             bind:value={league.name}
         />
       </label>
-      <div class="hidden lg:block"/>
 
-      <label for="startDate">
-        <span>Start Date</span>
-        <input
-            required
-            id="startDate"
-            name="startDate"
-            type="text"
-            minlength="2"
-            disabled
-            bind:value={league.startDate}
-        />
-      </label>
-      <label for="endDate">
-        <span>End Date</span>
-        <input
-            required
-            id="endDate"
-            name="endDate"
-            type="text"
-            minlength="2"
-            disabled
-            bind:value={league.endDate}
-        />
-      </label>
     </div>
 
     <div class="text-center mt-5 lg:mt-10 mb-5">

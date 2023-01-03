@@ -31,7 +31,24 @@ object LeagueService {
             throw ValidationException(validationResult.errors)
         }
 
-        transaction { LeagueBuilderService.create(leagueCreationDto, currentUser) }
+        transaction {
+            LeagueBuilderService.create(leagueCreationDto, currentUser)
+                .also {
+                    LeagueSeason.new {
+                        league = it
+                        startDate = LocalDate.now()
+                        season = 1
+                        createdBy = currentUser
+                    }
+                }
+                .also {
+                    LeagueCoefficients.new {
+                        league = it
+                        kValue = leagueCreationDto.coefficients.kValue
+                        resultCoefficient = leagueCreationDto.coefficients.resultCoefficient
+                    }
+                }
+        }
 
         return leagueCreationDto
     }

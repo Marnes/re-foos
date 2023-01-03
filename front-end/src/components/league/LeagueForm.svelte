@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { LeagueConfig, LeagueCreation, LeagueType } from '$src/models/league/league';
+    import { LeagueCoefficients, LeagueConfig, LeagueCreation, LeagueType } from '$src/models/league/league';
     import moment from 'moment';
     import { writable, type Writable } from 'svelte/store';
     import { modalStore, RadioGroup, RadioItem, toastStore } from '@skeletonlabs/skeleton';
@@ -39,7 +39,12 @@
         const league = new LeagueCreation()
 
         league.startDate = moment().format('YYYY-MM-DD')
-        league.config = new LeagueConfig()
+
+        league.coefficients = new LeagueCoefficients();
+        league.coefficients.kValue = 36;
+        league.coefficients.resultCoefficient = 50;
+
+        league.config = new LeagueConfig();
         league.config.startingElo = 1000
         league.config.type = LeagueType.HEAD_TO_HEAD
         league.config.players = 2;
@@ -56,8 +61,6 @@
     }
 
     const save = async () => {
-        console.log(league);
-        return;
         const response = await post(`/leagues`, league);
 
         if (response.ok) {
@@ -72,6 +75,7 @@
     let league = newLeague()
 
     $: playersPerTeam = league.config.players / league.config.teams
+    $: scoreBasedCoefficient = 100 - league.coefficients.resultCoefficient;
 </script>
 
 <div class="card card-glass-surface p-6">
@@ -211,6 +215,41 @@
             type="number"
             disabled
             value={playersPerTeam}
+        />
+      </label>
+      <label for="kValue">
+        <span>K Value</span>
+        <input
+            required
+            id="kValue"
+            name="kvalue"
+            type="number"
+            min="0"
+            max="100"
+            bind:value={league.coefficients.kValue}
+        />
+      </label>
+      <label for="resultCoefficient">
+        <span>Result Coefficient</span>
+        <input
+            required
+            id="resultCoefficient"
+            name="resultCoefficient"
+            type="number"
+            min="0"
+            max="100"
+            bind:value={league.coefficients.resultCoefficient}
+        />
+      </label>
+      <label for="scoreCoefficient">
+        <span>Score Coefficient</span>
+        <input
+            required
+            id="scoreCoefficient"
+            name="scoreCoefficient"
+            type="number"
+            disabled
+            value={scoreBasedCoefficient}
         />
       </label>
     </div>

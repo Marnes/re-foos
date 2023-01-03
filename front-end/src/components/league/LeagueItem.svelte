@@ -70,7 +70,7 @@
         <div>
           <span class="text-sm text-surface-500/70">Matches</span>
           <br/>
-          {league.matches}
+          {league.matches || '-'}
         </div>
       </div>
     </div>

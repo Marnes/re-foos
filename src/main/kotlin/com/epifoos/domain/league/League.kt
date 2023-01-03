@@ -26,9 +26,10 @@ class League(id: EntityID<Int>) : AuditedEntity(id, LeagueTable) {
 
 
     fun getActiveOrLastSeason(): LeagueSeason {
-        val active = seasons.find { it.endDate == null }
+        val now = LocalDate.now()
 
-        return active ?: seasons.maxByOrNull { it.season }!!
+        return seasons.firstOrNull { it.endDate != null && (it.endDate!! == now || it.endDate!!.isAfter(now)) }
+            ?: seasons.first { it.endDate == null }
     }
 }
 

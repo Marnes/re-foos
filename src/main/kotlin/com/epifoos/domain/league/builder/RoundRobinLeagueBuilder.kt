@@ -10,7 +10,6 @@ class RoundRobinLeagueBuilder : LeagueBuilder() {
     companion object {
         private const val TEAMS = 2
         private const val GAMES = 3
-        private const val SCORES_PER_TEAM = 2
         private const val PLAYERS_PER_TEAM = 2
     }
 
@@ -22,7 +21,7 @@ class RoundRobinLeagueBuilder : LeagueBuilder() {
             games = GAMES
             teams = TEAMS
             players = TEAMS * PLAYERS_PER_TEAM
-            scoresPerTeam = SCORES_PER_TEAM
+            scoresPerTeam = leagueConfigDto.scoresPerTeam
             playersPerTeam = PLAYERS_PER_TEAM
             maxScore = leagueConfigDto.maxScore
         }

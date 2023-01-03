@@ -40,5 +40,11 @@ data class LeagueCreationDto(
     val name: String,
     val startDate: LocalDate,
     val endDate: LocalDate?,
+    val coefficients: LeagueCoefficientsDto,
     val config: LeagueConfigDto
+)
+
+data class LeagueCoefficientsDto(
+    val kValue: Double,
+    val resultCoefficient: Int
 )

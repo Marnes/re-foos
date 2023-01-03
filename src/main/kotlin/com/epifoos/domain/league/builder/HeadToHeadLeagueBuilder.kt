@@ -16,12 +16,12 @@ class HeadToHeadLeagueBuilder : LeagueBuilder() {
         return LeagueConfig.new {
             this.league = league
             startingElo = leagueConfigDto.startingElo
-            type = LeagueType.ROUND_ROBIN
+            type = LeagueType.HEAD_TO_HEAD
             games = leagueConfigDto.games
             teams = TEAMS
-            players = TEAMS * leagueConfigDto.playersPerTeam
+            players = leagueConfigDto.players
             scoresPerTeam = SCORES_PER_TEAM
-            playersPerTeam = leagueConfigDto.playersPerTeam
+            playersPerTeam = leagueConfigDto.players / TEAMS
             maxScore = leagueConfigDto.maxScore
         }
     }

@@ -85,7 +85,7 @@
       Could not change password. Please try again.
     </div>
   {/if}
-  <div class="col-span-1 md:col-span-2 mt-3">
+  <div class="col-span-1 md:col-span-2 mt-3 text-right">
     <button
         class="btn bg-primary-500 btn-lg text-white w-full md:w-auto"
         on:click={changePassword}

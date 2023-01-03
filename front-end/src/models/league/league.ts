@@ -23,7 +23,13 @@ export class LeagueCreation {
     name!: string;
     startDate!: Date;
     endDate!: Date;
+    coefficients!: LeagueCoefficients;
     config!: LeagueConfig;
+}
+
+export class LeagueCoefficients {
+    kValue!: number;
+    resultCoefficient!: number;
 }
 
 export class LeagueConfig {

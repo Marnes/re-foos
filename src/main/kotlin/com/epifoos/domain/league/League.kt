@@ -5,7 +5,6 @@ import org.jetbrains.exposed.dao.IntEntityClass
 import org.jetbrains.exposed.dao.id.EntityID
 import org.jetbrains.exposed.sql.javatime.date
 import java.time.LocalDate
-import kotlin.math.ceil
 
 object LeagueTable : AuditedTable("league") {
     var name = varchar("name", 255)
@@ -117,15 +116,14 @@ class LeagueConfig(id: EntityID<Int>) : BaseIntEntity(id, LeagueConfigTable) {
         return games
     }
 
-    fun getBestOf(): Int {
-        val gamesCount = getNumberOfGames()
-
-        if (gamesCount % 2 == 0) {
-            return gamesCount
+    fun getGameMaxScore(): Int {
+        if (type === LeagueType.ROUND_ROBIN) {
+            return scoresPerTeam * maxScore
         }
 
-        return ceil(gamesCount.toDouble() / 2).toInt()
+        return maxScore;
     }
+
 
     fun getMinimumTotalScore(): Int {
         return getNumberOfGames() * maxScore

@@ -27,7 +27,7 @@ object CalculationService {
     private fun getCalculator(league: League): EloCalculator<*, *> {
 
         return TeamBasedCalculator(
-            league, TeamBasedMatchDataMapper(getWinConditionMapper(league)), TeamBasedCoefficientCalculator()
+            league, TeamBasedMatchDataMapper(getWinConditionMapper(league)), TeamBasedCoefficientCalculator(league)
         )
     }
 

@@ -7,14 +7,14 @@ import com.epifoos.domain.calculation.coefficient.GameCoefficients
 import com.epifoos.domain.calculation.coefficient.MatchCoefficients
 import com.epifoos.domain.calculation.data.dto.GameData
 import com.epifoos.domain.calculation.data.dto.MatchData
+import com.epifoos.domain.league.League
 import com.epifoos.domain.match.Match
 import com.epifoos.domain.player.Player
 import kotlin.math.pow
 
-class TeamBasedCoefficientCalculator : CoefficientCalculator() {
+class TeamBasedCoefficientCalculator(league: League) : CoefficientCalculator(league) {
     companion object {
         private const val ELO_WEIGHT = 400.0F
-        private const val MAX_SCORE = 10
     }
 
     override fun calculateCoefficient(
@@ -69,7 +69,7 @@ class TeamBasedCoefficientCalculator : CoefficientCalculator() {
     }
 
     private fun normalizeScore(teamTotalScore: Int, opponentAverageScore: Double): Double {
-        return ((teamTotalScore - opponentAverageScore) + MAX_SCORE) / (2.0F * MAX_SCORE)
+        return ((teamTotalScore - opponentAverageScore) + league.config.getGameMaxScore()) / (2.0F * league.config.getGameMaxScore())
     }
 
 }

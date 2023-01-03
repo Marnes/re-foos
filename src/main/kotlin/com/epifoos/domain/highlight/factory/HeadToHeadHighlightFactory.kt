@@ -33,4 +33,7 @@ class HeadToHeadHighlightFactory(league: League, messageMap: Map<HighlightMessag
         return calculationResult.matchData.winners.isEmpty()
     }
 
+    override fun supportsWhiteWash(): Boolean {
+        return false //Can add later
+    }
 }

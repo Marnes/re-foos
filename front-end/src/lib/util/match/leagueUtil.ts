@@ -32,7 +32,7 @@ export const scoreString = (league: League, score: number): string => {
         return '-';
     }
 
-    return score.toString();
+    return `${score}`;
 }
 
 export const seasonPath = (path: string, season: string | number | null | undefined): string => {

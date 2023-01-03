@@ -36,8 +36,8 @@ const buildGameRequest = (roundRobinGame: RoundRobinGame): GameCaptureRequest =>
 }
 
 const buildTeamsRequest = (roundRobinGame: RoundRobinGame): TeamCaptureRequest[] => {
-    const leftTeam = new TeamCaptureRequest(roundRobinGame.leftTeam.map(player => player.id), roundRobinGame.leftScores.filter(Number));
-    const rightTeam = new TeamCaptureRequest(roundRobinGame.rightTeam.map(player => player.id), roundRobinGame.rightScores.filter(Number));
+    const leftTeam = new TeamCaptureRequest(roundRobinGame.leftTeam.map(player => player.id), roundRobinGame.leftScores);
+    const rightTeam = new TeamCaptureRequest(roundRobinGame.rightTeam.map(player => player.id), roundRobinGame.rightScores);
 
     return [leftTeam, rightTeam];
 }

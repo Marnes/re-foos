@@ -6,6 +6,7 @@
     export let maxScore: number;
     export let reversed = false;
     export let disabled = false;
+    export let hidden = false;
 
     const dispatch = createEventDispatcher();
     const scoreArray = _.times(maxScore + 1, (score) => score)
@@ -19,11 +20,13 @@
     }
 </script>
 
-<div class="flex flex-row hidden lg:flex h-full">
+<div
+    class="flex flex-row hidden lg:flex h-full"
+    class:!hidden={hidden}
+>
   {#each scores as i}
     <div
-        class="flex flex-row items-center
-        h-full w-20 items-center gap-2  cursor-pointer  border-2 border-white"
+        class="flex flex-row items-center h-16 w-20 items-center gap-2  cursor-pointer  border-2 border-white"
         class:!text-error-500="{value === i && value !== maxScore}"
         class:!text-tertiary-500="{value === i && value === maxScore}"
         class:!border-error-500="{value === i && value !== maxScore}"

@@ -22,6 +22,10 @@ class HeadToHeadHighlightFactory(league: League, messageMap: Map<HighlightMessag
     }
 
     override fun getOther(calculationResult: CalculationResult): Set<Player> {
+        if (calculationResult.matchData.losers.isEmpty()) {
+            return calculationResult.matchData.players
+        }
+
         return calculationResult.matchData.losers
     }
 

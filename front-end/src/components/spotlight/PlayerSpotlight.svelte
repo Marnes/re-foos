@@ -12,7 +12,7 @@
     import { league, playerSpotlight } from '$src/stores/leagueStore';
     import { userNameSentence } from '$src/lib/util/stringUtil.js';
     import { page } from '$app/stores';
-    import { seasonPath } from '$src/lib/util/match/leagueUtil';
+    import { seasonPath, showScores, scoreString } from '$src/lib/util/match/leagueUtil';
 
     let player: Player
     let match: Match
@@ -55,7 +55,6 @@
         return '';
     }
 
-
 </script>
 
 <div class="spotlight-container h-full">
@@ -75,8 +74,8 @@
         </div>
         <div class="grid grid-cols-3 gap-4 mb-3 text-right">
           <div/>
-          <StatItem title="Total Goals" value="{player.scoreFor}"/>
-          <StatItem title="Total Goals Against" value={player.scoreAgainst}/>
+          <StatItem title="Total Score" value="{player.scoreFor}"/>
+          <StatItem title="Total Score Against" value={player.scoreAgainst}/>
         </div>
         <div class="grid grid-cols-3 gap-4 mb-3 text-right">
           <div/>
@@ -111,42 +110,44 @@
             />
             <StatItem title="Elo Change" eloChange={match.playerStats[player.id].eloChange}/>
           </div>
-          <div class="grid grid-cols-3 gap-4 mb-3 text-right">
-            <div/>
-            <StatItem title="Total Goals" value={match.playerStats[player.id].scoreFor}/>
-            <StatItem title="Total Goals Against" value={match.playerStats[player.id].scoreAgainst}/>
-          </div>
-          <div class="pt-3">
-            <div class="table-container">
-              <table class="table table-hover">
-                <tbody>
-                {#each match.games as game}
-                  <tr>
-                    {#each game.teams[0].players as playerId}
-                      <td class="{getGameClass(game.teams[0])}">
-                        {getPlayer(playerId).username}
-                      </td>
-                    {/each}
-                    {#each game.teams[0].scores as score}
-                      <td class="text-center {getGameClass(game.teams[0])}">{score}</td>
-                    {/each}
-                    {#each game.teams[1].scores as score}
-                      <td class="text-center {getGameClass(game.teams[1])}">{score}</td>
-                    {/each}
-                    {#each game.teams[1].players as playerId}
-                      <td class="{getGameClass(game.teams[1])}">
-                        {getPlayer(playerId).username}
-                      </td>
-                    {/each}
-                    <td class="text-center">
-                      <EloChange elo={game.playerStats[player.id].eloChange}/>
-                    </td>
-                  </tr>
-                {/each}
-                </tbody>
-              </table>
+          {#if showScores($league)}
+            <div class="grid grid-cols-3 gap-4 mb-3 text-right">
+              <div/>
+              <StatItem title="Total Score" value={match.playerStats[player.id].scoreFor}/>
+              <StatItem title="Total Score Against" value={match.playerStats[player.id].scoreAgainst}/>
             </div>
-          </div>
+            <div class="pt-3">
+              <div class="table-container">
+                <table class="table table-hover">
+                  <tbody>
+                  {#each match.games as game}
+                    <tr>
+                      {#each game.teams[0].players as playerId}
+                        <td class="{getGameClass(game.teams[0])}">
+                          {getPlayer(playerId).username}
+                        </td>
+                      {/each}
+                      {#each game.teams[0].scores as score}
+                        <td class="text-center {getGameClass(game.teams[0])}">{scoreString($league, score)}</td>
+                      {/each}
+                      {#each game.teams[1].scores as score}
+                        <td class="text-center {getGameClass(game.teams[1])}">{scoreString($league, score)}</td>
+                      {/each}
+                      {#each game.teams[1].players as playerId}
+                        <td class="{getGameClass(game.teams[1])}">
+                          {getPlayer(playerId).username}
+                        </td>
+                      {/each}
+                      <td class="text-center">
+                        <EloChange elo={game.playerStats[player.id].eloChange}/>
+                      </td>
+                    </tr>
+                  {/each}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          {/if}
         {/if}
       </PlayerProfile>
     </div>

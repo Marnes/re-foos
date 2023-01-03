@@ -20,7 +20,7 @@
     $: valueSet = hasValue(value)
 
     const showWinnerSelector = maxScore === 1;
-    const showNumberInput = maxScore > 8;
+    const showNumberInput = maxScore > 10;
 
     function onInput(event: CustomEvent) {
         if (disabled) {
@@ -34,7 +34,12 @@
 </script>
 
 {#if showWinnerSelector}
-  <WinnerInput/>
+  <WinnerInput
+      leftTeam={leftTeam}
+      disabled={disabled}
+      bind:value
+      on:input={onInput}
+  />
 {:else }
   <NumberInput
       action={action}
@@ -42,6 +47,7 @@
       maxScore={maxScore}
       disabled={disabled}
       leftTeam={leftTeam}
+      visible={showNumberInput}
       bind:input
       bind:value
       on:input={onInput}
@@ -50,7 +56,7 @@
       maxScore={maxScore}
       reversed={!leftTeam}
       disabled={disabled}
-      leftTeam={leftTeam}
+      hidden={showNumberInput}
       bind:value
       on:input={onInput}
   />

@@ -22,8 +22,8 @@ open class TeamBasedMatchDataMapper<W : WinConditionMapper>(winConditionMapper: 
         val scoreForMap = getScoreForMap(players, gameData.values)
         val scoreAgainstMap = getScoreAgainstMap(players, gameData.values)
 
-        val winner = winConditionMapper.getWinners(players, gameResults)
-        val loser = winConditionMapper.getLosers(players, gameResults)
+        val winner = winConditionMapper.getWinners(players, gameResults, scoreForMap)
+        val loser = winConditionMapper.getLosers(players, gameResults, scoreForMap)
 
         return MatchData(
             players,

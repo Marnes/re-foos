@@ -1,7 +1,7 @@
 <script lang="ts">
     import ScoreInput from '$src/components/game/match/ScoreInput.svelte';
     import BoardContainer from '$src/components/game/match/boards/BoardContainer.svelte';
-    import RoundRobinPlayerCard from '$src/components/game/player/RoundRobinPlayerCard.svelte';
+    import GameBoard from '$src/components/game/match/boards/GameBoard.svelte';
     import { League } from '$src/models/league/league';
     import { Player } from '$src/models/player/player';
     import { GameResult, MatchResult, Result } from '$src/models/match/matchResult';
@@ -100,51 +100,37 @@
     })
 </script>
 
-<BoardContainer leftTeam={players}>
-  <div class="flex flex-col items-center gap-4 w-full">
+<BoardContainer>
+  <div class="flex flex-col justify-between h-full">
     {#each roundRobinGames as game, gameIndex}
-      <div class="flex flex-row py-7 w-full">
-        <div class="flex flex-col gap-2 justify-center grow">
-          <RoundRobinPlayerCard player={game.leftPlayer1} class="w-full"/>
-          <RoundRobinPlayerCard player={game.leftPlayer2} class="w-full"/>
-        </div>
-        <div class="flex flex-col gap-2 justify-center h-full">
-          {#each game.leftScores as score, scoreIndex}
-            <ScoreInput
-                teamNumber="1"
-                minScore={minScore}
-                maxScore={maxScore}
-                disabled={!canCapture(gameIndex, scoreIndex, game.leftScores, game.rightScores)}
-                action={onScoreInput(inputElements, minScore, maxScore)}
-                bind:input={inputElements[elementPosition(0, gameIndex, scoreIndex)]}
-                bind:value={score}
-                on:input={setScore(gameIndex, scoreIndex, 1)}
-            />
+      <GameBoard leftTeam={game.leftTeam} rightTeam={game.rightTeam}>
+        <div class="flex flex-col gap-2">
+          {#each game.leftScores as _, scoreIndex}
+            <div class="flex flex-row gap-2 justify-center h-12 lg:h-16 overflow-hidden">
+              <ScoreInput
+                  leftTeam={true}
+                  minScore={minScore}
+                  maxScore={maxScore}
+                  disabled={!canCapture(gameIndex, scoreIndex, game.leftScores, game.rightScores)}
+                  action={onScoreInput(inputElements, minScore, maxScore)}
+                  bind:input={inputElements[elementPosition(0, gameIndex, scoreIndex)]}
+                  bind:value={game.leftScores[scoreIndex]}
+                  on:input={setScore(gameIndex, scoreIndex, 1)}
+              />
+              <ScoreInput
+                  leftTeam={false}
+                  minScore={minScore}
+                  maxScore={maxScore}
+                  disabled={!canCapture(gameIndex, scoreIndex, game.leftScores, game.rightScores)}
+                  action={onScoreInput(inputElements, minScore, maxScore)}
+                  bind:input={inputElements[elementPosition(1, gameIndex, scoreIndex)]}
+                  bind:value={game.rightScores[scoreIndex]}
+                  on:input={setScore(gameIndex, scoreIndex, 2)}
+              />
+            </div>
           {/each}
         </div>
-        <div class="flex flex-col justify-center mx-3 flex-1">
-          <span class="text-md xl:text-2xl font-bold text-center">VS</span>
-        </div>
-        <div class="flex flex-col gap-2 justify-center">
-          {#each game.rightScores as score, scoreIndex}
-            <ScoreInput
-                teamNumber="2"
-                minScore={minScore}
-                maxScore={maxScore}
-                reversed={true}
-                disabled={!canCapture(gameIndex, scoreIndex, game.leftScores, game.rightScores)}
-                action={onScoreInput(inputElements, minScore, maxScore)}
-                bind:input={inputElements[elementPosition(1, gameIndex, scoreIndex)]}
-                bind:value={score}
-                on:input={setScore(gameIndex, scoreIndex, 2)}
-            />
-          {/each}
-        </div>
-        <div class="flex flex-col gap-2 justify-center grow">
-          <RoundRobinPlayerCard player={game.rightPlayer1} class="w-full" reversed={true}/>
-          <RoundRobinPlayerCard player={game.rightPlayer2} class="w-full" reversed={true}/>
-        </div>
-      </div>
+      </GameBoard>
     {/each}
   </div>
 

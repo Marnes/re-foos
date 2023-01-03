@@ -118,9 +118,19 @@ object LeagueService {
         }
     }
 
-    fun setLeagueEndDate(leagueId: Int, endDate: LocalDate) {
+    fun createNewSeason(leagueId: Int, currentUser: User) {
         transaction {
             val league = League.findById(leagueId) ?: throw leagueNotFound(leagueId)
+            val season = LeagueSeason.findActive(leagueId) ?: throw EntityNotFoundException("No active seasons for league with id $leagueId")
+
+            season.endDate = LocalDate.now()
+
+            LeagueSeason.new {
+                this.league = league
+                this.season = season.season + 1
+                startDate = LocalDate.now().plusDays(1)
+                createdBy = currentUser
+            }
         }
     }
 

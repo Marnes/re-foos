@@ -6,7 +6,7 @@ const TEAM_ATTRIBUTE = 'data-team';
 export const onScoreInput = (inputElements: any[], minScore: number, maxScore: number): Function => {
     return (node: any) => {
         const handleInput = (event: any) => {
-            const value = Number(node.value)
+            let value = Number(node.value)
             const elementIndex = _.indexOf(inputElements, node);
             const teamNumber = node.getAttribute(TEAM_ATTRIBUTE);
 
@@ -17,6 +17,8 @@ export const onScoreInput = (inputElements: any[], minScore: number, maxScore: n
             if (value < minScore) {
                 node.value = minScore;
             }
+
+            value = Number(node.value)
 
             if (value * 10 >= maxScore || value === 0) {
                 setTimeout(() => { //If input is still disabled

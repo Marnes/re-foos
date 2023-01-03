@@ -27,9 +27,9 @@
         const response = await post(`/leagues/${league.id}/matches`, detail);
 
         if (response.ok) {
-            await invalidateAll();
             drawerStore.close();
             toastStore.trigger({ message: 'Match Captured', autohide: true, timeout: 3000 });
+            await invalidateAll();
         }
     }
 </script>

@@ -7,6 +7,7 @@
     export let maxScore: number;
     export let leftTeam: boolean;
     export let disabled = false;
+    export let visible = false;
     export let input: any;
 
     export let action: any = () => {
@@ -27,9 +28,10 @@
 </script>
 
 <input
-    class="h-full w-12 text-2xl lg:h-24 lg:w-24 lg:text-4xl lg:hidden
+    class="h-12 lg:h-16 w-12 text-2xl lg:w-16 lg:text-4xl lg:hidden
     score-input no-spinner text-center
     !bg-transparent focus:border-primary-500"
+    class:!block={visible}
     type="number"
     pattern="[0-9]*"
     min="{minScore}"

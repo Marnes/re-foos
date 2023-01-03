@@ -4,9 +4,12 @@
     import Icon from '@iconify/svelte';
     import { League } from '$src/models/league/league';
     import { LeagueType } from '$src/models/league/league.js';
+    import { ModalType } from '$src/lib/util/skeletonUtil';
     import { Modal } from '$src/models/modal';
     import { isoDate } from '$src/lib/util/dateUtil.js';
-    import { menu, modalStore } from '@skeletonlabs/skeleton';
+    import { menu, type ModalSettings, modalStore } from '@skeletonlabs/skeleton';
+    import { post } from '$src/lib/utils';
+    import { invalidateAll } from '$app/navigation';
     import { session } from '$src/stores/sessionStore.js';
     import _ from 'lodash';
 
@@ -16,6 +19,27 @@
     const getJoinLink = (league: League) => {
         return () => {
             modalStore.trigger(Modal.component(`Join link for <strong>${ league.name }</strong>`, LinkDialog, { league }));
+        }
+    }
+
+    const startNewSeason = (league: League) => {
+        return () => {
+            const confirmValues: ModalSettings = {
+                type: ModalType.COFIRM,
+                title: `Start new Season for <strong>${ league.name }</strong>`,
+                body: `Are you sure you want to start a new season for <strong>${ league.name }</strong>? ` +
+                    `The current season will end at the end of today, and the new season will start tomorrow.`,
+                response: async (r: boolean) => {
+                    if (r) {
+                        await post(`/leagues/${league.id}/season`);
+                        await invalidateAll();
+                    }
+                },
+                buttonTextCancel: 'Cancel',
+                buttonTextConfirm: 'Create Season',
+            };
+
+            modalStore.trigger(confirmValues);
         }
     }
 
@@ -34,6 +58,9 @@
           <ul>
             <li>
               <button class="option w-full" on:click|preventDefault|stopPropagation={getJoinLink(league)}>Link</button>
+            </li>
+            <li>
+              <button class="option w-full" on:click|preventDefault|stopPropagation={startNewSeason(league)}>Start New Season</button>
             </li>
           </ul>
         </nav>

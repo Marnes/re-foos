@@ -1,5 +1,6 @@
 <script lang="ts">
     import BoardContainer from '$src/components/game/match/boards/BoardContainer.svelte';
+    import GameBoard from '$src/components/game/match/boards/GameBoard.svelte';
     import ScoreInput from '$src/components/game/match/ScoreInput.svelte';
     import { League } from '$src/models/league/league';
     import { onScoreInput } from '$src/lib/actions/scoreInput';
@@ -59,43 +60,39 @@
     }
 
     onMount(() => {
-        inputElements[0].focus();
+        if (!_.isNil(inputElements[0])) inputElements[0].focus();
     })
 </script>
 
-<BoardContainer leftTeam={team1} rightTeam={team2}>
-  <div class="flex flex-row justify-center overflow-y-auto py-5">
-    <div class="flex-1"></div>
-    <div class="flex flex-col gap-2 items-center justify-between">
+<BoardContainer>
+  <GameBoard leftTeam={team1} rightTeam={team2}>
+    <div class="flex flex-col gap-2 mt-5">
       {#each team1Scores as _, i}
-        <ScoreInput
-            minScore={minScore}
-            maxScore={maxScore}
-            disabled={!canCapture(i, team1Scores, team2Scores)}
-            action={onScoreInput(inputElements, minScore, maxScore)}
-            bind:input={inputElements[i * 2]}
-            bind:value={team1Scores[i]}
-            on:input={setScore(i, 1)}
-        />
+        <div class="flex flex-row gap-2 justify-center items-center flex-1 overflow-hidden">
+          <ScoreInput
+              leftTeam={true}
+              minScore={minScore}
+              maxScore={maxScore}
+              disabled={!canCapture(i, team1Scores, team2Scores)}
+              action={onScoreInput(inputElements, minScore, maxScore)}
+              bind:input={inputElements[i * 2]}
+              bind:value={team1Scores[i]}
+              on:input={setScore(i, 1)}
+          />
+          <ScoreInput
+              leftTeam={false}
+              minScore={minScore}
+              maxScore={maxScore}
+              disabled={!canCapture(i, team1Scores, team2Scores)}
+              action={onScoreInput(inputElements, minScore, maxScore)}
+              bind:input={inputElements[1 + (i * 2)]}
+              bind:value={team2Scores[i]}
+              on:input={setScore(i, 2)}
+          />
+        </div>
       {/each}
     </div>
-    <div class="flex-1"></div>
-    <div class="flex flex-col gap-2 items-center justify-between">
-      {#each team2Scores as _, i}
-        <ScoreInput
-            leftTeam={false}
-            minScore={minScore}
-            maxScore={maxScore}
-            disabled={!canCapture(i, team1Scores, team2Scores)}
-            action={onScoreInput(inputElements, minScore, maxScore)}
-            bind:input={inputElements[1 + (i * 2)]}
-            bind:value={team2Scores[i]}
-            on:input={setScore(i, 2)}
-        />
-      {/each}
-    </div>
-    <div class="flex-1"></div>
-  </div>
+  </GameBoard>
 
   <svelte:fragment slot="action">
     <button

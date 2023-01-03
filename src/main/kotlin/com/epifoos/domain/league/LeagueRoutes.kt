@@ -11,7 +11,6 @@ import io.ktor.server.auth.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
-import java.time.LocalDate
 
 
 fun Route.leagueRoutes() {
@@ -73,8 +72,13 @@ fun Route.leagueRoutes() {
                     call.respond(LeagueService.generateNewCode(call.parameters["leagueId"]!!.toInt()))
                 }
 
-                post("/close") {
-                    call.respond(LeagueService.setLeagueEndDate(call.parameters["leagueId"]!!.toInt(), LocalDate.now()))
+                post("/season") {
+                    call.respond(
+                        LeagueService.createNewSeason(
+                            call.parameters["leagueId"]!!.toInt(),
+                            AuthUtil.authenticatedUser(call)
+                        )
+                    )
                 }
             }
         }

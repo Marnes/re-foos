@@ -97,6 +97,8 @@ data class GameData(
 data class GameResult(
     val winners: Team?,
     val losers: Team?,
+    val team1Score: Int,
+    val team2Score: Int,
     val isDraw: Boolean,
     val difference: GameDifference?
 ) {

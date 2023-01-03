@@ -3,7 +3,6 @@ package com.epifoos.domain.league
 import com.epifoos.domain.*
 import org.jetbrains.exposed.dao.IntEntityClass
 import org.jetbrains.exposed.dao.id.EntityID
-import org.jetbrains.exposed.sql.and
 import org.jetbrains.exposed.sql.javatime.date
 import java.time.LocalDate
 import kotlin.math.ceil
@@ -56,8 +55,11 @@ class LeagueSeason(id: EntityID<Int>) : AuditedEntity(id, LeagueSeasonTable) {
         }
 
         fun findActive(leagueId: Int): LeagueSeason? {
-            return LeagueSeason.find { LeagueSeasonTable.league eq leagueId and (LeagueSeasonTable.endDate.isNull()) }
-                .firstOrNull()
+            val now = LocalDate.now()
+            val seasons = LeagueSeason.find { LeagueSeasonTable.league eq leagueId }.toList()
+
+            return seasons.firstOrNull { it.endDate != null && (it.endDate!! == now || it.endDate!!.isAfter(now)) }
+                ?: seasons.first { it.endDate == null }
         }
     }
 

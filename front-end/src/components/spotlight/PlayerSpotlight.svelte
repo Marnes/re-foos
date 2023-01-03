@@ -12,7 +12,7 @@
     import { league, playerSpotlight } from '$src/stores/leagueStore';
     import { userNameSentence } from '$src/lib/util/stringUtil.js';
     import { page } from '$app/stores';
-    import { seasonPath, showScores, scoreString } from '$src/lib/util/match/leagueUtil';
+    import { scoreString, seasonPath, showScores } from '$src/lib/util/match/leagueUtil';
 
     let player: Player
     let match: Match
@@ -72,11 +72,13 @@
           <StatItem title="Highest Elo" value="{formatElo(player.highestElo)}"/>
           <StatItem title="Lowest Elo" value="{formatElo(player.lowestElo)}"/>
         </div>
-        <div class="grid grid-cols-3 gap-4 mb-3 text-right">
-          <div/>
-          <StatItem title="Total Score" value="{player.scoreFor}"/>
-          <StatItem title="Total Score Against" value={player.scoreAgainst}/>
-        </div>
+        {#if showScores($league)}
+          <div class="grid grid-cols-3 gap-4 mb-3 text-right">
+            <div/>
+            <StatItem title="Total Score" value="{player.scoreFor}"/>
+            <StatItem title="Total Score Against" value={player.scoreAgainst}/>
+          </div>
+        {/if}
         <div class="grid grid-cols-3 gap-4 mb-3 text-right">
           <div/>
           <StatItem title="Current Winning Streak" value={player.currentWinningStreak}/>

@@ -1,6 +1,6 @@
 <div class="flex flex-col bg-black w-full overflow-x-hidden h-full">
-  <div class="flex flex-row h-full match-screen">
-    <div class="flex flex-col w-full card-glass-surface">
+  <div class="flex flex-row match-screen overflow-y-auto overflow-x-hidden flex-1" >
+    <div class="flex flex-col w-full card-glass-surface" >
       <slot />
     </div>
   </div>

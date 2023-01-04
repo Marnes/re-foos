@@ -105,7 +105,10 @@
     {#each roundRobinGames as game, gameIndex}
       <div>
         <GameBoard leftTeam={game.leftTeam} rightTeam={game.rightTeam}>
-          <div class="flex flex-col gap-2 mt-10">
+          <div
+              class="flex flex-col gap-2 mt-10"
+              class:mb-10={gameIndex + 1 === roundRobinGames.length}
+          >
             {#each game.leftScores as _, scoreIndex}
               <div class="flex flex-row gap-2 justify-center h-12 lg:h-16 overflow-hidden">
                 <ScoreInput

@@ -8,7 +8,7 @@
     $: sortedLeagues = leagues.sort((l1, l2) => sortAlphaNum(l1.name, l2.name));
 </script>
 
-<div class="grid grid-cols-1 lg:grid-cols-4 gap-6 lg:gap-3">
+<div class="grid grid-cols-1 lg:grid-cols-6 gap-6 lg:gap-3">
   {#each sortedLeagues as league}
     <LeagueItem league={league}/>
   {/each}

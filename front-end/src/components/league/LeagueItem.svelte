@@ -45,7 +45,7 @@
 
 </script>
 
-<a class="card overflow-hidden" href="/leagues/{league.id}/leaderboard">
+<a class="card overflow-hidden flex flex-col" href="/leagues/{league.id}/leaderboard">
   <header class="p-4 space-y-4">
     <div class="flex flex-row justify-between">
       <h3>{league.name}</h3>
@@ -71,7 +71,7 @@
     <span class="block text-md mt-2 text-surface-500">Players: {league.players}</span>
   </header>
   <hr/>
-  <div class="p-4 space-y-4">
+  <div class="p-4 space-y-4 flex-1">
     <h4 class="text-primary-500">Season {league.season}</h4>
     {#if league.leader}
       <div class="flex flex-col mt-3 items-center">
